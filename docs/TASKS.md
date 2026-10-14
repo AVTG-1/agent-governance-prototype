@@ -68,11 +68,11 @@ Work top to bottom. Tick each box when its acceptance checks pass, then commit. 
 **Accept:** a full mocked run produces an evidence pack whose chain verifies in a test.
 
 ## M8 — Key views (SPEC §5.8)
-- [ ] `KEY_VIEWS` in `app/demo/script.py`: eight entries with id, title, caption and the step that emits the `keyview` marker event.
-- [ ] `app/demo/keyviews.py` keeps the last completed run's event log and markers in memory. `GET /api/keyviews` lists them; `GET /api/keyviews/export` returns the self-contained HTML file.
-- [ ] UI: a **Key views** button (K) after the close card, the filmstrip, key-view mode with the "recorded from this run" badge, ←/→/Esc, animations off and frozen countdowns.
-- [ ] Export: string-assembled HTML with inlined assets and `window.__REPLAY__`. It opens offline in key-view mode with the recording banner and makes no network requests.
-- [ ] `tests/test_keyviews.py`: a mocked full run produces exactly eight markers in order. Listing and exporting make no LLM calls and add no decision events. The exported file contains no token (use the fake token from the leak test), no `http://` or `https://` asset URLs, and the "playback only" label. `/api/keyviews` returns 404 before any run reaches Act 6.
+- [x] `KEY_VIEWS` in `app/demo/script.py`: eight entries with id, title, caption and the step that emits the `keyview` marker event.
+- [x] `app/demo/keyviews.py` keeps the last completed run's event log and markers in memory. `GET /api/keyviews` lists them; `GET /api/keyviews/export` returns the self-contained HTML file.
+- [x] UI: a **Key views** button (K) after the close card, the filmstrip, key-view mode with the "recorded from this run" badge, ←/→/Esc, animations off and frozen countdowns.
+- [x] Export: string-assembled HTML with inlined assets and `window.__REPLAY__`. It opens offline in key-view mode with the recording banner and makes no network requests.
+- [x] `tests/test_keyviews.py`: a mocked full run produces exactly eight markers in order. Listing and exporting make no LLM calls and add no decision events. The exported file contains no token (use the fake token from the leak test), no `http://` or `https://` asset URLs, and the "playback only" label. `/api/keyviews` returns 404 before any run reaches Act 6.
 
 **Accept:** after a mocked run, every key view renders the expected panel. Open the exported file from disk in a headless browser if one is available and screenshot views 4, 5 and 7 into `docs/screens/`.
 

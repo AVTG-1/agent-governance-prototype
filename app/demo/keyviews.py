@@ -36,7 +36,7 @@ class KeyViews:
         }
 
     def listing(self) -> dict:
-        markers = [{**e["payload"], "seq": e["seq"]} for e in self.events if e["kind"] == "keyview"]
+        markers = [{**e["payload"], "seq": e["seq"], "ts": e["ts"]} for e in self.events if e["kind"] == "keyview"]
         return {"meta": self.meta, "views": markers, "events": self.events}
 
     def export_html(self) -> tuple[str, str]:

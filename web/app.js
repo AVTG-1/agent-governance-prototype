@@ -189,10 +189,10 @@ function renderStatus(s) {
   const prov = s.provider === 'openrouter' ? 'OpenRouter' : 'Foundry';
   const live = REPLAY ? 'recorded' : prov;
   out.push(`<span class="chip"><span class="dot ${REPLAY ? 'ai' : ''}"></span>${esc(live)}: <b>${esc(s.models.agent || '—')}</b> / <b>${esc(s.models.investigator || '—')}</b></span>`);
-  if (s.policy) out.push(`<span class="chip">${ICON.lock}<b>${esc(s.policy)}</b></span>`);
+  if (s.policy) out.push(`<span class="chip">${ICON.lock}<b>${esc(ui.kv ? s.policy.replace('recon-agent-policy', 'policy') : s.policy)}</b></span>`);
   const mode = s.map.mode === 'ungoverned' ? ['tag-deny', 'Today mode: no plane']
     : s.enforce ? ['tag-brand', 'Enforcing'] : s.map.plane ? ['tag-info', 'Shadow: observe only'] : ['tag-info', 'Discovery'];
-  out.push(`<span class="tag ${mode[0]}">${esc(mode[1])}</span>`);
+  if (!ui.kv) out.push(`<span class="tag ${mode[0]}">${esc(mode[1])}</span>`);
   return out.join('');
 }
 
@@ -913,7 +913,7 @@ function boot() {
     const m = REPLAY.meta || {};
     const banner = document.createElement('div');
     banner.className = 'replay-banner';
-    banner.textContent = `Recorded from a live run on ${String(m.recorded_at || '').replace('T', ' ')} · models ${m.agent_model || '?'} / ${m.investigator_model || '?'} · playback only`;
+    banner.textContent = `Recorded from a live run on ${String(m.recorded_at || '').slice(0, 16).replace('T', ' ')} · models ${m.agent_model || '?'} / ${m.investigator_model || '?'} · playback only`;
     document.body.prepend(banner);
     const events = REPLAY.events || [];
     ui.kvData = { meta: m, events, views: events.filter((e) => e.kind === 'keyview').map((e) => ({ ...e.payload, seq: e.seq, ts: e.ts })) };
