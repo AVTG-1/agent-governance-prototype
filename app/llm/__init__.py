@@ -5,9 +5,11 @@ app/llm/mock.py through a pytest fixture; nothing a presenter can reach selects 
 """
 from __future__ import annotations
 
+import asyncio
 import json
 import re
 import ssl
+import sys
 import time
 from dataclasses import dataclass, field
 
@@ -37,6 +39,7 @@ class LLMResult:
     model_ref: str
     usage: dict | None = None
     variant: str = ""
+    stop_reason: str | None = None     # "max_tokens" when the provider says the reply was cut off
 
 
 class LLMError(Exception):
@@ -62,6 +65,8 @@ class Connection:
     settings: Settings = field(default_factory=Settings)
     models: dict = field(default_factory=lambda: dict(RECOMMENDED["foundry"]))
     tests: dict = field(default_factory=dict)          # role -> TestResult
+    tested: dict = field(default_factory=dict)         # model ref -> TestResult, every live test this session
+    preflight: dict | None = None                      # the last preflight's results (memory only)
 
     @property
     def ready(self) -> bool:
@@ -116,6 +121,14 @@ async def _call_model(provider: str, model_ref: str, token: str, settings: Setti
         return await _try_variants(client, provider, family, base, headers, vs, build, memo_key, model_ref)
 
 
+def _retry_after(value: str | None) -> float:
+    """Seconds to wait before the one retry after a 429: the gateway's Retry-After, capped at 8 s."""
+    try:
+        return min(8.0, max(0.5, float(value)))
+    except (TypeError, ValueError):
+        return 2.0
+
+
 async def _try_variants(client, provider, family, base, headers, vs, build, memo_key, model_ref) -> LLMResult:
     errors: list[LLMError] = []
     t0 = time.perf_counter()
@@ -123,6 +136,12 @@ async def _try_variants(client, provider, family, base, headers, vs, build, memo
         path, body = build(v)
         try:
             resp = await client.post(base + path, json=body, headers=headers)
+            if resp.status_code == 429:          # rate-limited: back off once, then say so
+                await asyncio.sleep(_retry_after(resp.headers.get("retry-after")))
+                resp = await client.post(base + path, json=body, headers=headers)
+                if resp.status_code == 429:
+                    raise LLMError("rate_limit", "429: the gateway is rate-limiting this token. "
+                                                 "Wait a few seconds, then retry.", 429)
         except httpx.TimeoutException:
             raise LLMError("timeout", f"No response in {LLM_TIMEOUT_S:.0f} s. Check VPN or proxy.") from None
         except httpx.ConnectError as e:
@@ -133,6 +152,8 @@ async def _try_variants(client, provider, family, base, headers, vs, build, memo
             raise LLMError("network", f"Could not reach {host}. Check VPN or proxy.") from None
         except httpx.HTTPError as e:
             raise LLMError("network", f"Network error: {type(e).__name__}. Check VPN or proxy.") from None
+        except UnicodeEncodeError:               # a header can only carry ASCII; never a 500 for this
+            raise LLMError("config", secrets_store.TOKEN_NOT_SENDABLE) from None
         if resp.status_code in (401, 403):
             raise _http_error(resp.status_code, resp.content)
         if resp.status_code != 200:
@@ -147,7 +168,7 @@ async def _try_variants(client, provider, family, base, headers, vs, build, memo
             continue
         _variant_memo[memo_key] = v["name"]
         return LLMResult(text, round((time.perf_counter() - t0) * 1000), model_ref,
-                         foundry.usage_of(resp.content), v["name"])
+                         foundry.usage_of(resp.content), v["name"], foundry.stop_reason(resp.content))
     non404 = [e for e in errors if e.kind != "not_found"]
     raise (non404[-1] if non404 else errors[-1])
 
@@ -178,38 +199,134 @@ async def test_model(provider: str, model_ref: str, token: str, settings: Settin
 
 # --- Strict JSON outputs ---------------------------------------------------------------------
 
+class ContractError(ValueError):
+    """A reply that is not the JSON object the contract asks for. `truncated`: the JSON never closed."""
+
+    def __init__(self, message: str, truncated: bool = False) -> None:
+        super().__init__(message)
+        self.truncated = truncated
+
+
+_FENCE = re.compile(r"```[a-zA-Z0-9_-]*[ \t]*\n?(.*?)(?:```|$)", re.S)
+
+
+def _outermost_object(t: str) -> str:
+    """The first balanced {...} in t, string-aware. Raises ContractError(truncated=True) if it never closes."""
+    start = t.find("{")
+    if start < 0:
+        raise ContractError("no JSON object in the reply")
+    depth, in_str, esc = 0, False, False
+    for i in range(start, len(t)):
+        ch = t[i]
+        if in_str:
+            if esc:
+                esc = False
+            elif ch == "\\":
+                esc = True
+            elif ch == '"':
+                in_str = False
+        elif ch == '"':
+            in_str = True
+        elif ch == "{":
+            depth += 1
+        elif ch == "}":
+            depth -= 1
+            if depth == 0:
+                return t[start:i + 1]
+    raise ContractError("the reply was cut off before the JSON object closed", truncated=True)
+
+
+def _strip_trailing_commas(t: str) -> str:
+    """Remove commas before } or ] that sit outside strings (a common model slip)."""
+    out, in_str, esc = [], False, False
+    for i, ch in enumerate(t):
+        if in_str:
+            out.append(ch)
+            if esc:
+                esc = False
+            elif ch == "\\":
+                esc = True
+            elif ch == '"':
+                in_str = False
+            continue
+        if ch == '"':
+            in_str = True
+        elif ch == ",":
+            j = i + 1
+            while j < len(t) and t[j] in " \t\r\n":
+                j += 1
+            if j < len(t) and t[j] in "}]":
+                continue
+        out.append(ch)
+    return "".join(out)
+
+
 def extract_json(text: str) -> dict:
-    """Parse a JSON object from model text, tolerating code fences or a sentence around it."""
-    t = text.strip()
-    t = re.sub(r"^```(?:json)?\s*|\s*```$", "", t)
-    try:
-        obj = json.loads(t)
-    except json.JSONDecodeError:
-        start, end = t.find("{"), t.rfind("}")
-        if start < 0 or end <= start:
-            raise ValueError("no JSON object in reply") from None
+    """The JSON object in a model reply: strips ``` fences and any prose around it, takes the outermost
+    object, and forgives trailing commas. Raises ContractError with a short reason."""
+    t = (text or "").strip()
+    m = _FENCE.search(t)
+    if m and "{" in m.group(1):
+        t = m.group(1)
+    body = _outermost_object(t)
+    for candidate in (body, _strip_trailing_commas(body)):
         try:
-            obj = json.loads(t[start:end + 1])
+            obj = json.loads(candidate)
+            break
         except json.JSONDecodeError as e:
-            raise ValueError(f"invalid JSON: {e.msg}") from None
+            err = e
+    else:
+        raise ContractError(f"invalid JSON: {err.msg} at character {err.pos}")
     if not isinstance(obj, dict):
-        raise ValueError("reply is not a JSON object")
+        raise ContractError("the reply is not a JSON object")
     return obj
 
 
-NUDGE = "\n\nReturn only valid JSON that matches the schema above. No prose, no code fences."
+def parse_contract(r: LLMResult, model: type[BaseModel]) -> BaseModel:
+    """Validate one reply against its contract. A reply the provider cut off at the output limit is
+    reported as cut off, whatever the parser saw."""
+    try:
+        return model.model_validate(extract_json(r.text))
+    except ContractError as e:
+        if r.stop_reason == "max_tokens" and not e.truncated:
+            raise ContractError(f"{e}; the provider stopped at the output limit", truncated=True) from None
+        raise
+    except ValidationError as e:
+        first = e.errors()[0]
+        where = ".".join(str(x) for x in first.get("loc", ())) or "reply"
+        raise ContractError(f"{where}: {first.get('msg', 'invalid')}") from None
 
 
-async def complete_json(role: str, system: str, user: str, model: type[BaseModel]) -> tuple[BaseModel, LLMResult]:
-    """Call, validate with pydantic; on invalid output retry once with a nudge, then fail visibly."""
+def retry_suffix(e: ContractError) -> str:
+    why = ("Your previous reply was cut off before the JSON ended. Keep every string short."
+           if e.truncated else f"Your previous reply could not be used: {e}.")
+    return f"\n\n{why} Return only the JSON object, matching the shape above exactly. No prose, no code fences."
+
+
+def _log_raw(role: str, job: str, r: LLMResult, e: ContractError) -> None:
+    """For diagnosis on the presenter's terminal. Model output never contains the token; redact anyway."""
+    head = f"[llm] {job or role}: unusable reply from {r.model_ref} ({e}; stop reason {r.stop_reason or 'n/a'}, " \
+           f"{len(r.text or '')} chars):"
+    print(secrets_store.redact(head), file=sys.stderr, flush=True)
+    print(secrets_store.redact((r.text or "")[:6000]), file=sys.stderr, flush=True)
+
+
+async def complete_json(role: str, system: str, user: str, model: type[BaseModel],
+                        job: str = "") -> tuple[BaseModel, LLMResult]:
+    """Call, validate; on an unusable reply retry once with the reason appended, then fail visibly."""
     r = await complete(role, system, user)
     try:
-        return model.model_validate(extract_json(r.text)), r
-    except (ValueError, ValidationError):
-        pass
-    r2 = await complete(role, system, user + NUDGE)
+        return parse_contract(r, model), r
+    except ContractError as e:
+        _log_raw(role, job, r, e)
+        first = e
+    r2 = await complete(role, system, user + retry_suffix(first))
     try:
-        return model.model_validate(extract_json(r2.text)), r2
-    except (ValueError, ValidationError) as e:
-        first = str(e).splitlines()[0][:160]
-        raise LLMError("parse", f"The {role} model returned invalid JSON twice ({first}).") from None
+        return parse_contract(r2, model), r2
+    except ContractError as e:
+        _log_raw(role, job, r2, e)
+        label = f"the {job.replace('_', ' ')}" if job else "its reply"
+        if e.truncated:
+            raise LLMError("parse", f"The {role} model's reply for {label} was cut off at the output limit twice "
+                                    f"({r2.model_ref}). Retry, or switch to a model with JSON mode.") from None
+        raise LLMError("parse", f"The {role} model returned unusable JSON twice for {label} ({str(e)[:140]}).") from None

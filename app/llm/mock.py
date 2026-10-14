@@ -29,33 +29,31 @@ CASE = {"case_title": "Prompt injection via settlement note on T-1097",
                      "read a client's tax ID, borrow the settlement agent's access, and post the data outside the firm. "
                      "All three requests were denied by policy. The agent was fooled; the controls held.",
         "linked_request_ids": [], "suspected_cause": "prompt_injection", "recommended_containment": "read_only"}
-def _g(agent, cap, evidence, **kw):
-    return {"agent": agent, "capability": cap, "evidence": evidence, **kw}
+def _g(agent, cap, basis="observed", **kw):
+    return {"agent": agent, "capability": cap, "basis": basis, "purpose": None, "tags": [], **kw}
 
 
-RULEBOOK = {
+RULEBOOK = {   # the compact contract (SPEC §7.2): ids and short codes, no prose
     "grants": [
-        _g("recon-agent", "trade.read", "232 calls this week"), _g("recon-agent", "settlement.read", "196 calls"),
-        _g("recon-agent", "client.read_masked", "80 calls, masked fields only", fields=["client_id", "name", "country"]),
-        _g("recon-agent", "refdata.read", "13 calls"), _g("recon-agent", "recon.update", "66 calls"),
-        _g("recon-agent", "ledger.read_quarter_end", "1 call on 2026-09-30, quarter-end close",
-           tags=["rare-but-required", "quarter-end close"]),
-        _g("settlement-agent", "trade.read", "58 calls"), _g("settlement-agent", "settlement.read", "104 calls"),
-        _g("settlement-agent", "settlement.update", "70 calls"), _g("settlement-agent", "ssi.amend", "6 calls, maker-checker"),
-        _g("settlement-agent", "client.read_masked", "12 calls"),
-        _g("settlement-agent", "client.read_pii", "4 calls for SSI verification", purpose="ssi_verification"),
-        _g("enrichment-agent", "trade.read", "118 calls"), _g("enrichment-agent", "refdata.read", "62 calls"),
-        _g("kyc-agent", "client.read_masked", "96 calls"), _g("kyc-agent", "refdata.read", "17 calls"),
+        _g("recon-agent", "trade.read"), _g("recon-agent", "settlement.read"),
+        _g("recon-agent", "client.read_masked"), _g("recon-agent", "refdata.read"), _g("recon-agent", "recon.update"),
+        _g("recon-agent", "ledger.read_quarter_end", "calendar", tags=["rare-but-required"]),
+        _g("settlement-agent", "trade.read"), _g("settlement-agent", "settlement.read"),
+        _g("settlement-agent", "settlement.update"), _g("settlement-agent", "ssi.amend"),
+        _g("settlement-agent", "client.read_masked"),
+        _g("settlement-agent", "client.read_pii", purpose="ssi_verification"),
+        _g("enrichment-agent", "trade.read"), _g("enrichment-agent", "refdata.read"),
+        _g("kyc-agent", "client.read_masked"), _g("kyc-agent", "refdata.read"),
     ],
     "left_out": [
-        {"agent": "recon-agent", "capability": "settlement.update", "reason": "never used in 90 days"},
-        {"agent": "recon-agent", "capability": "fx.read", "reason": "never used in 90 days"},
-        {"agent": "recon-agent", "capability": "fileshare.export", "reason": "never used in 90 days"},
-        {"agent": "enrichment-agent", "capability": "settlement.read", "reason": "never used in 90 days"},
-        {"agent": "kyc-agent", "capability": "client.read_pii", "reason": "never used in 90 days"},
+        {"agent": "recon-agent", "capability": "settlement.update", "reason": "unused_90d"},
+        {"agent": "recon-agent", "capability": "fx.read", "reason": "unused_90d"},
+        {"agent": "recon-agent", "capability": "fileshare.export", "reason": "unused_90d"},
+        {"agent": "enrichment-agent", "capability": "settlement.read", "reason": "unused_90d"},
+        {"agent": "kyc-agent", "capability": "client.read_pii", "reason": "unused_90d"},
     ],
-    "flags": [{"agent": "kyc-agent", "capability": "fileshare.export", "observed": 7,
-               "issue": "observed nightly but violates guardrail R-EGR-01", "recommendation": "owner_decision"}],
+    "flags": [{"agent": "kyc-agent", "capability": "fileshare.export", "rule": "R-EGR-01",
+               "recommendation": "owner_decision"}],
 }
 DIFF = {"changes": [
     {"op": "restrict_delegation", "agent": "recon-agent", "target": "settlement-agent",

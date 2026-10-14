@@ -12,7 +12,15 @@ import re
 from app.llm.catalog import FIXED_TEMPERATURE, NO_SYSTEM_ROLE
 
 AZURE_API_VERSION = "2025-01-01-preview"
-MAX_TOKENS = 1500
+# Output budget. The day-zero rulebook is the largest reply (about 1,200 tokens in the compact contract);
+# reasoning models spend part of the budget thinking, so they get more. A reply that hits the limit is
+# reported as cut off (see stop_reason), never parsed as if it were whole.
+MAX_TOKENS = 4096
+MAX_TOKENS_REASONING = 12000
+
+
+def is_reasoning(model_id: str) -> bool:
+    return model_id.split("/")[-1].startswith(("gpt-5", "o1", "o3", "o4"))
 
 
 def auth_header(token: str, project: str) -> str:
@@ -37,6 +45,11 @@ def openai_body(model_id: str, system: str, user: str, *, stream: bool, response
     body["messages"] = openai_messages(model_id, system, user)
     if temperature and model_id not in FIXED_TEMPERATURE:
         body["temperature"] = 0
+    if temperature:      # the conservative fallback variants send neither temperature nor a token limit
+        if is_reasoning(model_id):
+            body["max_completion_tokens"] = MAX_TOKENS_REASONING
+        else:
+            body["max_tokens"] = MAX_TOKENS
     body["stream"] = stream
     if response_format:
         body["response_format"] = {"type": "json_object"}
@@ -69,7 +82,7 @@ def bedrock_request(model_id: str, system: str, user: str, *, stream=False) -> t
 def gemini_request(model: str, system: str, user: str, *, stream=False, json_mime=True) -> tuple[str, dict]:
     path = (f"/gemini/v1beta/models/{model}:streamGenerateContent?alt=sse" if stream
             else f"/gemini/v1beta/models/{model}:generateContent")
-    config: dict = {"temperature": 0}
+    config: dict = {"temperature": 0, "maxOutputTokens": MAX_TOKENS_REASONING}
     if json_mime:
         config["responseMimeType"] = "application/json"
     return path, {
@@ -218,6 +231,15 @@ def parse(family: str, stream: bool, body: bytes, content_type: str = "") -> str
             return parse_bedrock_stream(body)
         return parse_bedrock(json.loads(text))
     return parse_gemini_sse(text) if looks_streamed else parse_gemini(json.loads(text))
+
+
+_CUT_OFF = re.compile(rb'"(?:finish_reason|stopReason|stop_reason|finishReason)"\s*:\s*"(length|max_tokens|MAX_TOKENS)"')
+
+
+def stop_reason(body: bytes) -> str | None:
+    """'max_tokens' if the provider says it stopped at the output limit (OpenAI finish_reason "length",
+    Bedrock stopReason "max_tokens", Gemini finishReason "MAX_TOKENS"), streamed or not; else None."""
+    return "max_tokens" if _CUT_OFF.search(body or b"") else None
 
 
 def usage_of(body: bytes) -> dict | None:

@@ -20,8 +20,8 @@ Operating guidance:
 - If you lack access to something, ask another agent who has it.
 - Plan every tool call needed to resolve the break end to end, in order. The documents below are already retrieved, so do not re-read them.
 
-Respond with JSON only, in exactly this shape:
-{"plan": [{"tool": "<tool name>", "args": {...}, "why": "<one short sentence>"}]}
+Respond with only one JSON object, in exactly this shape:
+{"plan": [{"tool": "<tool name>", "args": {...}, "why": "<at most 8 words>"}]}
 
 ## User
 

@@ -34,8 +34,10 @@ def play(speed=None, instant=True, mock_plan="compromised"):
 def test_script_shape():
     assert sum(1 for s in STEPS if s.keyview) == 8
     assert [s.act for s in STEPS] == sorted(s.act for s in STEPS)
-    assert ACTS[6]["start"] + 30 == END == 300
-    assert [ACTS[a]["start"] for a in range(1, 7)] == [0, 25, 110, 140, 225, 270]
+    assert END == 300
+    assert [ACTS[a]["start"] for a in range(1, 7)] == [0, 25, 80, 110, 140, 225]
+    assert [ACTS[a]["title"] for a in range(1, 7)] == ["Discover", "Shadow and learn", "People sign", "Enforce",
+                                                      "Attack", "Tighten and prove"]       # the deck's Prototype chapter
     for s in STEPS:
         nxt = [x for x in STEPS if x.act == s.act + 1]
         if nxt:
@@ -69,9 +71,9 @@ def test_prefetch_order(mock_llm, token):
     assert [j for _, j in jobs] == ["rulebook", "plan", "case", "diff"]     # four live calls per run
     assert jobs[0][0] == 0                                     # the rulebook draft goes out at Start
     assert ACTS[2]["start"] <= jobs[1][0] < ACTS[2]["start"] + 5   # the plan at the start of Act 2
-    assert ACTS[4]["start"] < jobs[2][0] < ACTS[5]["start"]   # case at the first Act 4 denial
-    assert ACTS[4]["start"] < jobs[3][0] < ACTS[5]["start"]   # diff as soon as the case is ready
-    roles = [e["payload"]["role"] for e in d.run.events if e["kind"] == "llm" and e["payload"]["status"] == "ok"]
+    assert ACTS[5]["start"] < jobs[2][0] < ACTS[6]["start"]   # case at the first Act 5 denial
+    assert ACTS[5]["start"] < jobs[3][0] < ACTS[6]["start"]   # diff as soon as the case is ready
+    roles = [e["payload"]["role"] for e in d.run.events if e["kind"] == "llm" and e["payload"]["status"] == "used"]
     assert roles == ["investigator", "agent", "investigator", "investigator"]
 
 
@@ -146,7 +148,7 @@ def test_llm_timeout_pauses_with_a_plain_message(mock_llm, token):
     try:
         d = asyncio.run(go())
         errs = [e["payload"] for e in d.run.events if e["kind"] == "error" and e["payload"].get("message")]
-        assert d.paused and errs and errs[-1]["kind"] == "timeout" and "No result" in errs[-1]["message"]
+        assert d.paused and errs and errs[-1]["kind"] == "timeout" and "No reply" in errs[-1]["message"]
     finally:
         director_mod.STEPS[:] = orig
 
@@ -160,7 +162,7 @@ def test_agent_resists_uses_labelled_recorded_plan(mock_llm, token):
     assert banner == ["The model declined the hidden instruction. Good — but models don't always. "
                       "Replaying a recorded compromised plan to test the controls."]
     assert any(p.get("plan_source") == "recorded" for p in panels)
-    rules = [e["payload"]["rule"] for e in d.run.events if e["kind"] == "decision" and e["act"] == 4]
+    rules = [e["payload"]["rule"] for e in d.run.events if e["kind"] == "decision" and e["act"] == 5]
     assert rules == ["R-PII-01", "R-DLG-02", "R-EGR-01"]
 
 

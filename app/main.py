@@ -3,8 +3,9 @@ from __future__ import annotations
 
 import asyncio
 import json
+import time
 
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, Header, HTTPException, Request
 from fastapi.responses import JSONResponse, PlainTextResponse, Response, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
@@ -15,6 +16,7 @@ from app.core.audit import build_pack
 from app.demo import acts
 from app.demo.director import SPEEDS, Director
 from app.demo.keyviews import KeyViews
+from app.demo.preflight import run_preflight
 from app.events import Bus
 from app.llm.catalog import FOUNDRY_MODELS, OPENROUTER_MODELS, RECOMMENDED, short_name
 from app.settings import FOUNDRY_BASE_URL, FOUNDRY_DEFAULT_PROJECT, WEB_DIR, ca_bundle
@@ -54,7 +56,21 @@ def _test_dict(t) -> dict | None:
             "message": t.message, "variant": t.variant}
 
 
-def connection_status() -> dict:
+def _switch_options(role: str) -> list[dict]:
+    """Models the pause card can switch a role to: every model that passed a live test this session first,
+    then the catalogue's JSON-mode models (tested live before use)."""
+    c = llm.CONNECTION
+    out = [{"ref": ref, "name": short_name(ref), "tested": True, "latency_ms": t.latency_ms}
+           for ref, t in c.tested.items() if t.ok and ref != c.models.get(role)]
+    if c.settings.provider == "foundry":
+        for m in FOUNDRY_MODELS:
+            if m["family"] in ("azure", "openai") and m["ref"] not in c.tested and m["ref"] != c.models.get(role) \
+                    and not m["ref"].split(":")[1].startswith(("o1", "gpt-5")):
+                out.append({"ref": m["ref"], "name": short_name(m["ref"]), "tested": False})
+    return out[:8]
+
+
+def connection_status(console: str | None = None) -> dict:
     c = llm.CONNECTION
     run = director.run
     return {
@@ -69,6 +85,10 @@ def connection_status() -> dict:
         "run": {"active": bool(run and not run.done), "exists": run is not None, "act": run.act if run else 0,
                 "done": bool(run and run.done), "closed": bool(run and run.closed)},
         "keyviews": keyviews.available,
+        "switch": {r: _switch_options(r) for r in llm.ROLES},
+        "preflight": c.preflight,
+        "controller": {"set": director.controller is not None,
+                       "you": console is not None and director.controller == console},
     }
 
 
@@ -80,24 +100,31 @@ def catalog() -> dict:
 
 
 @app.get("/api/connection/status")
-def status() -> dict:
-    return connection_status()
+def status(x_console_id: str | None = Header(default=None)) -> dict:
+    return connection_status(_console(x_console_id))
 
 
 @app.post("/api/connection/test")
-async def test_connection(req: TestRequest) -> dict:
+async def test_connection(req: TestRequest, x_console_id: str | None = Header(default=None)) -> dict:
     if req.provider not in ("foundry", "openrouter"):
         raise HTTPException(400, "Provider must be foundry or openrouter.")
     if any(r not in req.models or not req.models[r].strip() for r in llm.ROLES):
         raise HTTPException(400, "Pick a model for both roles.")
-    if req.token and req.token.strip():
-        secrets_store.set(req.token)
+    c = llm.CONNECTION
+    try:
+        project = secrets_store.clean(req.project, secrets_store.SUFFIX_NOT_SENDABLE) or FOUNDRY_DEFAULT_PROJECT
+        if req.token and not secrets_store.is_masked_echo(req.token) and secrets_store.clean(req.token):
+            secrets_store.set(req.token)
+            c.tested, c.preflight = {}, None          # earlier tests proved a different token
+    except ValueError as e:                  # a stray character pasted: say so plainly, never a 500
+        raise HTTPException(400, str(e)) from None
     token = secrets_store.get()
     if not token:
         raise HTTPException(400, "Paste a token first.")
-    c = llm.CONNECTION
+    if c.settings.provider != req.provider:
+        c.tested, c.preflight = {}, None
     c.settings = llm.Settings(provider=req.provider,
-                              project=(req.project or FOUNDRY_DEFAULT_PROJECT).strip(),
+                              project=project,
                               base_url=(req.base_url or FOUNDRY_BASE_URL).strip(),
                               ca_bundle=(req.ca_bundle or "").strip() or None)
     c.models = {r: req.models[r].strip() for r in llm.ROLES}
@@ -105,30 +132,49 @@ async def test_connection(req: TestRequest) -> dict:
     results = await asyncio.gather(*(llm.test_model(req.provider, c.models[r], token, c.settings)
                                      for r in llm.ROLES))
     c.tests = dict(zip(llm.ROLES, results))
-    return connection_status()
+    c.tested.update({t.model_ref: t for t in results})
+    return connection_status(_console(x_console_id))
 
 
 @app.post("/api/connection/token")
 def refresh_token(req: TokenRequest) -> dict:
     """Mid-demo: a fresh token after a 401/403. The paused call is retried on resume."""
-    if not req.token.strip():
-        raise HTTPException(400, "Paste a token.")
-    secrets_store.set(req.token)
+    try:
+        if secrets_store.is_masked_echo(req.token) or not secrets_store.clean(req.token):
+            raise HTTPException(400, "Paste a fresh token.")
+        secrets_store.set(req.token)
+    except ValueError as e:
+        raise HTTPException(400, str(e)) from None
     return connection_status()
 
 
 @app.post("/api/connection/forget")
 def forget() -> dict:
     secrets_store.clear()
-    llm.CONNECTION.tests = {}
+    llm.CONNECTION.tests, llm.CONNECTION.tested, llm.CONNECTION.preflight = {}, {}, None
     return connection_status()
 
 
 # --- Demo control ------------------------------------------------------------------------------------
+#
+# One director, one controlling tab. The tab that starts a run controls it; any other tab is a read-only
+# viewer until the presenter clicks "Take control" there. A double-clicked Start is one run.
 
 class Control(BaseModel):
     cmd: str
     value: float | None = None
+
+
+class SwitchRequest(BaseModel):
+    role: str
+    model: str
+
+
+_start_lock = asyncio.Lock()
+
+
+def _console(header: str | None) -> str:
+    return (header or "default").strip()[:64] or "default"
 
 
 def _require_gate() -> None:
@@ -136,15 +182,42 @@ def _require_gate() -> None:
         raise HTTPException(409, "Test the connection for both roles first. The demo needs a live model.")
 
 
+def _require_controller(console: str) -> None:
+    if director.controller is not None and director.controller != console:
+        raise HTTPException(403, "This tab is a viewer. Use Take control to drive the demo from here.")
+
+
+def _active() -> bool:
+    run = director.run
+    return bool(run and not run.done and director.task and not director.task.done())
+
+
 @app.post("/api/demo/start")
-async def start() -> dict:
+async def start(x_console_id: str | None = Header(default=None)) -> dict:
     _require_gate()
-    run = await director.start()
+    console = _console(x_console_id)
+    async with _start_lock:
+        run = director.run
+        if _active():
+            if director.controller != console:
+                raise HTTPException(409, "A run is already playing in another tab. This tab is a viewer: "
+                                         "use Take control to drive it.")
+            if time.monotonic() - director.started_mono < 3:      # a double click: the same run
+                return {"run_id": run.id}
+        director.controller = console
+        run = await director.start(fresh=True)
     return {"run_id": run.id}
 
 
+@app.post("/api/demo/take_control")
+def take_control(x_console_id: str | None = Header(default=None)) -> dict:
+    director.controller = _console(x_console_id)
+    return connection_status(director.controller)
+
+
 @app.post("/api/demo/control")
-async def control(c: Control) -> dict:
+async def control(c: Control, x_console_id: str | None = Header(default=None)) -> dict:
+    _require_controller(_console(x_console_id))
     if c.cmd in ("restart", "jump"):
         _require_gate()
     if director.run is None and c.cmd != "speed":
@@ -156,27 +229,65 @@ async def control(c: Control) -> dict:
     elif c.cmd == "next":
         director.next_step()
     elif c.cmd == "restart":
-        await director.start()
+        async with _start_lock:
+            await director.start()
     elif c.cmd == "jump" and c.value and 1 <= int(c.value) <= 6:
         await director.jump(int(c.value))
     elif c.cmd == "speed" and c.value in SPEEDS:
         director.set_speed(float(c.value))
+    elif c.cmd in ("retry", "wait"):
+        if not director.retry(c.cmd):
+            raise HTTPException(409, "Nothing to retry.")
     else:
         raise HTTPException(400, f"Unknown command {c.cmd}.")
     return {"ok": True}
 
 
+@app.post("/api/demo/switch_model")
+async def switch_model(req: SwitchRequest, x_console_id: str | None = Header(default=None)) -> dict:
+    """Pause card: switch a role's model. A model not yet tested this session gets a live test first."""
+    _require_controller(_console(x_console_id))
+    if req.role not in llm.ROLES:
+        raise HTTPException(400, "Unknown role.")
+    c = llm.CONNECTION
+    token = secrets_store.get()
+    if not token:
+        raise HTTPException(400, "Paste a token first.")
+    t = c.tested.get(req.model)
+    if t is None or not t.ok:
+        t = await llm.test_model(c.settings.provider, req.model, token, c.settings)
+        c.tested[req.model] = t
+    if not t.ok:
+        raise HTTPException(400, f"{short_name(req.model)} failed its live test: {t.message}")
+    c.models[req.role] = req.model
+    c.tests[req.role] = t
+    director.switch_model(req.role, req.model)
+    return connection_status(_console(x_console_id))
+
+
 @app.post("/api/demo/approve")
-def approve() -> dict:
+def approve(x_console_id: str | None = Header(default=None)) -> dict:
+    _require_controller(_console(x_console_id))
     director.approve()
     return {"ok": True}
 
 
 @app.post("/api/demo/extra")
-async def extra() -> dict:
+async def extra(x_console_id: str | None = Header(default=None)) -> dict:
+    _require_controller(_console(x_console_id))
     if not await director.extra():
         raise HTTPException(409, "The extra scenario runs once, after the close card.")
     return {"ok": True}
+
+
+@app.post("/api/connection/preflight")
+async def preflight() -> dict:
+    """Optional, on the gate: each of the four real contracts once, with the real prompts. Memory only."""
+    _require_gate()
+    if _active():
+        raise HTTPException(409, "Preflight runs from the connection screen, not during a run.")
+    llm.CONNECTION.preflight = await run_preflight()
+    return connection_status()
 
 
 @app.get("/api/stream")
@@ -188,9 +299,9 @@ async def stream(request: Request) -> StreamingResponse:
             run = director.run
             sent = {}
             if run:
-                for ev in list(run.events):
+                for ev in list(run.events):          # a (re)connecting tab resyncs from the run's log
                     sent[ev["run"]] = ev["seq"]
-                    yield f"data: {json.dumps(ev, ensure_ascii=False)}\n\n"
+                    yield f"id: {ev['seq']}\ndata: {json.dumps(ev, ensure_ascii=False)}\n\n"
             while not await request.is_disconnected():
                 try:
                     ev = await asyncio.wait_for(q.get(), timeout=10)
@@ -199,7 +310,7 @@ async def stream(request: Request) -> StreamingResponse:
                     continue
                 if ev["seq"] <= sent.get(ev["run"], 0):
                     continue
-                yield f"data: {json.dumps(ev, ensure_ascii=False)}\n\n"
+                yield f"id: {ev['seq']}\ndata: {json.dumps(ev, ensure_ascii=False)}\n\n"
         finally:
             bus.unsubscribe(q)
 

@@ -16,8 +16,8 @@ Rules for your draft:
   - add_condition: target = capability name; params.condition = one of deny_if_untrusted_source, max_rows, require_human; params.value as needed
 - Focus on what made this incident possible and on standing access nobody uses.
 
-Return JSON only, in exactly this shape:
-{"changes": [{"op": "<operation>", "agent": "<agent id>", "target": "<target>", "params": {}, "rationale": "<one sentence>"}]}
+Return only one JSON object, in exactly this shape:
+{"changes": [{"op": "<operation>", "agent": "<agent id>", "target": "<target>", "params": {}, "rationale": "<at most 12 words>"}]}
 
 ## User
 

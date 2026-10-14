@@ -34,6 +34,23 @@ CAPABILITIES: dict[str, Capability] = {
     "policy.update": Capability("policy", "control", "Change policy or grants"),
     "policy.approve": Capability("policy", "control", "Approve a policy change"),
 }
+# Plain language for the console: what a person would call each action, before the technical id.
+PLAIN = {
+    "trade.read": "Read a trade",
+    "settlement.read": "Read settlement status",
+    "settlement.update": "Update settlement status",
+    "ssi.amend": "Change settlement instructions",
+    "client.read_masked": "Read client record (masked)",
+    "client.read_pii": "Read client tax ID and email",
+    "refdata.read": "Read reference data",
+    "ledger.read_quarter_end": "Read quarter-end ledger",
+    "recon.update": "Update a reconciliation break",
+    "fx.read": "Read FX positions",
+    "fileshare.export": "Export client file to shared drive",
+    "external.post": "Send data outside the firm",
+    "policy.update": "Change policy or access",
+    "policy.approve": "Approve a policy change",
+}
 CONTROL_PLANE = frozenset(c for c, cap in CAPABILITIES.items() if cap.op == "control")
 CLIENT_DATA = frozenset({"client.read_masked", "client.read_pii"})
 PII_FIELDS = frozenset({"tax_id", "email", "dob"})
@@ -88,6 +105,21 @@ GUARDRAIL_TEXT = {
     "R-SSI-01": "SSI changes need maker-checker",
     "R-DLG-02": "Delegation only narrows",
     "R-SELF-01": "No agent changes policy or its own access",
+}
+
+RULE_PLAIN = {
+    "R-EGR-01": "Nothing restricted leaves the firm",
+    "R-SSI-01": "Settlement changes need a second person",
+    "R-DLG-02": "Delegation only narrows",
+    "R-SELF-01": "No agent changes its own access",
+    "R-ID-01": "Registered agent, live credential",
+    "R-CNT-01": "Contained session",
+    "R-VOL-01": "Volume limit",
+    "R-OBS-00": "Observed on day zero",
+    "R-PII-01": "Personal data needs a purpose-bound grant",
+    "R-GRANT-01": "Signed grant",
+    "R-JIT-01": "Two-minute access",
+    "R-DEF-00": "Default deny",
 }
 
 # --- Grants, delegation, envelopes ---------------------------------------------------------
@@ -215,5 +247,5 @@ class PolicyStore:
         before = self.current.version_label()
         self.current = candidate
         after = candidate.version_label()
-        self.history.append({"label": after, "note": f"{note + ': ' if note else ''}approved by {owner} ({how})"})
+        self.history.append({"label": after, "note": f"{note + ": " if note else ""}signed by {owner} ({how})"})
         return before, after
