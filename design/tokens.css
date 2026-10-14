@@ -1,0 +1,143 @@
+/*
+  Colour carries meaning everywhere in this deck, and only these meanings:
+    brand  — deterministic control (identity, policy, enforcement) and active UI
+    allow  — an action that went ahead
+    deny   — an action that was stopped
+    hold   — an action waiting for a person
+    ai     — AI in an advisory role (never grants anything)
+
+  Two themes share one set of token names. The theme is set on <html data-theme="light|dark">.
+*/
+:root,
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  --paper: #f2f5fb;
+  --surface: #ffffff;
+  --surface-2: #f8faff;
+  --ink: #141d3a;
+  --ink-2: #47506a;
+  --ink-3: #78819a;
+  --ink-4: #b3bacb;
+  --line: #dee3ef;
+  --line-strong: #c6cddf;
+  --ink-tint: #e9edf6;
+
+  --brand: #3049d1;
+  --brand-strong: #2238ad;
+  --brand-line: #3049d1;
+  --brand-tint: #e6ebfd;
+  --brand-soft: #c9d3fb;
+  --on-brand: #ffffff;
+  --on-brand-2: #d6ddff;
+
+  --deep: linear-gradient(135deg, #121a3c 0%, #1b2a6b 100%);
+  --deep-solid: #16224f;
+  --on-deep: #eef1fb;
+  --on-deep-2: #b4bfe0;
+
+  --allow: #0f8a6c;
+  --allow-tint: #dcf3eb;
+  --deny: #d12f42;
+  --deny-tint: #fde6e8;
+  --hold: #b06f00;
+  --hold-tint: #fcefd4;
+  --ai: #6a46e5;
+  --ai-tint: #eee8fd;
+
+  --glow-1: rgba(48, 73, 209, 0.12);
+  --glow-2: rgba(15, 138, 108, 0.09);
+  --glow-3: rgba(106, 70, 229, 0.08);
+  --dot: rgba(48, 73, 209, 0.16);
+
+  --shadow-sm: 0 1px 2px rgba(20, 29, 58, 0.1), 0 0 0 1px rgba(20, 29, 58, 0.04);
+  --shadow-md: 0 1px 4px rgba(20, 29, 58, 0.3);
+  --shadow-card: 0 1px 2px rgba(20, 29, 58, 0.04), 0 8px 24px -12px rgba(20, 29, 58, 0.12);
+
+  --rail-bg: linear-gradient(180deg, #111a3d 0%, #172660 100%);
+  --rail-text: #eef1fb;
+  --rail-muted: #94a1c8;
+  --rail-hover: rgba(255, 255, 255, 0.07);
+  --rail-active: rgba(255, 255, 255, 0.11);
+  --rail-accent: #8ea0ff;
+  --rail-line: rgba(255, 255, 255, 0.12);
+
+  --select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2347506a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --paper: #0b1020;
+  --surface: #131a2e;
+  --surface-2: #182038;
+  --ink: #e8ecf6;
+  --ink-2: #b0b9cf;
+  --ink-3: #8089a3;
+  --ink-4: #4b5574;
+  --line: #242d47;
+  --line-strong: #323c5c;
+  --ink-tint: #1c2540;
+
+  --brand: #4560e6;
+  --brand-strong: #5a73f0;
+  --brand-line: #8196ff;
+  --brand-tint: #1d2752;
+  --brand-soft: #2c3a7a;
+  --on-brand: #ffffff;
+  --on-brand-2: #d6ddff;
+
+  --deep: linear-gradient(135deg, #0a0f22 0%, #16215a 100%);
+  --deep-solid: #111a45;
+  --on-deep: #eef1fb;
+  --on-deep-2: #a9b4d6;
+
+  --allow: #3cc79f;
+  --allow-tint: #0f352b;
+  --deny: #ff6d7b;
+  --deny-tint: #3d1820;
+  --hold: #f2b441;
+  --hold-tint: #3a2b0c;
+  --ai: #a58fff;
+  --ai-tint: #261f4f;
+
+  --glow-1: rgba(69, 96, 230, 0.2);
+  --glow-2: rgba(60, 199, 159, 0.08);
+  --glow-3: rgba(165, 143, 255, 0.1);
+  --dot: rgba(129, 150, 255, 0.14);
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  --shadow-md: 0 1px 6px rgba(0, 0, 0, 0.6);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 30px -14px rgba(0, 0, 0, 0.6);
+
+  --rail-bg: linear-gradient(180deg, #080c1a 0%, #0f1736 100%);
+  --rail-text: #eef1fb;
+  --rail-muted: #8590b5;
+  --rail-hover: rgba(255, 255, 255, 0.06);
+  --rail-active: rgba(129, 150, 255, 0.14);
+  --rail-accent: #8ea0ff;
+  --rail-line: rgba(255, 255, 255, 0.08);
+
+  --select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23b0b9cf' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+}
+
+:root {
+  --font: 'Instrument Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  /* Type scale (modular, ~1.25) */
+  --t-xs: 0.8125rem;
+  --t-sm: 0.9375rem;
+  --t-md: 1.0625rem;
+  --t-lg: 1.3125rem;
+  --t-xl: 1.75rem;
+  --t-2xl: 2.5rem;
+  --t-3xl: 3.25rem;
+
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 16px;
+
+  --rail-w: 272px;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
