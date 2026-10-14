@@ -17,10 +17,10 @@ Work top to bottom. Tick each box when its acceptance checks pass, then commit. 
 **Accept:** tests assert the fixture counts and the shadow outcome.
 
 ## M2 — Governance core (the most important milestone)
-- [ ] Request envelope and decision models (SPEC §6.1–6.2).
-- [ ] Rules as data with ids and versions (SPEC §6.3). Policy engine with enforce and shadow modes.
-- [ ] Delegation intersection, JIT envelopes on a demo clock, containment actions, verifier, right-sizing, audit hash chain.
-- [ ] One test per invariant in SPEC §6.4, plus the three Act 4 denials with the exact rule ids.
+- [x] Request envelope and decision models (SPEC §6.1–6.2).
+- [x] Rules as data with ids and versions (SPEC §6.3). Policy engine with enforce and shadow modes.
+- [x] Delegation intersection, JIT envelopes on a demo clock, containment actions, verifier, right-sizing, audit hash chain.
+- [x] One test per invariant in SPEC §6.4, plus the three Act 4 denials with the exact rule ids.
 
 **Accept:** `pytest -q` is green. Reading `policy_engine.py` takes under five minutes.
 
