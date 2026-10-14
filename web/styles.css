@@ -26,6 +26,7 @@ input:focus, select:focus { outline: 2px solid var(--brand-line); outline-offset
 .seg button { padding: 6px 14px; border-radius: 999px; font-size: var(--t-sm); color: var(--ink-2); }
 .seg button:hover { color: var(--ink); }
 .seg button[aria-checked='true'] { background: var(--surface); color: var(--brand-line); font-weight: 700; box-shadow: var(--shadow-sm); }
+a.btn { text-decoration: none; }
 .btn { display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border-radius: var(--r-sm); font-size: var(--t-sm); font-weight: 700; white-space: nowrap; }
 .btn-primary { background: linear-gradient(135deg, var(--brand), var(--brand-strong)); color: var(--on-brand); }
 .btn-primary:hover:not(:disabled) { background: var(--brand-strong); }
@@ -145,7 +146,9 @@ input:focus, select:focus { outline: 2px solid var(--brand-line); outline-offset
 .trow.ungoverned { border-style: dashed; background: transparent; }
 .trow.ungoverned.harm { border-color: var(--deny); }
 .trow.selected { outline: 2px solid var(--brand-line); }
-.tl-empty { color: var(--ink-3); font-size: var(--t-sm); padding: 18px 6px; }
+.tl-empty { color: var(--ink-3); font-size: var(--t-sm); padding: 18px 10px; display: flex; flex-direction: column; gap: 10px; }
+.tl-empty b { color: var(--ink-2); font-size: var(--t-md); }
+.tl-empty .ghost { height: 44px; border-radius: var(--r-sm); border: 1px dashed var(--line-strong); opacity: 0.6; }
 .tl-more { color: var(--ink-3); font-size: var(--t-xs); text-align: center; padding-top: 2px; }
 
 /* --- act panel --- */
@@ -156,7 +159,7 @@ input:focus, select:focus { outline: 2px solid var(--brand-line); outline-offset
 .card.deny { border-color: color-mix(in srgb, var(--deny) 45%, transparent); background: color-mix(in srgb, var(--deny-tint) 55%, var(--surface)); }
 .card.allow { border-color: color-mix(in srgb, var(--allow) 40%, transparent); }
 .card.brand { border-color: var(--brand-soft); background: color-mix(in srgb, var(--brand-tint) 60%, var(--surface)); }
-.card.info { background: var(--ink-tint); border-color: transparent; color: var(--ink-2); font-size: var(--t-sm); }
+.card.info { display: block; background: var(--ink-tint); border-color: transparent; color: var(--ink-2); font-size: var(--t-sm); }
 .card.deep { background: var(--deep); color: var(--on-deep); border-color: transparent; }
 .card.deep .dim { color: var(--on-deep-2); }
 .card .t { font-weight: 700; font-size: var(--t-sm); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
@@ -177,9 +180,9 @@ table.reg tr.assigned td { animation: assigned 1.6s var(--ease); }
 .src b { display: block; font-size: var(--t-md); color: var(--ink); }
 .strip { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; position: relative; }
 .node { border-radius: var(--r-md); border: 1.5px solid var(--line-strong); padding: 8px; background: var(--surface); position: relative; font-size: var(--t-sm); }
-.node .k { font-size: var(--t-xs); color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.06em; }
-.node .v { font-weight: 700; line-height: 1.25; }
-.node .s { font-size: var(--t-xs); color: var(--ink-3); }
+.node .k { font-size: 0.68rem; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.04em; }
+.node .v { font-weight: 700; line-height: 1.25; overflow-wrap: anywhere; }
+.node .s { font-size: var(--t-xs); color: var(--ink-3); overflow-wrap: anywhere; line-height: 1.3; }
 .node.good { border-color: var(--brand-line); } .node.good .s { color: var(--brand-line); }
 .node.bad { border-color: color-mix(in srgb, var(--deny) 60%, transparent); } .node.bad .s { color: var(--deny); }
 .node + .node::before { content: '→'; position: absolute; left: -15px; top: 50%; transform: translateY(-50%); color: var(--ink-3); }
@@ -216,10 +219,10 @@ table.isect tr.focus td { background: color-mix(in srgb, var(--deny-tint) 60%, t
 .stat b { display: block; font-size: 1.6rem; line-height: 1.15; }
 .stat span { font-size: var(--t-xs); color: var(--ink-2); }
 .evgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.ev { border-radius: var(--r-md); padding: 10px 12px; background: var(--surface-2); border: 1px solid var(--line); display: flex; flex-direction: column; gap: 2px; }
-.ev b { font-size: 1.45rem; line-height: 1.15; }
-.ev .l { font-size: var(--t-sm); color: var(--ink); font-weight: 700; }
-.ev .d { font-size: var(--t-xs); color: var(--ink-3); }
+.ev { border-radius: var(--r-md); padding: 8px 10px; background: var(--surface-2); border: 1px solid var(--line); display: flex; flex-direction: column; gap: 2px; }
+.ev b { font-size: 1.35rem; line-height: 1.15; }
+.ev .l { font-size: var(--t-xs); color: var(--ink); font-weight: 700; line-height: 1.3; }
+.ev .d { font-size: 0.75rem; color: var(--ink-3); line-height: 1.3; }
 .downloads { display: flex; gap: 8px; flex-wrap: wrap; }
 .close ol { list-style: decimal; padding-left: 20px; display: flex; flex-direction: column; gap: 2px; font-size: var(--t-sm); }
 
@@ -285,3 +288,15 @@ body.still *, body.still *::before, body.still *::after { animation: none !impor
 /* inline icons everywhere outside the map */
 .panel svg, .caption svg, .chip svg, .kv-badge svg, .results svg, .modal svg, .trow svg, .film svg { width: 14px; height: 14px; flex: none; vertical-align: -2px; }
 .ibtn svg { width: 16px; height: 16px; }
+
+/* close card: over the map and timeline at the end of the run */
+.closewrap { position: fixed; left: 14px; right: calc(34% + 2px); top: 98px; bottom: 90px; z-index: 15; display: grid; place-items: center;
+  background: color-mix(in srgb, var(--paper) 55%, transparent); backdrop-filter: blur(3px); border-radius: var(--r-lg); }
+.closecard { position: relative; width: min(620px, 90%); background: var(--deep); color: var(--on-deep); border-radius: var(--r-lg);
+  padding: 26px 30px; display: flex; flex-direction: column; gap: 12px; box-shadow: var(--shadow-card); }
+.closecard .eyebrow { font-size: var(--t-xs); letter-spacing: 0.08em; text-transform: uppercase; color: var(--on-deep-2); font-weight: 700; }
+.closecard h3 { font-size: var(--t-xl); line-height: 1.2; }
+.closecard ol { list-style: decimal; padding-left: 24px; display: flex; flex-direction: column; gap: 4px; font-size: var(--t-lg); }
+.closecard .x { position: absolute; top: 14px; right: 14px; background: transparent; color: var(--on-deep-2); border-color: rgba(255,255,255,0.2); }
+.closecard .btn-quiet { background: transparent; color: var(--on-deep); border-color: rgba(255,255,255,0.3); }
+.mode-ungoverned .m-plane, .mode-ungoverned .m-gov { opacity: 0.3; }

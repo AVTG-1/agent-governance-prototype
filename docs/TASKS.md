@@ -50,10 +50,10 @@ Work top to bottom. Tick each box when its acceptance checks pass, then commit. 
 **Accept:** the timing test is green; restart fully resets state.
 
 ## M6 — Console UI
-- [ ] Build the UI as a pure reducer of events: `state = events.reduce(apply, initialState)`, then `render(state)`. Keep no state outside it. Key views (M8) depend on this, so get it right here.
-- [ ] The layout in SPEC §4.2 and `docs/DESIGN.md`: header with act progress and controls, estate map, live timeline, act panel, caption bar.
-- [ ] Per-act panels: registry, wrap strip plus shadow counters, enforcement plus envelope countdown, poisoned note plus plan plus capability intersection plus case, diff plus verifier plus replay plus approval modal, evidence.
-- [ ] Light and dark themes (D key); keyboard controls; legible at 1440×900 and 1920×1080 with no page scroll.
+- [x] Build the UI as a pure reducer of events: `state = events.reduce(apply, initialState)`, then `render(state)`. Keep no state outside it. Key views (M8) depend on this, so get it right here.
+- [x] The layout in SPEC §4.2 and `docs/DESIGN.md`: header with act progress and controls, estate map, live timeline, act panel, caption bar.
+- [x] Per-act panels: registry, wrap strip plus shadow counters, enforcement plus envelope countdown, poisoned note plus plan plus capability intersection plus case, diff plus verifier plus replay plus approval modal, evidence.
+- [x] Light and dark themes (D key); keyboard controls; legible at 1440×900 and 1920×1080 with no page scroll.
 
 **Accept:** manual check against the DESIGN checklist; screenshot both themes into `docs/screens/` if a headless browser is available.
 

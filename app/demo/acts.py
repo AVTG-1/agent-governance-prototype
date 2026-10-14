@@ -375,7 +375,7 @@ async def attack_governed(d, step) -> None:
         d.panel("attack", governed=list(rows))
         if call.chain and len(call.chain) > 1 and o.decision.rule == "R-DLG-02":
             d.caption(CAPTIONS["delegation"])
-            focus = [c for c in ("client.read_pii", "client.read_masked", "settlement.read", "trade.read")]
+            focus = ["client.read_pii", "client.read_masked", "trade.read"]
             table = intersection_table(call.chain, w.policy.current, call.purpose or "reconciliation", focus)
             d.panel("attack", intersection={"caller": call.chain[0], "callee": call.chain[-1],
                                             "task": call.purpose, "requested": call.capability, "rows": table,

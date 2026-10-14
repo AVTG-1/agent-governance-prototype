@@ -2,7 +2,7 @@
 
 A self-playing, 5-minute demo showing how a control plane governs the AI agents that bridge a bank's post-trade systems. It finds the agents, wraps an existing one without changing its code, observes before enforcing, stops a fooled agent, tightens access safely and produces measured evidence. Everything is synthetic.
 
-**Status:** specification kit. Claude Code builds the app from `SPEC.md` and `docs/TASKS.md`; see `docs/KICKOFF_PROMPT.md`.
+**Status:** built (milestones M0–M9 in `docs/TASKS.md`). Interpretations of the spec are in `docs/DECISIONS.md`.
 
 ## Repository map
 
@@ -18,10 +18,15 @@ A self-playing, 5-minute demo showing how a control plane governs the AI agents 
 | `design/` | Colour tokens and fonts from the deck |
 | `reference/` | The proposal deck and background research (read-only) |
 | `scripts/check_no_secrets.py` | Fails if anything that looks like a credential is committed |
+| `app/core/` | The governance core: policy engine, delegation, envelopes, verifier, containment, audit chain |
+| `app/demo/` | The 5-minute script, the director and key views |
+| `app/llm/` | Foundry and OpenRouter client (`mock.py` is for tests only) |
+| `web/` | The console: plain HTML, CSS and one ES module, no build step |
+| `tests/` | Invariant tests and the rest (`python -m pytest -q`, offline) |
 
-## Run on the work laptop (once built)
+## Run on the work laptop
 
-Use PowerShell or Anaconda Prompt, from the repository folder:
+Python 3.11 or newer. Use PowerShell or Anaconda Prompt, from the repository folder:
 
 ```powershell
 python -m venv .venv
@@ -30,7 +35,11 @@ pip install -r requirements.txt
 python run.py
 ```
 
-With conda instead: `conda create -n agentgov python=3.11 -y`, then `conda activate agentgov`, then `pip install -r requirements.txt`.
+With conda instead: `conda create -n agentgov python=3.11 -y`, then `conda activate agentgov`, then `pip install -r requirements.txt` and `python run.py`.
+
+If PowerShell refuses to run `activate` (execution policy), either run `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` once, or skip activation and call the venv's Python directly: `.venv\Scripts\python -m pip install -r requirements.txt`, then `.venv\Scripts\python run.py`.
+
+`run.py` serves on `http://127.0.0.1:8765` (this machine only) and opens the browser. Stop it with Ctrl+C. If the browser doesn't open, browse to that address yourself.
 
 The browser opens on the **connection screen**:
 1. Keep **LLM Foundry** selected (recommended). Paste a **fresh** token; the project suffix defaults to `llmproxy-playground`.
@@ -41,16 +50,22 @@ After the run, press **K** (or click **Key views**) to jump back to the eight ke
 
 The token is held in memory only. It is never saved, logged or shown again. If it expires mid-run, the demo pauses and asks for a new one.
 
-**Behind a corporate proxy:** the app honours `HTTPS_PROXY`. If TLS fails, set `LLM_CA_BUNDLE` to your corporate CA file path. Never disable verification.
+**Behind a corporate proxy:** the app honours `HTTPS_PROXY` and `NO_PROXY`. In PowerShell: `$env:HTTPS_PROXY = "http://proxy.example:8080"` before `python run.py`. If TLS fails, set `$env:LLM_CA_BUNDLE = "C:\path\to\corporate-ca.pem"` (or paste the path in the connection screen's *Advanced* section). Never disable verification.
+
+**Controls during the run:** Space pause/resume · → next step · R restart · click an act to jump · 0.5×/1×/2× speed · D theme · K key views · click a timeline row for its full decision record. The owner approval in Act 5 auto-approves after 8 s, or click *Approve*.
+
+**Tests (offline, no token):** `python -m pytest -q` and `python scripts/check_no_secrets.py`.
 
 **Check connectivity before the meeting:**
 
 ```powershell
 python scripts\probe_llm.py --provider foundry --model azure:gpt-4.1-mini
 python scripts\probe_llm.py --provider foundry --model bedrock:claude-sonnet-4.5
+python scripts\probe_llm.py --provider foundry --model bedrock:claude-sonnet-4.5 --each-variant
+python scripts\probe_llm.py --provider foundry --model gemini:gemini-3-flash-preview --each-variant
 ```
 
-The script asks for the token interactively.
+The script asks for the token interactively (input hidden) and reports which endpoint variant worked (for example `converse (non-stream)` or `converse_stream`). `--each-variant` tries every variant separately. `--list` prints the catalogue.
 
 ## Rules for this repository
 

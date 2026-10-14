@@ -252,9 +252,9 @@ const AGENTS = ['recon-agent', 'settlement-agent', 'enrichment-agent', 'kyc-agen
 const AGENT_NAME = { 'recon-agent': 'Reconciliation', 'settlement-agent': 'Settlement', 'enrichment-agent': 'Enrichment', 'kyc-agent': 'KYC refresh', investigator: 'AI investigator' };
 const SYSTEMS = [['trade', 'Trade capture', 'REST API'], ['settlement', 'Settlement / SSIs', 'REST API'], ['recon', 'Reconciliation', 'Database'],
   ['client', 'Client master', 'Database · PII'], ['refdata', 'Reference data', 'REST API'], ['ledger', 'General ledger', 'Batch file']];
-const W = 440, H = 560, AX = 6, AW = 132, AH = 58, SX = 304, SW = 130, SH = 46, PX = 168, PW = 106, PY = 50, PH = 382;
-const agentY = (id) => 28 + AGENTS.indexOf(id) * 96;
-const sysY = (id) => (id === 'external' ? 486 : id === 'fileshare' || id === 'fx' || id === 'policy' ? 400 : 22 + SYSTEMS.findIndex((x) => x[0] === id) * 64);
+const W = 440, H = 640, AX = 6, AW = 132, AH = 60, SX = 304, SW = 130, SH = 48, PX = 168, PW = 106, PY = 56, PH = 452;
+const agentY = (id) => 34 + AGENTS.indexOf(id) * 116;
+const sysY = (id) => (id === 'external' ? 566 : id === 'fileshare' || id === 'fx' || id === 'policy' ? 470 : 26 + SYSTEMS.findIndex((x) => x[0] === id) * 76);
 
 function agentSub(a) {
   const f = a.flags || [];
@@ -272,7 +272,7 @@ function edgePath(e) {
   const a = [AX + AW, ay], s = [SX, sy];
   if (e.mode === 'ungoverned') {
     const top = (ay + sy) / 2 < 280;
-    const cy = top ? 8 : H - 8;
+    const cy = top ? 6 : H - 6;
     return `M${a[0]},${a[1]} C${PX - 10},${cy} ${PX + PW + 10},${cy} ${s[0]},${s[1]}`;
   }
   const py1 = Math.min(Math.max(ay, PY + 16), PY + PH - 16), py2 = Math.min(Math.max(sy, PY + 16), PY + PH - 16);
@@ -287,7 +287,7 @@ function delegationPath(e) {
 function renderMap(s) {
   const m = s.map;
   const known = (id) => m.agents[id] && m.agents[id].known;
-  const parts = [`<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Estate map">
+  const parts = [`<svg class="mode-${m.mode}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Estate map">
     <defs><linearGradient id="plane-grad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="var(--brand)"/><stop offset="1" stop-color="var(--brand-strong)"/></linearGradient>
     <marker id="arr" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L8,4 L0,8z" fill="var(--deny)"/></marker></defs>`];
   // discovered connections (before the plane) and governed routes (after)
@@ -300,19 +300,20 @@ function renderMap(s) {
     for (const id of AGENTS.slice(0, 4)) if (known(id)) parts.push(`<path class="m-gov" d="M${AX + AW},${agentY(id) + AH / 2} L${PX},${Math.min(Math.max(agentY(id) + AH / 2, PY + 16), PY + PH - 16)}"/>`);
     for (const [id] of SYSTEMS) parts.push(`<path class="m-gov" d="M${PX + PW},${sysY(id) + SH / 2} L${SX},${sysY(id) + SH / 2}"/>`);
   }
-  // control plane
-  const pl = m.plane ? 'm-plane' : 'm-plane off';
-  const lines = m.plane ? [['Control plane', ''], ['gateway', 'sub'], ['Envoy in prod.', 'sub'], ['', ''], ['policy engine', 'sub'], ['Cedar in prod.', 'sub'], ['', ''], ['identity broker', 'sub'], ['SPIFFE in prod.', 'sub'], ['', ''], ['audit chain', 'sub'], ['SHA-256', 'sub']]
-    : [['No control', ''], ['plane yet', '']];
-  parts.push(`<g class="${pl}"><rect x="${PX}" y="${PY}" width="${PW}" height="${PH}" rx="16"/>${lines.map(([t, c], i) => `<text class="${c}" x="${PX + PW / 2}" y="${PY + 34 + i * 17}" text-anchor="middle">${esc(t)}</text>`).join('')}</g>`);
   // decision edges: newest few, newest flashes
-  const edges = Object.values(m.edges).sort((a, b) => a.seq - b.seq).slice(-7);
+  const want = m.mode === 'ungoverned' ? 'ungoverned' : 'governed';
+  const edges = Object.values(m.edges).filter((e) => e.mode === want).sort((a, b) => a.seq - b.seq).slice(-7);
   const newest = edges.length ? edges[edges.length - 1].seq : -1;
   for (const e of edges) {
     const cls = `m-edge ${e.decision} ${e.mode === 'ungoverned' ? 'ungoverned' : ''} ${e.seq === newest ? 'fresh' : 'old'}`;
     parts.push(`<path class="${cls}" d="${edgePath(e)}"/>`);
     if (e.via) parts.push(`<path class="${cls}" d="${delegationPath(e)}" marker-end="url(#arr)"/>`);
   }
+  // control plane
+  const pl = m.plane ? 'm-plane' : 'm-plane off';
+  const lines = m.plane ? [['Control plane', ''], ['gateway', 'sub'], ['Envoy in prod.', 'sub'], ['', ''], ['policy engine', 'sub'], ['Cedar in prod.', 'sub'], ['', ''], ['identity broker', 'sub'], ['SPIFFE in prod.', 'sub'], ['', ''], ['audit chain', 'sub'], ['SHA-256', 'sub']]
+    : [['No control', ''], ['plane yet', '']];
+  parts.push(`<g class="${pl}"><rect x="${PX}" y="${PY}" width="${PW}" height="${PH}" rx="16"/>${lines.map(([t, c], i) => `<text class="${c}" x="${PX + PW / 2}" y="${PY + 34 + i * 17}" text-anchor="middle">${esc(t)}</text>`).join('')}</g>`);
   // agents
   for (const id of AGENTS) {
     const a = m.agents[id] || { id };
@@ -330,7 +331,7 @@ function renderMap(s) {
       <text class="m-node" x="${SX + 10}" y="${sysY(id) + 19}" style="fill:var(--ink);font-size:12.5px;font-weight:700">${esc(name)}</text>
       <text x="${SX + 10}" y="${sysY(id) + 35}" style="fill:var(--ink-3);font-size:10.5px">${esc(iface)}</text></g>`);
   }
-  parts.push(`<path class="m-boundary" d="M${SX - 12},${H - 96} H${W - 2}"/><text class="m-label" x="${W - 4}" y="${H - 102}" text-anchor="end">FIRM BOUNDARY</text>`);
+  parts.push(`<path class="m-boundary" d="M${SX - 12},${sysY('external') - 22} H${W - 2}"/><text class="m-label" x="${W - 4}" y="${sysY('external') - 28}" text-anchor="end">FIRM BOUNDARY</text>`);
   parts.push(`<g class="m-sys outside"><rect x="${SX}" y="${sysY('external')}" width="${SW}" height="${SH}" rx="8"/>
     <text x="${SX + 10}" y="${sysY('external') + 19}" style="fill:var(--ink);font-size:12.5px;font-weight:700">Outside the firm</text>
     <text x="${SX + 10}" y="${sysY('external') + 35}" style="fill:var(--ink-3);font-size:10.5px">Internet</text></g>`);
@@ -347,7 +348,11 @@ function rowsFit() {
 }
 
 function renderTimeline(s) {
-  if (!s.timeline.length) return `<div class="tl-empty">Decisions appear here once the control plane is in the path. Each row shows the rule and version that decided it, and how long it took.</div>`;
+  if (!s.timeline.length) {
+    return `<div class="tl-empty"><b>Nothing is decided yet, so nothing is recorded.</b>
+      <span>Agents reach systems directly today. Once the control plane is in the path, every call appears here with the rule and version that decided it and how long the decision took.</span>
+      <div class="ghost"></div><div class="ghost"></div><div class="ghost"></div></div>`;
+  }
   const n = rowsFit();
   const rows = s.timeline.slice(-n).reverse();
   const newest = s.timeline[s.timeline.length - 1].seq;
@@ -394,7 +399,11 @@ function head(title, right = '') { return `<div class="ph"><h3>${esc(title)}</h3
 
 function panelRegistry(p) {
   const out = [head('Discover · agent registry', p.scanning ? '<span class="tag tag-brand pulse">scanning signals</span>' : (p.rows || []).length ? `<span class="tag tag-info">${p.rows.length} agents</span>` : '')];
-  out.push(`<div class="sources">${(p.sources || []).map((x) => `<div class="src"><b>${x.count == null ? '…' : x.count}</b>${esc(x.name)}</div>`).join('')}</div>`);
+  if (p.scanning || !(p.rows || []).length) {
+    out.push(`<div class="sources">${(p.sources || []).map((x) => `<div class="src"><b>${x.count == null ? '…' : x.count}</b>${esc(x.name)}</div>`).join('')}</div>`);
+  } else {
+    out.push(`<div class="xs dim">Signals scanned: ${(p.sources || []).map((x) => `${x.count} ${esc(x.name.toLowerCase())}`).join(' · ')}</div>`);
+  }
   if ((p.rows || []).length) {
     const hl = new Set(p.highlight || []);
     out.push(`<table class="reg"><thead><tr><th>Agent</th><th>Owner</th><th>Credential</th><th>Status</th></tr></thead><tbody>${p.rows.map((r) => {
@@ -409,20 +418,21 @@ function panelRegistry(p) {
   if ((p.findings || []).length) {
     out.push(`<div class="list">${p.findings.map((f) => `<div class="li"><span class="tag tag-deny">${ICON.warn}${esc(short(f.agent))}</span><span class="grow">${esc(f.text)}</span></div>`).join('')}</div>`);
   }
-  if (p.note) out.push(`<div class="card info">${ICON.info} ${esc(p.note)}</div>`);
   if (p.summary) {
     const x = p.summary;
-    out.push(`<div class="card brand"><div class="t">${x.agents} agents found · ${x.owned} of ${x.agents} now owned · ${x.shared_logins} on a shared human login</div><div class="xs dim">Discovery is deterministic: vault, gateway logs, database sessions, cloud roles and config files. No AI.</div></div>`);
-  }
+    out.push(`<div class="card brand"><div class="t">${x.agents} agents found · ${x.owned} of ${x.agents} now owned · ${x.shared_logins} on a shared human login</div><div class="xs">${esc(p.note || '')} Deterministic, no AI.</div></div>`);
+  } else if (p.note) out.push(`<div class="card info">${ICON.info} ${esc(p.note)}</div>`);
   return out.join('');
 }
 
 function panelObserve(p) {
   const out = [head('Wrap · reconciliation agent', p.stage === 'before' ? '<span class="tag tag-deny">before</span>' : '<span class="tag tag-brand">wrapped</span>')];
-  if (p.strip) {
+  if (p.strip && !p.shadow) {
     out.push(`<div class="strip">${p.strip.map((n) => `<div class="node ${n.state}"><div class="k">${esc(n.k)}</div><div class="v">${esc(n.label)}</div><div class="s">${esc(n.sub)}</div></div>`).join('')}</div>`);
+    if (p.honesty) out.push(`<div class="card info">${ICON.info} ${esc(p.honesty)}</div>`);
+  } else if (p.strip) {
+    out.push(`<div class="chips">${p.strip.map((n) => `<span class="tag ${n.state === 'good' ? 'tag-brand' : 'tag-info'}">${esc(n.k)}: ${esc(n.label)}</span>`).join('')}</div>`);
   }
-  if (p.honesty) out.push(`<div class="card info">${ICON.info} ${esc(p.honesty)}</div>`);
   if (p.shadow) {
     const x = p.shadow;
     out.push(head('Shadow mode · enforcement off', `<span class="tag tag-info">${esc(x.policy)}</span>`));
@@ -441,7 +451,11 @@ function panelObserve(p) {
 
 function panelEnforce(p) {
   const out = [head('Enforce', `<span class="toggle ${p.enforce ? 'on' : ''}"><span class="sw"></span>Enforcement ${p.enforce ? 'on' : 'off'}</span>`)];
-  if ((p.routine || []).length) {
+  if ((p.routine || []).length && p.need) {
+    const ok = p.routine.filter((r) => r.decision === 'allow').length;
+    const worst = Math.max(...p.routine.map((r) => r.ms));
+    out.push(`<div class="li">${tag('allow')}<span class="grow small">${ok} of ${p.routine.length} routine calls allowed by standing grants · slowest decision ${ms(worst)} · no AI in the path</span></div>`);
+  } else if ((p.routine || []).length) {
     out.push(`<div class="list">${p.routine.map((r) => `<div class="li">${tag(r.decision)}<span class="grow"><code>${esc(r.capability)}</code> <span class="dim xs">${esc(r.agent)}</span></span><span class="mono xs dim">${esc(r.rule)}</span><span class="xs dim">${ms(r.ms)}</span></div>`).join('')}</div>`);
     out.push(`<div class="xs dim">Each decision is deterministic code citing its rule. No model is in the decision path.</div>`);
   }
@@ -501,7 +515,10 @@ function panelAttack(p, s) {
   if (st === 3) {
     const plan = p.plan_source === 'recorded' ? 'recorded plan' : 'live plan';
     out.push(head('Same plan, through the control plane', `<span class="tag tag-brand">${esc(plan)}</span>`));
-    out.push(`<div class="list">${(p.governed || []).map((r) => `<div class="card ${r.decision === 'deny' ? 'deny' : r.decision === 'allow' ? 'allow' : ''}"><div class="t">${tag(r.decision)}<code>${esc(r.capability)}</code><span class="mono xs" style="color:var(--brand-line)">${esc(r.rule)}</span>${(r.chain || []).length > 1 ? `<span class="xs dim">${esc(r.chain.join(' → '))}</span>` : ''}</div><div class="xs">${esc(r.reason)}</div></div>`).join('')}</div>`);
+    const compact = !!p.intersection;
+    out.push(`<div class="list">${(p.governed || []).map((r) => (compact && r.decision === 'allow')
+      ? `<div class="li">${tag(r.decision)}<span class="grow xs"><code>${esc(r.capability)}</code> <span class="mono" style="color:var(--brand-line)">${esc(r.rule)}</span> · not harmful</span></div>`
+      : `<div class="card ${r.decision === 'deny' ? 'deny' : r.decision === 'allow' ? 'allow' : ''}"><div class="t">${tag(r.decision)}<code>${esc(r.capability)}</code><span class="mono xs" style="color:var(--brand-line)">${esc(r.rule)}</span>${(r.chain || []).length > 1 ? `<span class="xs dim">${esc(r.chain.join(' → '))}</span>` : ''}</div><div class="xs">${esc(r.reason)}</div></div>`).join('')}</div>`);
     if (p.intersection) {
       const x = p.intersection;
       out.push(`<div class="card brand"><div class="t">Capability intersection · ${esc(short(x.caller))} asks ${esc(short(x.callee))}</div>
@@ -532,13 +549,14 @@ function panelAttack(p, s) {
 }
 
 function panelTighten(p) {
-  const out = [head('Tighten · AI drafts, verifier checks', `<span class="tag tag-ai">${ICON.ai}${esc(p.model ? p.model.split(':').pop().split('/').pop() : 'investigator')}</span>`)];
+  const out = [head('Tighten · verifier checks the AI draft', `<span class="tag tag-ai">${ICON.ai}${esc(p.model ? p.model.split(':').pop().split('/').pop() : 'investigator')}</span>`)];
   const later = ['replay', 'approved', 'rerun'].includes(p.stage);
   const checks = p.checks || [];
   if (later) {
     out.push(`<div class="list">${(p.proposed || []).map((c, i) => {
       const v = checks[i] || { ok: false, reason: '' };
-      return `<div class="li">${okTag(v.ok, v.ok ? 'accepted' : 'rejected')}<span class="grow"><code>${esc(c.op)}</code> ${esc(c.target)}<div class="xs ${v.ok ? 'dim' : 'bad'}">${esc(v.reason.replace(/^(narrows|rejected): /, ''))}</div></span></div>`;
+      const why = p.rerun && v.ok ? '' : `<div class="xs ${v.ok ? 'dim' : 'bad'}">${esc(v.reason.replace(/^(narrows|rejected): /, ''))}</div>`;
+      return `<div class="li">${okTag(v.ok, v.ok ? 'accepted' : 'rejected')}<span class="grow"><code>${esc(c.op)}</code> ${esc(c.target)}${why}</span></div>`;
     }).join('')}</div>`);
   } else {
     out.push(`<div class="list">${(p.proposed || []).map((c, i) => {
@@ -559,11 +577,15 @@ function panelTighten(p) {
   }
   if (p.rerun) {
     const r = p.rerun;
-    const rows = (r.rows || []).map((x) => `<div class="li">${x.decision === 'not attempted' ? '<span class="tag tag-info">not attempted</span>' : tag(x.decision)}<span class="grow xs"><code>${esc(x.capability)}</code> ${esc(x.rule || '')}</span></div>`).join('');
+    const skipped = (r.rows || []).filter((x) => x.decision === 'not attempted').length;
+    const chips = (r.rows || []).filter((x) => x.decision !== 'not attempted')
+      .map((x) => `<span class="tag ${DECISION_TAG[x.decision] ? DECISION_TAG[x.decision][0] : 'tag-info'}">${ICON[x.decision === 'allow' ? 'allow' : 'deny']}${x.n} ${esc(x.capability)}</span>`).join(' ')
+      + (skipped ? ` <span class="tag tag-info">${skipped} step${skipped === 1 ? '' : 's'} never ran</span>` : '');
     const sum = r.running ? '' : r.stopped_at
-      ? `<div class="xs"><b>Re-run blocked at step ${r.stopped_at} of ${r.total}: ${r.attempted} call${r.attempted === 1 ? '' : 's'} attempted</b> (Act 4: ${r.act4_attempted}). Repeat of an open case, so rule <code>${esc(r.playbook)}</code> revoked the session in ${ms(r.containment_ms)} (Act 4: ${r.act4_containment_s} s).</div>`
+      ? `<div class="small"><b>Blocked at step ${r.stopped_at} of ${r.total}: ${r.attempted} call${r.attempted === 1 ? '' : 's'} attempted</b> (Act 4: ${r.act4_attempted}).</div>
+         <div class="xs">Repeat of an open case: rule <code>${esc(r.playbook)}</code> revoked the session in ${ms(r.containment_ms)} (Act 4: ${r.act4_containment_s} s).</div>`
       : `<div class="xs">Re-run: ${r.attempted} calls attempted.</div>`;
-    out.push(`<div class="card"><div class="t">Re-run the same plan on ${esc(p.version ? p.version.after : 'the new policy')}</div>${rows}${sum}</div>`);
+    out.push(`<div class="card"><div class="t">Re-run the same plan on ${esc(p.version ? p.version.after : 'the new policy')}</div>${sum}<div class="chips">${chips}</div></div>`);
   }
   return out.join('');
 }
@@ -573,11 +595,11 @@ function panelEvidence(p, s) {
   if (!m) return head('Evidence');
   const pct = m.consequential ? Math.round((100 * m.through_plane) / m.consequential) : 0;
   const tiles = [
-    [`${m.through_plane} of ${m.consequential} (${pct}%)`, 'Consequential calls through the plane', 'governed calls in this run; the today-mode illustration is excluded'],
-    [`${m.p50_ms} / ${m.p95_ms} ms`, 'Decision time p50 / p95', `in-process, ${m.decisions} decisions; production target under 5 ms at the gateway`],
-    [`${m.attacks_blocked} / ${m.attacks_total}`, 'Attacks blocked in the suite', `replayed against ${esc(p.policy)}`],
+    [`${m.through_plane} of ${m.consequential} (${pct}%)`, 'Consequential calls through the plane', 'governed calls this run (today-mode replay excluded)'],
+    [`${m.p50_ms} / ${m.p95_ms} ms`, 'Decision time p50 / p95', `in-process; production target under 5 ms at the gateway`],
+    [`${m.attacks_blocked} / ${m.attacks_total}`, 'Attacks blocked in the suite', `against ${esc(p.policy)}`],
     [`${m.legit_broken} of ${m.legit_total}`, 'Legitimate calls broken by the new policy', m.quarter_end_ok ? 'quarter-end flow intact' : 'quarter-end flow broken'],
-    [m.containment_s != null ? `${m.containment_s} s` : '—', 'First malicious call to containment', `wall clock incl. demo pacing; repeat attempt: ${ms(m.rerun_containment_ms)}`],
+    [m.containment_s != null ? `${m.containment_s} s` : '—', 'First malicious call to containment', `includes demo pacing · repeat: ${ms(m.rerun_containment_ms)}`],
     [`${m.agents_owned} / ${m.agents_total}`, 'Agents with an identity and owner', `${m.workload_only} attributable at workload level only`],
   ];
   const out = [head('Prove · measured in this run', m.plan_source === 'recorded' ? '<span class="tag tag-info">agent plan: recorded</span>' : '<span class="tag tag-ai">agent plan: live</span>')];
@@ -586,10 +608,7 @@ function panelEvidence(p, s) {
   if (!REPLAY && !ui.kv) {
     out.push(`<div class="downloads"><a class="btn btn-quiet" href="/api/evidence.md" download>Evidence pack (.md)</a><a class="btn btn-quiet" href="/api/evidence.json" download>Evidence pack (.json)</a>${s.closed ? '<a class="btn btn-quiet" href="/api/keyviews/export" download>Download key views</a>' : ''}</div>`);
   }
-  if (p.close) {
-    out.push(`<div class="card deep close"><div class="t">${esc(p.close.text)}</div><ol>${p.close.asks.map((a) => `<li>${esc(a)}</li>`).join('')}</ol></div>`);
-    if (!REPLAY && !ui.kv && s.done) out.push(`<div class="downloads"><button class="btn btn-quiet" data-cmd="extra" ${s.extraDone ? 'disabled' : ''}>Extra: malfunction</button></div>`);
-  }
+  if (p.close && ui.closeHidden) out.push(`<div class="downloads"><button class="btn btn-quiet" data-cmd="close-show">Show close card</button></div>`);
   return out.join('');
 }
 
@@ -619,6 +638,14 @@ function renderOverlays(s) {
       <div class="small">${esc(s.error.message)} The demo is paused at the same step and continues when you resume.</div>
       <input id="tok-new" type="password" autocomplete="off" placeholder="Paste a fresh token">
       <div class="actions"><button class="btn btn-primary" data-cmd="token-submit">Use token and resume</button></div></div></div>`);
+  }
+  const ev = s.panels.evidence;
+  if (ev && ev.close && !ui.closeHidden && !ui.kv) {
+    out.push(`<div class="closewrap"><div class="closecard"><button class="ibtn x" data-cmd="close-hide" title="Hide">${ICON.close}</button>
+      <div class="eyebrow">Synthetic estate</div><h3>To run Acts 1–3 on a real slice, we need:</h3>
+      <ol>${ev.close.asks.map((a) => `<li>${esc(a)}</li>`).join('')}</ol>
+      <div class="downloads">${!REPLAY ? `<button class="btn btn-primary" data-cmd="film">Key views <span class="kbd">K</span></button>` : ''}
+      ${!REPLAY && s.done ? `<button class="btn btn-quiet" data-cmd="extra" ${s.extraDone ? 'disabled' : ''}>Extra: malfunction</button>` : ''}</div></div></div>`);
   }
   if (ui.drawer != null) {
     const row = s.timeline.find((r) => r.seq === ui.drawer);
@@ -688,7 +715,7 @@ function connectStream() {
   source.onmessage = (m) => {
     const ev = JSON.parse(m.data);
     if (ev.kind === 'run') {
-      ui.events = [ev]; ui.state = apply(initialState(), ev); ui.drawer = null;
+      ui.events = [ev]; ui.state = apply(initialState(), ev); ui.drawer = null; ui.closeHidden = false;
       if (ui.kv) ui.kv = null;
       api('GET', '/api/connection/status').then((c) => { ui.conn = c; schedule(); }).catch(() => {});
     } else {
@@ -731,8 +758,10 @@ async function onCommand(cmd, el) {
     case 'kv-exit': return exitKeyViews();
     case 'drawer': ui.drawer = Number(arg); return schedule();
     case 'drawer-close': ui.drawer = null; return schedule();
+    case 'close-hide': ui.closeHidden = true; return schedule();
+    case 'close-show': ui.closeHidden = false; return schedule();
     case 'approve': return api('POST', '/api/demo/approve').catch(() => {});
-    case 'extra': return api('POST', '/api/demo/extra').catch(() => {});
+    case 'extra': ui.closeHidden = true; return api('POST', '/api/demo/extra').catch(() => {});
     case 'token-submit': {
       const v = $('#tok-new') ? $('#tok-new').value.trim() : '';
       if (!v) return;
