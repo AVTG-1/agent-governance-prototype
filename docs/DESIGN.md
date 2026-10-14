@@ -41,8 +41,8 @@ The prototype must look like the proposal deck it sits beside. `reference/propos
 
 ## Checklist before calling M6 done
 
-- [ ] Every decision row shows agent, action, resource, tag (icon plus word), `rule@version` and ms.
-- [ ] Today-mode edges are dashed and visibly bypass the plane.
-- [ ] The poisoned note's injected sentence is highlighted.
-- [ ] Nothing is cut off at 1440×900 in either theme.
-- [ ] The token is never visible except as `••••` plus the last 4 characters.
+- [x] Every decision row shows agent, action, resource, tag (icon plus word), `rule@version` and ms.
+- [x] Today-mode edges are dashed and visibly bypass the plane.
+- [x] The poisoned note's injected sentence is highlighted.
+- [x] Nothing is cut off at 1440×900 in either theme.
+- [x] The token is never visible except as `••••` plus the last 4 characters.
