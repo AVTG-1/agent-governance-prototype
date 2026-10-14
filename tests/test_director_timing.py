@@ -35,6 +35,7 @@ def test_script_shape():
     assert sum(1 for s in STEPS if s.keyview) == 8
     assert [s.act for s in STEPS] == sorted(s.act for s in STEPS)
     assert ACTS[6]["start"] + 30 == END == 300
+    assert [ACTS[a]["start"] for a in range(1, 7)] == [0, 25, 110, 140, 225, 270]
     for s in STEPS:
         nxt = [x for x in STEPS if x.act == s.act + 1]
         if nxt:
@@ -65,9 +66,13 @@ def test_real_clock_path_at_high_speed(mock_llm, token):
 def test_prefetch_order(mock_llm, token):
     d, _ = play()
     jobs = [(e["t"], e["payload"]["job"]) for e in d.run.events if e["kind"] == "llm" and e["payload"]["status"] == "requested"]
-    assert [j for _, j in jobs] == ["plan", "case", "diff"]
-    assert jobs[0][0] == ACTS[2]["start"]                     # plan requested at the start of Act 2
-    assert ACTS[4]["start"] < jobs[1][0] < ACTS[5]["start"]   # case at the first Act 4 denial
+    assert [j for _, j in jobs] == ["rulebook", "plan", "case", "diff"]     # four live calls per run
+    assert jobs[0][0] == 0                                     # the rulebook draft goes out at Start
+    assert ACTS[2]["start"] <= jobs[1][0] < ACTS[2]["start"] + 5   # the plan at the start of Act 2
+    assert ACTS[4]["start"] < jobs[2][0] < ACTS[5]["start"]   # case at the first Act 4 denial
+    assert ACTS[4]["start"] < jobs[3][0] < ACTS[5]["start"]   # diff as soon as the case is ready
+    roles = [e["payload"]["role"] for e in d.run.events if e["kind"] == "llm" and e["payload"]["status"] == "ok"]
+    assert roles == ["investigator", "agent", "investigator", "investigator"]
 
 
 def test_controls_pause_next_jump_restart_speed(mock_llm, token):
@@ -108,12 +113,12 @@ def test_restart_fully_resets(mock_llm, token):
         await d.start()
         await d.task
         old = d.run
-        assert old.world.policy.current.version_label() == "recon-agent-policy@v5"
+        assert old.world.policy.current.version_label() == "rulebook@v2"
         d.instant = False
         await d.start()
         new = d.run
         assert new is not old and new.t == 0 and new.world.audit.records == []
-        assert new.world.policy.current.version_label() == "recon-agent-policy@v3"
+        assert new.world.policy.current.version_label() == "rulebook@v0"
         assert new.world.estate.outbox == [] and new.events[0]["kind"] == "run"
         await d.stop()
     asyncio.run(go())
@@ -137,7 +142,7 @@ def test_llm_timeout_pauses_with_a_plain_message(mock_llm, token):
     import dataclasses
     import app.demo.director as director_mod
     orig = list(director_mod.STEPS)
-    director_mod.STEPS[:] = [dataclasses.replace(s, timeout_s=0.05) if s.wait_for == "plan" else s for s in orig]
+    director_mod.STEPS[:] = [dataclasses.replace(s, timeout_s=0.05) if s.wait_for == "rulebook" else s for s in orig]
     try:
         d = asyncio.run(go())
         errs = [e["payload"] for e in d.run.events if e["kind"] == "error" and e["payload"].get("message")]
@@ -163,9 +168,9 @@ def test_next_goes_exactly_one_step(mock_llm, token):
     async def go():
         d = Director(Bus(), KeyViews())
         await d.start()
-        await asyncio.sleep(0.15)                      # step 0 done, waiting for step 1 at 0:02
-        assert d.run.step_index == 0
-        for expected in (1, 2, 3):
+        await asyncio.sleep(0.1)
+        assert d.run.step_index == -1                  # the Act 1 intro card is showing
+        for expected in (0, 1, 2, 3):
             d.next_step()
             await asyncio.sleep(0.15)
             assert d.run.step_index == expected

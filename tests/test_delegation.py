@@ -3,11 +3,12 @@ import itertools
 
 from app.core.delegation import effective_capabilities, intersection_table
 from app.core.gateway import Call
-from app.core.policies import CAPABILITIES, TASK_NEEDS, baseline_policy, initial_policy
+from app.core.policies import CAPABILITIES, TASK_NEEDS
 
 
-def test_effective_is_subset_of_every_member():
-    for policy in (initial_policy(), baseline_policy()):
+def test_effective_is_subset_of_every_member(world):
+    from tests.conftest import day_zero_world
+    for policy in (day_zero_world(shadow=False).policy.current, world.policy.current):
         agents = sorted(policy.agents)
         for n in (2, 3):
             for chain in itertools.permutations(agents, n):

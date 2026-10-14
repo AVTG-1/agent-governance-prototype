@@ -5,24 +5,29 @@ emits the events the console reduces. Nothing here decides access: the gateway d
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import time
 from collections import Counter, defaultdict
+from datetime import date
 from pathlib import Path
 
 from app.core import containment
+from app.core import rulebook as rb
 from app.core.audit import percentile, verify_chain
 from app.core.delegation import intersection_table
 from app.core.gateway import Call
-from app.core.policies import RESTRICTED, baseline_policy
+from app.core.policies import GUARDRAIL_TEXT, GUARDRAILS, RESTRICTED, RULES
 from app.core.verifier import PolicyDiff, verify_and_replay
 from app.demo.script import CAPTIONS, CLOSE_ASKS, FALLBACK_BANNER
-from app.estate.agents import (INJECTED, ROUTINE, TAINT, AgentPlan, Case, PlanStep, agent_prompt, case_prompt,
-                               diff_prompt, map_step, plan_is_compromised)
+from app.estate.agents import (INJECTED, ROUTINE, TAINT, AgentPlan, Case, agent_prompt, case_prompt,
+                               diff_prompt, map_step, plan_is_compromised, rulebook_prompt)
 from app.estate.systems import EXTERNAL_HOST, PII_FIELDS
 from app.llm import complete_json
 
 RECORDED_PLAN = Path(__file__).with_name("recorded_plan.json")
+ONBOARD_ORDER = ("recon-agent", "kyc-agent", "enrichment-agent", "settlement-agent")
+OWNERS_LABEL = "the agents' owners"
 SIGNAL_SOURCES = [("Vault entries", "vault_entries"), ("Gateway logs", "gateway_logs"),
                   ("Database sessions", "db_sessions"), ("Cloud roles", "cloud_roles"), ("Config files", "config_files")]
 
@@ -73,8 +78,10 @@ def override_caption(d, step) -> str | None:
                 return CAPTIONS["plan_fallback"]
     if step.action == "attack_close" and data.get("plan_source") == "recorded":
         return CAPTIONS["close_fallback"]
-    if step.action == "tighten_replay" and not data.get("accepted"):
-        return CAPTIONS["replay_nothing"]
+    if step.action == "harden_replay" and not data.get("accepted"):
+        return CAPTIONS["harden_nothing"]
+    if step.action == "rulebook_replay" and (data.get("rulebook_replay") or {}).get("legit_broken"):
+        return CAPTIONS["rulebook_broken"]
     return None
 
 
@@ -96,14 +103,14 @@ async def discover_scan(d, step) -> None:
     for i, (_, key) in enumerate(SIGNAL_SOURCES):
         sources[i] = {**sources[i], "count": len(w.signals[key])}
         d.panel("registry", sources=[dict(s) for s in sources])
-        await d.sleep(1.0)
+        await d.sleep(0.6)
     rows = []
     for a in w.discover():
         rows.append(a.row())
         d.panel("registry", rows=list(rows))
         d.emit("map", {"agent": {"id": a.id, "known": True, "name": a.name, "status": a.status, "owner": a.owner,
                                  "flags": a.flags}, "links": [[a.id, s] for s in a.systems]})
-        await d.sleep(1.4)
+        await d.sleep(1.2)
     inv = w.registry.get("investigator")
     d.emit("map", {"agent": {"id": inv.id, "known": True, "name": inv.name, "status": "advisory", "owner": inv.owner,
                              "flags": ["advises only: no system access"]}})
@@ -139,58 +146,215 @@ async def discover_assign(d, step) -> None:
                      "shared_logins": sum(1 for r in rows if r["credential_kind"] == "shared")})
 
 
-# --- Act 2: Wrap and observe ---------------------------------------------------------------------
+# --- Act 2: Shadow and learn (day zero) -----------------------------------------------------------
 
-async def observe_start(d, step) -> None:
+def _fingerprint(summary: dict) -> str:
+    return hashlib.sha256(json.dumps(summary, sort_keys=True).encode()).hexdigest()
+
+
+def prefetch_rulebook(d) -> None:
+    """At Start. The fixtures are deterministic, so the same engine shadows the recorded week in a scratch
+    world now and the draft request goes out immediately. Act 2 recomputes the summary from the live run's
+    own records and checks it is identical before the draft is used."""
+    from app.core.world import World
+
+    scratch = World()
+    scratch.discover()
+    scratch.assign_owners()
+    scratch.onboard_all()
+    for spec in scratch.shadow_week:
+        scratch.gateway.handle(Call.from_spec({**spec, "session": "s-shadow-week"}), enforce=False, execute=False)
+    summary = rb.usage_summary(scratch.audit.records, scratch.signals, scratch.usage,
+                               scratch.estate.refdata["calendar"], scratch.owners())
+    d.run.data["summary_prefetched"] = _fingerprint(summary)
+    system, user = rulebook_prompt(summary)
+    d.prefetch("rulebook", lambda: complete_json("investigator", system, user, rb.RulebookDraft))
+
+
+async def onboard_start(d, step) -> None:
     w = d.run.world
-    system, user = agent_prompt(w.estate)
+    system, user = agent_prompt(w.estate)           # the Act 4 plan: prefetched at the start of Act 2
     d.prefetch("plan", lambda: complete_json("agent", system, user, AgentPlan))
-    a = w.registry.get("recon-agent")
-    d.panel("observe", stage="before", strip=[
-        {"k": "Agent", "label": "recon-agent", "sub": "code unchanged", "state": "same"},
-        {"k": "Credential", "label": a.credential.principal, "sub": "shared with a person", "state": "bad"},
-        {"k": "Path", "label": "Direct API + DB", "sub": "no gateway", "state": "bad"},
-        {"k": "Data", "label": "Whatever the login reaches", "sub": "6 systems", "state": "bad"},
-    ], shadow=None, groups=None, honesty=None)
-
-
-async def observe_wrap(d, step) -> None:
-    w = d.run.world
-    info = w.registry.wrap("recon-agent")
-    d.panel("observe", stage="wrapped", retired=info["retired"], strip=[
-        {"k": "Agent", "label": "recon-agent", "sub": "code unchanged", "state": "same"},
-        {"k": "Credential", "label": "Brokered, 10 min", "sub": f"{' and '.join(info['retired'])} retired", "state": "good"},
-        {"k": "Path", "label": "Via the gateway", "sub": "every call decided", "state": "good"},
-        {"k": "Data", "label": "Policy decides", "sub": "per request", "state": "good"},
-    ], honesty="Attribution: workload-level. If several agents shared this runtime they'd appear as one until separated.")
-    d.emit("map", {"set": {"mode": "governed", "plane": True},
-                   "agent": {"id": "recon-agent", "status": "wrapped", "flags": w.registry.get("recon-agent").flags}})
+    rows = []
+    for agent_id in ONBOARD_ORDER:
+        a = w.registry.get(agent_id)
+        rows.append({"agent": agent_id, "name": a.name, "owner": a.owner, "before": a.credential.label,
+                     "after": None, "swap": None, "path": None, "data": None, "attribution": None, "done": False})
+    d.emit("map", {"set": {"mode": "shadow", "plane": True}})
+    d.panel("onboard", rows=rows, current=None, guardrails=None, default_deny=None)
     d.emit("system", {"policy": w.policy.current.version_label(), "enforce": False})
 
 
-async def observe_shadow(d, step) -> None:
+async def onboard_swaps(d, step) -> None:
+    w = d.run.world
+    rows = [dict(r) for r in _last_rows(d)]
+    for agent_id in ONBOARD_ORDER:
+        info = w.registry.onboard(agent_id)
+        for r in rows:
+            if r["agent"] == agent_id:
+                r.update(after=info["after"], swap=info["swap"], path=info["path"], data=info["data"],
+                         attribution=info["attribution"], attaches=info["attaches"], retired=info["retired"], done=True)
+        d.panel("onboard", rows=[dict(r) for r in rows], current=agent_id)
+        a = w.registry.get(agent_id)
+        d.emit("map", {"agent": {"id": agent_id, "status": "onboarded", "flags": a.flags, "owner": a.owner}})
+        await d.sleep(3.5)
+    d.panel("onboard", current=None)
+
+
+def _last_rows(d) -> list[dict]:
+    for ev in reversed(d.run.events):
+        if ev["kind"] == "panel" and ev["payload"]["view"] == "onboard" and "rows" in ev["payload"]["set"]:
+            return ev["payload"]["set"]["rows"]
+    return []
+
+
+async def guardrails(d, step) -> None:
+    gr = [{"rule": g, "version": RULES[g].version, "text": GUARDRAIL_TEXT[g]} for g in GUARDRAILS]
+    d.panel("onboard", guardrails=gr, default_deny="not yet",
+            policy=d.run.world.policy.current.version_label())
+
+
+async def shadow_week(d, step) -> None:
     w = d.run.world
     calls = w.shadow_week
+    per_agent: dict[str, dict] = {a: {"observed": 0, "would_deny": 0, "would_hold": 0, "caps": {}} for a in ONBOARD_ORDER}
+    days: dict[str, dict] = {}
+    quarter_ends = set(w.estate.refdata["calendar"]["quarter_ends"])
+    for spec in calls:
+        day = spec["ts"][:10]
+        days.setdefault(day, {"date": day, "dow": date.fromisoformat(day).strftime("%a"), "calls": 0,
+                              "tag": "quarter-end" if day in quarter_ends else None})
+    batch = 50
+    processed = 0
     tally = Counter()
-    denied = []
-    batch = 25
-    d.panel("observe", stage="shadow", shadow={"processed": 0, "total": len(calls), "allow": 0, "would_deny": 0,
-                                               "would_hold": 0, "running": True, "policy": w.policy.current.version_label()})
     for i in range(0, len(calls), batch):
         for spec in calls[i:i + batch]:
-            o = decide(d, Call.from_spec({**spec, "session": "s-shadow-week"}), enforce=False, execute=False,
-                       emit=False)
-            tally[o.decision.decision] += 1
-            if o.decision.decision != "allow":
-                denied.append((spec, o))
+            o = decide(d, Call.from_spec({**spec, "session": "s-shadow-week"}), enforce=False, execute=False, emit=False)
+            agent = (spec.get("chain") or [spec["agent"]])[0]
+            pa = per_agent[agent]
+            pa["observed"] += 1
+            pa["caps"][spec["capability"]] = pa["caps"].get(spec["capability"], 0) + 1
+            if o.decision.decision in ("would_deny", "would_hold"):
+                pa[o.decision.decision] += 1
                 emit_decision(d, o, recorded_at=spec["ts"])
-        d.panel("observe", shadow={"processed": min(i + batch, len(calls)), "total": len(calls),
-                                   "allow": tally["allow"], "would_deny": tally["would_deny"],
-                                   "would_hold": tally["would_hold"], "running": True,
-                                   "policy": w.policy.current.version_label()})
-        await d.sleep(0.5)
-    d.run.data["shadow_denied"] = [(s["capability"], s["ts"]) for s, _ in denied]
-    d.panel("observe", shadow={**_last(d, "observe", "shadow"), "running": False})
+            tally[o.decision.decision] += 1
+            days[spec["ts"][:10]]["calls"] += 1
+            processed += 1
+        d.panel("shadow", running=True, processed=processed, total=len(calls),
+                totals={"observed": processed, "allow": tally["allow"], "would_deny": tally["would_deny"],
+                        "would_hold": tally["would_hold"]},
+                agents={a: {**v, "caps": dict(v["caps"])} for a, v in per_agent.items()},
+                calendar=sorted(days.values(), key=lambda x: x["date"]), findings=None,
+                policy=w.policy.current.version_label())
+        await d.sleep(0.42)
+    summary = rb.usage_summary(w.audit.records, w.signals, w.usage, w.estate.refdata["calendar"], w.owners())
+    d.run.data["summary"] = summary
+    d.run.data["shadow_totals"] = dict(tally)
+    if d.run.data.get("summary_prefetched") not in (None, _fingerprint(summary)):
+        raise RuntimeError("The prefetched usage summary differs from this run's shadow records.")
+    d.panel("shadow", running=False)
+
+
+async def shadow_findings(d, step) -> None:
+    summary = d.run.data["summary"]
+    findings = []
+    for a in summary["agents"]:
+        for o in a["observed"]:
+            if o["guardrail"] and o["guardrail"]["outcome"] == "would deny":
+                findings.append({"kind": "deny", "agent": a["agent"], "capability": o["capability"], "count": o["week"],
+                                 "pattern": o["pattern"], "rule": o["guardrail"]["rule"],
+                                 "text": f"Observed {o['week']} times, {o['pattern'] or 'this week'}. Breaks a guardrail: "
+                                         f"{o['guardrail']['text'].lower()}."})
+    for a in summary["agents"]:
+        for o in a["observed"]:
+            if o["calendar"]:
+                findings.append({"kind": "protect", "agent": a["agent"], "capability": o["capability"], "count": o["week"],
+                                 "text": f"Used once, on the quarter-end day. Rare, but quarter-end close needs it."})
+    for a in summary["agents"]:
+        for o in a["observed"]:
+            if o["guardrail"] and o["guardrail"]["outcome"] == "would hold":
+                findings.append({"kind": "hold", "agent": a["agent"], "capability": o["capability"], "count": o["week"],
+                                 "rule": o["guardrail"]["rule"],
+                                 "text": f"{o['week']} amendments would each wait for a second person (maker-checker)."})
+    d.panel("shadow", findings=findings, highlight="kyc-agent")
+
+
+async def rulebook_draft(d, step) -> None:
+    w = d.run.world
+    draft, res = d.run.llm["rulebook"].result()
+    summary = d.run.data["summary"]
+    lines = rb.verify_rulebook(draft, summary)
+    candidate = rb.build_rulebook(w.policy.current, lines)
+    decisions = rb.owner_decisions(summary, lines)
+    grants = [l for l in lines if l.kind == "grant"]
+    d.run.data.update(rulebook_lines=lines, rulebook_candidate=candidate, owner_decisions=decisions,
+                      rulebook_ok=sum(1 for l in grants if l.ok), rulebook_total=len(grants))
+    d.panel("rulebook", stage="draft", model=res.model_ref, latency_ms=d.run.data.get("rulebook_latency_ms"),
+            lines=[], replay=None, decisions=None, approval=None, version=None, default_deny=None,
+            counts={"grants": len(grants), "left_out": sum(1 for l in lines if l.kind == "left_out"),
+                    "flags": sum(1 for l in lines if l.kind in ("flag", "habit"))})
+    pace = 0.5 if len(lines) <= 24 else 11.0 / len(lines)
+    for l in lines:
+        d.panel("rulebook", push={"lines": l.as_dict()})
+        await d.sleep(pace)
+    ok = sum(1 for l in grants if l.ok)
+    d.panel("rulebook", verified={"ok": ok, "total": len(grants)})
+
+
+async def rulebook_replay(d, step) -> None:
+    w = d.run.world
+    r = rb.replay_week(w.gateway, w.shadow_week, w.audit.records, d.run.data["rulebook_candidate"])
+    d.run.data["rulebook_replay"] = r
+    for k in range(1, 6):
+        d.panel("rulebook", stage="replay", replay={
+            "calls": r["calls"], "checked": r["calls"] * k // 5, "running": k < 5,
+            "legit_total": r["legit_total"], "legit_broken": r["legit_broken"] if k == 5 else 0,
+            "violations": r["violations"], "violations_stopped": r["violations_stopped"] if k == 5 else 0,
+            "held": r["held"] if k == 5 else 0, "per_agent": r["per_agent"] if k == 5 else {}})
+        await d.sleep(0.6)
+
+
+async def owner_approval(d, payload: dict) -> bool:
+    """The same modal everywhere: an 8 s countdown, then auto-approval labelled as such. True if clicked."""
+    d.approval.clear()
+    for left in range(8, 0, -1):
+        d.emit("system", {"approval": {**payload, "remaining": left}})
+        for _ in range(10):
+            await d.sleep(0.1)
+            if d.approval.is_set():
+                d.emit("system", {"approval": None})
+                return True
+    d.emit("system", {"approval": None})
+    return False
+
+
+async def rulebook_approve(d, step) -> None:
+    w = d.run.world
+    lines = d.run.data["rulebook_lines"]
+    decisions = d.run.data["owner_decisions"]
+    candidate = d.run.data["rulebook_candidate"]
+    grants = [l for l in lines if l.kind == "grant" and l.ok]
+    per_agent = Counter(l.agent for l in grants)
+    clicked = await owner_approval(d, {
+        "kind": "rulebook", "title": "Approve the rulebook as owners",
+        "before": w.policy.current.version_label(), "after": candidate.version_label(),
+        "items": [{"agent": a, "owner": w.registry.get(a).owner, "grants": n} for a, n in per_agent.items()],
+        "reject": [{"agent": x["agent"], "owner": x["owner"], "capability": x["capability"], "rule": x["rule"],
+                    "observed": x["observed"], "pattern": x["pattern"]} for x in decisions],
+        "replay": d.run.data.get("rulebook_replay", {}).get("legit_broken"),
+    })
+    how = "approved by the presenter" if clicked else "auto-approved for demo"
+    before, after = w.policy.approve(candidate, owner=OWNERS_LABEL, how=how, note="day-zero rulebook")
+    rejected = [{**x, "decision": "rejected by the owner", "by": x["owner"]} for x in decisions]
+    d.run.data["owner_rejected"] = rejected
+    d.panel("rulebook", stage="approved", version={"before": before, "after": after, "how": how}, decisions=rejected)
+    d.emit("system", {"policy": after})
+
+
+async def default_deny_on(d, step) -> None:
+    d.panel("rulebook", default_deny="on")
+    d.emit("system", {"enforce": True})
+    d.emit("map", {"set": {"mode": "governed"}})
 
 
 def _last(d, view: str, key: str) -> dict:
@@ -200,33 +364,11 @@ def _last(d, view: str, key: str) -> dict:
     return {}
 
 
-async def observe_groups(d, step) -> None:
-    w = d.run.world
-    quarter_ends = set(w.estate.refdata["calendar"]["quarter_ends"])
-    by_cap: dict[str, list[str]] = defaultdict(list)
-    for cap, ts in d.run.data.get("shadow_denied", []):
-        by_cap[cap].append(ts[:10])
-    groups = []
-    for cap, days in sorted(by_cap.items(), key=lambda kv: -len(kv[1])):
-        if set(days) <= quarter_ends:
-            groups.append({"count": len(days), "capability": cap, "kind": "protected",
-                           "verdict": "rare but required → protected", "tag": f"quarter-end close ({days[0]})"})
-        else:
-            groups.append({"count": len(days), "capability": cap, "kind": "missing",
-                           "verdict": "missing permission → added to baseline", "tag": None})
-    before = w.policy.current.version_label()
-    w.policy.adopt(baseline_policy(w.policy.current),
-                   "baseline after the shadow week: refdata.read added, ledger.read_quarter_end protected")
-    after = w.policy.current.version_label()
-    d.panel("observe", groups=groups, baseline={"before": before, "after": after})
-    d.emit("system", {"policy": after})
-
-
 # --- Act 3: Enforce and exception ----------------------------------------------------------------
 
 async def enforce_start(d, step) -> None:
-    d.panel("enforce", enforce=True, routine=[], need=None, envelope=None, jit_read=None, after=None)
-    d.emit("system", {"enforce": True})
+    d.panel("enforce", enforce=True, routine=[], need=None, envelope=None, jit_read=None, after=None,
+            policy=d.run.world.policy.current.version_label())
 
 
 async def enforce_routine(d, step) -> None:
@@ -235,7 +377,7 @@ async def enforce_routine(d, step) -> None:
         d.panel("enforce", push={"routine": {"agent": call.agent, "capability": call.capability,
                                              "decision": o.decision.decision, "rule": o.decision.ref,
                                              "ms": o.decision.elapsed_ms}})
-        await d.sleep(2.0)
+        await d.sleep(1.3)
 
 
 async def enforce_jit(d, step) -> None:
@@ -428,9 +570,9 @@ async def attack_close(d, step) -> None:
     return None
 
 
-# --- Act 5: Tighten and approve --------------------------------------------------------------------
+# --- Act 5: Harden (post-incident only) ----------------------------------------------------------------
 
-async def tighten_draft(d, step) -> None:
+async def harden_draft(d, step) -> None:
     w = d.run.world
     diff, res = d.run.llm["diff"].result()
     checks, candidate, replay = verify_and_replay(diff.changes, w.policy.current, w.usage, w.gateway,
@@ -440,7 +582,7 @@ async def tighten_draft(d, step) -> None:
     proposed = [{"n": i, "op": c.op, "agent": c.agent, "target": c.target,
                  "params": json.dumps(c.params, ensure_ascii=False)[:100] if c.params else "",
                  "rationale": c.rationale[:180]} for i, c in enumerate(diff.changes, 1)]
-    d.panel("tighten", stage="draft", proposed=proposed, checks=[], replay=None, approval=None, version=None,
+    d.panel("harden", stage="draft", proposed=proposed, checks=[], replay=None, approval=None, version=None,
             rerun=None, policy=w.policy.current.version_label(), model=res.model_ref,
             latency_ms=d.run.data.get("diff_latency_ms"))
     pace = 1.5 if len(checks) <= 7 else 0.9
@@ -448,13 +590,13 @@ async def tighten_draft(d, step) -> None:
     for c in checks:
         await d.sleep(pace)
         shown.append(c.as_dict())
-        d.panel("tighten", checks=list(shown))
+        d.panel("harden", checks=list(shown))
 
 
-async def tighten_replay(d, step) -> None:
+async def harden_replay(d, step) -> None:
     r = d.run.data["replay"]
     for k in range(1, 6):
-        d.panel("tighten", stage="replay", replay={
+        d.panel("harden", stage="replay", replay={
             "legit_checked": r["legit_total"] * k // 5, "legit_total": r["legit_total"],
             "legit_broken": r["legit_broken"] if k == 5 else 0, "quarter_end_ok": r["quarter_end_ok"],
             "attacks_checked": r["attacks_total"] * k // 5, "attacks_total": r["attacks_total"],
@@ -463,36 +605,25 @@ async def tighten_replay(d, step) -> None:
         await d.sleep(0.6)
 
 
-async def tighten_approve(d, step) -> None:
+async def harden_approve(d, step) -> None:
     w = d.run.world
     if not d.run.data.get("accepted"):
-        d.panel("tighten", approval={"skipped": True, "text": "Nothing to approve: the policy stays at "
+        d.panel("harden", approval={"skipped": True, "text": "Nothing to approve: the policy stays at "
                                                              f"{w.policy.current.version_label()}."})
         return
     before = w.policy.current.version_label()
     target = d.run.data["candidate"].version_label()
     owner = w.registry.get("recon-agent").owner
-    d.approval.clear()
-    clicked = False
-    for left in range(8, 0, -1):
-        d.panel("tighten", approval={"open": True, "owner": owner, "remaining": left, "before": before,
-                                     "after": target, "changes": len(d.run.data["accepted"])})
-        for _ in range(10):
-            await d.sleep(0.1)
-            if d.approval.is_set():
-                clicked = True
-                break
-        if clicked:
-            break
+    clicked = await owner_approval(d, {"kind": "harden", "title": f"Approve as owner: {owner}", "owner": owner,
+                                       "before": before, "after": target, "changes": len(d.run.data["accepted"]),
+                                       "replay": d.run.data["replay"]["legit_broken"]})
     how = "approved by the presenter" if clicked else "auto-approved for demo"
-    before, after = w.policy.approve(d.run.data["candidate"], owner=owner, how=how)
-    d.panel("tighten", stage="approved", approval={"open": False, "owner": owner, "result": how, "before": before,
-                                                   "after": after},
-            version={"before": before, "after": after, "how": how})
+    before, after = w.policy.approve(d.run.data["candidate"], owner=owner, how=how, note="post-incident hardening")
+    d.panel("harden", stage="approved", version={"before": before, "after": after, "how": how})
     d.emit("system", {"policy": after})
 
 
-async def tighten_rerun(d, step) -> None:
+async def harden_rerun(d, step) -> None:
     w = d.run.world
     plan = current_plan(d)
     session = "s-recon-02"
@@ -517,11 +648,11 @@ async def tighten_rerun(d, step) -> None:
             contained_ms = round((time.monotonic() - t_first) * 1000, 2) if t_first else 0.0
             stopped_at = n
             d.emit("map", {"agent": {"id": "recon-agent", "status": "session revoked"}})
-        d.panel("tighten", stage="rerun", rerun={"rows": list(rows), "running": True})
+        d.panel("harden", stage="rerun", rerun={"rows": list(rows), "running": True})
         await d.sleep(1.2)
     act4 = d.run.data.get("act4", {})
     d.run.data["rerun"] = {"attempted": attempted, "stopped_at": stopped_at, "containment_ms": contained_ms}
-    d.panel("tighten", rerun={"rows": rows, "running": False, "attempted": attempted, "total": len(plan.plan),
+    d.panel("harden", rerun={"rows": rows, "running": False, "attempted": attempted, "total": len(plan.plan),
                               "stopped_at": stopped_at, "playbook": "P-INJ-02" if stopped_at else None,
                               "containment_ms": contained_ms, "act4_attempted": act4.get("attempted"),
                               "act4_containment_s": d.run.data.get("containment_s")})
@@ -549,7 +680,11 @@ def metrics(d) -> dict:
         "agents_owned": owned, "agents_total": total, "workload_only": workload_only,
         "chain_ok": ok, "chain_first_broken": bad, "chain_head": recs[-1]["hash"] if recs else None,
         "plan_source": d.run.data.get("plan_source"),
-        "latency_ms": {k: d.run.data.get(f"{k}_latency_ms") for k in ("plan", "case", "diff")},
+        "shadow_calls": sum((d.run.data.get("shadow_totals") or {}).values()),
+        "guardrail_violations": (d.run.data.get("shadow_totals") or {}).get("would_deny", 0),
+        "rulebook_ok": d.run.data.get("rulebook_ok"), "rulebook_total": d.run.data.get("rulebook_total"),
+        "owner_rejected": len(d.run.data.get("owner_rejected") or []),
+        "latency_ms": {k: d.run.data.get(f"{k}_latency_ms") for k in ("rulebook", "plan", "case", "diff")},
     }
 
 

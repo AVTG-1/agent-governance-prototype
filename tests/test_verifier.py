@@ -3,9 +3,6 @@ from app.core.policies import Grant
 from app.core.verifier import ProposedChange, verify, verify_and_replay
 
 EXPECTED = [
-    ProposedChange(op="remove_grant", agent="recon-agent", target="settlement.update"),
-    ProposedChange(op="remove_grant", agent="recon-agent", target="fx.read"),
-    ProposedChange(op="remove_grant", agent="recon-agent", target="fileshare.export"),
     ProposedChange(op="restrict_delegation", agent="recon-agent", target="settlement-agent",
                    params={"capabilities": ["client.read_pii", "client.read_masked"]}),
     ProposedChange(op="require_human_for_envelope", agent="recon-agent", target="env-recon-cm-01", params={"days": 7}),
@@ -15,12 +12,21 @@ EXPECTED = [
 def test_expected_changes_accepted_and_replay_is_clean(world):
     checks, candidate, r = verify_and_replay(EXPECTED, world.policy.current, world.usage, world.gateway,
                                              world.shadow_week, world.attack_suite)
-    assert [c.ok for c in checks] == [True] * 5, [c.reason for c in checks]
-    assert r["legit_broken"] == 0 and r["legit_total"] == 600 and r["quarter_end_ok"]
+    assert [c.ok for c in checks] == [True] * 2, [c.reason for c in checks]
+    assert r["legit_broken"] == 0 and r["legit_total"] == 1141 and r["quarter_end_ok"]
     assert (r["attacks_blocked"], r["attacks_total"]) == (20, 20)
-    assert candidate.version_label() == "recon-agent-policy@v5"
-    assert "fx.read" not in candidate.grants_of("recon-agent")
-    assert world.policy.current.version_label() == "recon-agent-policy@v4"     # unchanged until approval
+    assert candidate.version_label() == "rulebook@v2"
+    assert candidate.delegation_blocks["recon-agent"]["settlement-agent"] >= {"client.read_pii", "client.read_masked"}
+    assert candidate.envelope_human_days == {"env-recon-cm-01": 7}
+    assert world.policy.current.version_label() == "rulebook@v1"     # unchanged until approval
+
+
+def test_legacy_grants_are_already_gone(world):
+    """Unused-grant removal happened on day zero: v1 never contained the legacy entitlements."""
+    recon = world.policy.current.grants_of("recon-agent")
+    assert not {"settlement.update", "fx.read", "fileshare.export"} & set(recon)
+    [c] = verify([ProposedChange(op="remove_grant", agent="recon-agent", target="fx.read")], world.policy.current, world.usage)
+    assert not c.ok and "not a current grant" in c.reason
 
 
 def test_rejects_protected_quarter_end_grant(world):
@@ -74,6 +80,6 @@ def test_semantic_check_catches_a_widening_that_slips_past_normalising(world, mo
         return new
 
     monkeypatch.setattr(PolicySet, "with_changes", sneaky)
-    [c] = verifier.verify([ProposedChange(op="remove_grant", agent="recon-agent", target="fx.read")],
-                          world.policy.current, world.usage)
+    [c] = verifier.verify([ProposedChange(op="add_condition", agent="recon-agent", target="trade.read",
+                                          params={"condition": "untrusted"})], world.policy.current, world.usage)
     assert not c.ok and c.reason == "rejected: widens access"

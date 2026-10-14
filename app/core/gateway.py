@@ -39,6 +39,8 @@ class Call:
     args: dict = field(default_factory=dict)
     resource: str | None = None
     tool: str | None = None
+    id: str | None = None          # recorded-call id (shadow week)
+    ts: str | None = None          # when a recorded call originally happened
 
     @classmethod
     def from_spec(cls, spec: dict) -> "Call":
@@ -51,6 +53,9 @@ class Outcome:
     decision: Decision
     result: dict | None
     record: dict | None
+
+
+OUTSIDE_THE_FIRM = {"external", "fileshare"}      # the shared drive is an external file-sharing service
 
 
 def data_class_of(capability: str, fields: list[str], system: str) -> str:
@@ -102,7 +107,7 @@ class Gateway:
             action=Action(capability=call.capability, system=system, fields=list(call.fields), rows=call.rows,
                           op=call.op or (cap.op if cap else "read"), resource=resource_of(call)),
             data_class=data_class_of(call.capability, call.fields, system),
-            destination=call.destination or ("external" if system == "external" else "internal"),
+            destination=call.destination or ("external" if system in OUTSIDE_THE_FIRM else "internal"),
             context=Context(
                 source_taint=list(call.taint), jit_grant=call.jit, enforce=enforce,
                 credential_audience=list(cred["audience"]), credential_expired=bool(cred["expired"]),
@@ -147,7 +152,8 @@ class Gateway:
             "reason": decision.reason,
             "obligations": decision.obligations,
             "elapsed_ms": decision.elapsed_ms,
-            "policy_version": policy.version_label(req.agent.id) if req.agent.id in policy.agents else None,
+            "policy_version": policy.version_label(),
+            **({"request_ref": call.id, "recorded_at": call.ts} if call.id else {}),
         })
         if enforce:
             self.decided += 1

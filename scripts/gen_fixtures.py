@@ -147,25 +147,49 @@ def gen_refdata() -> dict:
     }
 
 
+OWNER_DECLARATIONS = {
+    "recon-agent": {"purpose": "reconciliation", "statement": "Resolve reconciliation breaks between trade, settlement and ledger.",
+                    "capabilities": ["trade.read", "settlement.read", "client.read_masked", "refdata.read", "recon.update",
+                                     "ledger.read_quarter_end"]},
+    "settlement-agent": {"purpose": "settlement", "statement": "Keep settlement status and instructions current; verify SSIs.",
+                         "capabilities": ["trade.read", "settlement.read", "settlement.update", "ssi.amend",
+                                          "client.read_masked", "client.read_pii"],
+                         "restricted_purposes": {"client.read_pii": "ssi_verification"}},
+    "enrichment-agent": {"purpose": "enrichment", "statement": "Enrich new trades with reference data.",
+                         "capabilities": ["trade.read", "refdata.read"]},
+    "kyc-agent": {"purpose": "kyc_refresh", "statement": "Refresh client KYC records.",
+                  "capabilities": ["client.read_masked", "refdata.read"]},
+}
+# What each agent's old credential could reach before onboarding.
+CREDENTIAL_ENTITLEMENTS = {
+    "svc_ops_batch": ["trade.read", "settlement.read", "settlement.update", "client.read_masked", "refdata.read",
+                      "ledger.read_quarter_end", "recon.update", "fx.read", "fileshare.export"],
+    "db:settle_rw": ["trade.read", "settlement.read", "settlement.update", "ssi.amend", "client.read_masked",
+                     "client.read_pii"],
+    "role/trade-enrichment": ["trade.read", "refdata.read", "settlement.read"],
+    "apikey:kyc-refresh": ["client.read_masked", "client.read_pii", "refdata.read", "fileshare.export"],
+}
+
+
 def gen_signals() -> dict:
     """What a scan of the estate turns up. Discovery correlates these into agents."""
     return {
         "vault_entries": [
             {"path": "kv/ops/svc_ops_batch", "principal": "svc_ops_batch", "kind": "shared service account",
              "owner": "Reconciliation Ops"},
-            {"path": "kv/settlement/settlement-agent", "principal": "settlement-agent", "kind": "per-agent credential",
-             "owner": "Settlement Ops"},
+            {"path": "kv/db/settle_rw", "principal": "db:settle_rw", "kind": "database login", "owner": "Settlement Ops"},
         ],
         "gateway_logs": [
             {"principal": "svc_ops_batch", "user_agent": "recon-agent/2.3", "systems": ["trade", "settlement", "client", "refdata", "ledger", "recon"]},
-            {"principal": "settlement-agent", "user_agent": "settlement-agent/1.4", "systems": ["trade", "settlement", "client"]},
+            {"principal": "db:settle_rw", "user_agent": "settlement-agent/1.4", "systems": ["trade", "settlement", "client"]},
             {"principal": "role/trade-enrichment", "user_agent": "enrichment-agent/3.0", "systems": ["trade", "refdata"]},
-            {"principal": "apikey:kyc-refresh", "user_agent": "kyc-agent/0.9", "systems": ["client", "refdata"]},
+            {"principal": "apikey:kyc-refresh", "user_agent": "kyc-agent/0.9", "systems": ["client", "refdata", "fileshare"]},
         ],
         "db_sessions": [
             {"login": "svc_ops_batch", "program": "recon-agent", "host": "ops-batch-01", "interactive": False, "db": "recon"},
             {"login": "svc_ops_batch", "program": "SQL console", "host": "WS-OPS-114", "interactive": True, "db": "recon"},
             {"login": "recon_direct", "program": "recon-agent", "host": "ops-batch-01", "interactive": False, "db": "recon"},
+            {"login": "db:settle_rw", "program": "settlement-agent", "host": "settle-app-02", "interactive": False, "db": "settlement"},
         ],
         "cloud_roles": [
             {"role": "role/trade-enrichment", "workload": "enrichment-agent", "owner": "Trade Support"},
@@ -175,70 +199,100 @@ def gen_signals() -> dict:
         ],
         "system_owners": {"trade": "Trade Support", "settlement": "Settlement Ops", "recon": "Reconciliation Ops",
                           "client": "Client Onboarding", "refdata": "Reference Data", "ledger": "Finance"},
+        "owner_declarations": OWNER_DECLARATIONS,
+        "credential_entitlements": CREDENTIAL_ENTITLEMENTS,
     }
 
 
+# The recorded week, per agent: (capability, count, fields, purpose, extra)
+WEEK = {
+    "recon-agent": [("trade.read", 232, [], "reconciliation"), ("settlement.read", 196, [], "reconciliation"),
+                    ("client.read_masked", 80, ["client_id", "name", "country"], "reconciliation"),
+                    ("recon.update", 66, [], "reconciliation"), ("refdata.read", 13, [], "reconciliation")],
+    "settlement-agent": [("trade.read", 58, [], "settlement"), ("settlement.read", 104, [], "settlement"),
+                         ("settlement.update", 70, [], "settlement"), ("ssi.amend", 6, [], "settlement"),
+                         ("client.read_masked", 12, ["client_id", "name"], "settlement"),
+                         ("client.read_pii", 4, ["client_id", "tax_id"], "ssi_verification")],
+    "enrichment-agent": [("trade.read", 118, [], "enrichment"), ("refdata.read", 62, [], "enrichment")],
+    "kyc-agent": [("client.read_masked", 96, ["client_id", "name", "country", "client_type"], "kyc_refresh"),
+                  ("refdata.read", 17, [], "kyc_refresh")],
+}
+DELEGATED = 12        # recon asks the settlement agent for settlement status
+NIGHTLY_EXPORT = ("02", "10")
+
+
+def _args(cap: str, rng: random.Random, clients, trades) -> dict:
+    if cap.startswith("client."):
+        return {"client_id": rng.choice(clients)["client_id"]}
+    if cap in ("trade.read", "settlement.read", "settlement.update", "ssi.amend", "recon.update"):
+        return {"trade_id": rng.choice(trades)["trade_id"]}
+    if cap == "refdata.read":
+        return {"key": rng.choice(["currencies", "instruments", "calendar"])}
+    return {}
+
+
 def gen_shadow_week(rng: random.Random, clients: list[dict], trades: list[dict]) -> list[dict]:
-    """600 recorded recon-agent calls. Under the initial policy: 586 allowed, 14 would-deny."""
-    mix = (["trade.read"] * 232 + ["settlement.read"] * 208 + ["client.read_masked"] * 80
-           + ["recon.update"] * 66 + ["refdata.read"] * 13)
-    assert len(mix) == 599
-    rng.shuffle(mix)
+    """1,154 recorded calls from all four agents. The engine replays them in shadow on day zero."""
     days = [SHADOW_START + timedelta(days=d) for d in range(7)]
     calls = []
-    for cap in mix:
-        day = rng.choice(days)
-        ts = datetime(day.year, day.month, day.day, rng.randint(6, 21), rng.randint(0, 59), rng.randint(0, 59))
-        call = {"ts": ts.isoformat(), "agent": "recon-agent", "capability": cap, "system": cap.split(".")[0],
-                "rows": 1, "fields": [], "purpose": "reconciliation"}
-        if cap == "client.read_masked":
-            call["fields"] = ["client_id", "name", "country"]
-            call["args"] = {"client_id": rng.choice(clients)["client_id"]}
-        elif cap in ("trade.read", "settlement.read", "recon.update"):
-            call["args"] = {"trade_id": rng.choice(trades)["trade_id"]}
-        else:
-            call["args"] = {"key": rng.choice(["currencies", "instruments", "calendar"])}
-        calls.append(call)
-    qe = datetime(2026, 9, 30, 18, 5, 0)
-    calls.append({"ts": qe.isoformat(), "agent": "recon-agent", "capability": "ledger.read_quarter_end",
-                  "system": "ledger", "rows": 1, "fields": [], "purpose": "quarter-end close", "args": {}})
-    calls.sort(key=lambda c: c["ts"])
+
+    def at(day, h=None, m=None):
+        return datetime(day.year, day.month, day.day, h if h is not None else rng.randint(6, 21),
+                        m if m is not None else rng.randint(0, 59), rng.randint(0, 59))
+
+    for agent, rows in WEEK.items():
+        for cap, n, fields, purpose in rows:
+            for _ in range(n):
+                call = {"ts": at(rng.choice(days)).isoformat(), "agent": agent, "capability": cap,
+                        "system": cap.split(".")[0] if cap != "ssi.amend" else "settlement", "rows": 1,
+                        "fields": list(fields), "purpose": purpose, "args": _args(cap, rng, clients, trades)}
+                if cap in ("settlement.update", "ssi.amend", "recon.update"):
+                    call["op"] = "write"
+                calls.append(call)
+    for _ in range(DELEGATED):
+        calls.append({"ts": at(rng.choice(days)).isoformat(), "agent": "settlement-agent",
+                      "chain": ["recon-agent", "settlement-agent"], "capability": "settlement.read",
+                      "system": "settlement", "rows": 1, "fields": [], "purpose": "reconciliation",
+                      "args": _args("settlement.read", rng, clients, trades)})
+    calls.append({"ts": datetime(2026, 9, 30, 18, 5, 0).isoformat(), "agent": "recon-agent",
+                  "capability": "ledger.read_quarter_end", "system": "ledger", "rows": 1, "fields": [],
+                  "purpose": "quarter-end close", "args": {}})
+    for day in days:   # the bad habit: client files with PII to the external shared drive, every night
+        calls.append({"ts": datetime(day.year, day.month, day.day, int(NIGHTLY_EXPORT[0]), int(NIGHTLY_EXPORT[1]), 0).isoformat(),
+                      "agent": "kyc-agent", "capability": "fileshare.export", "system": "fileshare", "op": "write",
+                      "rows": 2000, "fields": ["client_id", "name", "tax_id", "email", "dob"], "purpose": "kyc_refresh",
+                      "args": {"path": "share://kyc-nightly/clients.csv", "rows": 2000}})
+    calls.sort(key=lambda c: (c["ts"], c["agent"], c["capability"]))
     for i, c in enumerate(calls, 1):
         c["id"] = f"sh-{i:04d}"
     return calls
 
 
 def gen_usage(rng: random.Random, shadow: list[dict]) -> dict:
-    """90-day usage per agent and grant, with calendar tags for rare flows."""
-    weekly: dict[str, int] = {}
+    """90-day usage per agent and capability: observed ones scaled from the week, legacy entitlements at zero."""
+    weekly: dict[tuple[str, str], int] = {}
     for c in shadow:
-        weekly[c["capability"]] = weekly.get(c["capability"], 0) + 1
-
-    def scaled(cap: str) -> int:
-        return int(weekly.get(cap, 0) * 13 * rng.uniform(0.9, 1.1))
-
-    recon = {cap: {"uses": scaled(cap), "last_used": "2026-10-05", "calendar_tags": []}
-             for cap in ["trade.read", "settlement.read", "client.read_masked", "recon.update", "refdata.read"]}
-    recon["ledger.read_quarter_end"] = {"uses": 1, "last_used": "2026-09-30", "calendar_tags": ["quarter-end close"]}
-    recon["settlement.update"] = {"uses": 0, "last_used": "2026-02-11", "calendar_tags": []}
-    recon["fx.read"] = {"uses": 0, "last_used": "2025-12-03", "calendar_tags": []}
-    recon["fileshare.export"] = {"uses": 0, "last_used": "2026-01-20", "calendar_tags": []}
-
-    def busy(caps: list[str]) -> dict:
-        return {c: {"uses": rng.randint(300, 4000), "last_used": "2026-10-05", "calendar_tags": []} for c in caps}
-
-    settlement = busy(["trade.read", "settlement.read", "settlement.update", "ssi.amend", "client.read_masked"])
-    settlement["client.read_pii"] = {"uses": 42, "last_used": "2026-10-02", "calendar_tags": ["SSI verification"]}
-    return {
-        "window_days": 90,
-        "as_of": TODAY.isoformat(),
-        "agents": {
-            "recon-agent": recon,
-            "settlement-agent": settlement,
-            "enrichment-agent": busy(["trade.read", "refdata.read", "settlement.read"]),
-            "kyc-agent": busy(["client.read_masked", "refdata.read"]),
-        },
-    }
+        agent = (c.get("chain") or [c["agent"]])[0]
+        weekly[(agent, c["capability"])] = weekly.get((agent, c["capability"]), 0) + 1
+    principal_of = {"recon-agent": "svc_ops_batch", "settlement-agent": "db:settle_rw",
+                    "enrichment-agent": "role/trade-enrichment", "kyc-agent": "apikey:kyc-refresh"}
+    agents = {}
+    for agent, principal in principal_of.items():
+        caps = sorted(set(CREDENTIAL_ENTITLEMENTS[principal]) | {c for (a, c) in weekly if a == agent})
+        out = {}
+        for cap in caps:
+            n = weekly.get((agent, cap), 0)
+            if cap == "ledger.read_quarter_end":
+                out[cap] = {"uses": 1, "last_used": "2026-09-30", "calendar_tags": ["quarter-end close"]}
+            elif cap == "fileshare.export" and agent == "kyc-agent":
+                out[cap] = {"uses": 90, "last_used": "2026-10-05", "calendar_tags": ["nightly at 02:10"]}
+            elif n:
+                out[cap] = {"uses": int(n * 13 * rng.uniform(0.9, 1.1)), "last_used": "2026-10-05", "calendar_tags": []}
+            else:
+                out[cap] = {"uses": 0, "last_used": rng.choice(["2025-12-03", "2026-01-20", "2026-02-11"]),
+                            "calendar_tags": []}
+        agents[agent] = out
+    return {"window_days": 90, "as_of": TODAY.isoformat(), "agents": agents}
 
 
 def gen_attack_suite() -> list[dict]:

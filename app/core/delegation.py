@@ -16,12 +16,10 @@ if TYPE_CHECKING:
 MAX_DEPTH = 2
 
 
-def delegable(policy: "PolicySet", caller: str, callee: str) -> frozenset[str] | None:
-    """Capabilities the caller's policy lets it delegate to this callee (None = may not delegate)."""
-    ap = policy.agents.get(caller)
-    if ap is None or callee not in ap.delegate_to:
-        return None
-    return frozenset(CAPABILITIES) - ap.delegate_to[callee]
+def delegable(policy: "PolicySet", caller: str, callee: str) -> frozenset[str]:
+    """Capabilities the rulebook lets this caller delegate to this callee (everything, minus any hardening blocks)."""
+    blocks = policy.delegation_blocks.get(caller, {})
+    return frozenset(CAPABILITIES) - blocks.get(callee, frozenset()) - blocks.get("*", frozenset())
 
 
 def effective_capabilities(chain: list[str], policy: "PolicySet", purpose: str) -> tuple[frozenset[str], list[dict]]:
@@ -32,8 +30,7 @@ def effective_capabilities(chain: list[str], policy: "PolicySet", purpose: str) 
     need = TASK_NEEDS.get(purpose, frozenset())
     effective &= need
     for caller, callee in zip(chain, chain[1:]):
-        allowed = delegable(policy, caller, callee)
-        effective &= allowed if allowed is not None else frozenset()
+        effective &= delegable(policy, caller, callee)
     return effective, intersection_table(chain, policy, purpose)
 
 
@@ -42,7 +39,7 @@ def intersection_table(chain: list[str], policy: "PolicySet", purpose: str,
     """Rows for the capability-intersection panel (SPEC §5.4)."""
     caller, callee = chain[0], chain[-1]
     need = TASK_NEEDS.get(purpose, frozenset())
-    allowed = delegable(policy, caller, callee) or frozenset()
+    allowed = delegable(policy, caller, callee)
     caps = focus or sorted(policy.capabilities_of(caller) | policy.capabilities_of(callee))
     rows = []
     for cap in caps:

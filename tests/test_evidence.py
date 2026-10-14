@@ -17,13 +17,16 @@ def test_evidence_pack_from_a_full_run(client):
     assert data["chain"]["verified"] is True and verify_chain(records) == (True, None)
     assert "Tamper-evident: altering any record breaks the chain." in md.text
     m = data["metrics"]
-    assert (m["attacks_blocked"], m["attacks_total"], m["legit_broken"], m["legit_total"]) == (20, 20, 0, 600)
+    assert (m["attacks_blocked"], m["attacks_total"], m["legit_broken"], m["legit_total"]) == (20, 20, 0, 1141)
+    assert (m["shadow_calls"], m["guardrail_violations"], m["rulebook_ok"], m["rulebook_total"]) == (1154, 7, 16, 16)
+    assert m["owner_rejected"] == 1
     assert m["through_plane"] == m["consequential"] > 0
     assert m["agents_owned"] == m["agents_total"] == 4 and m["workload_only"] == 1
     assert m["p95_ms"] >= m["p50_ms"] > 0
-    assert [v["label"] for v in data["policy_versions"]] == [
-        "recon-agent-policy@v3", "recon-agent-policy@v4", "recon-agent-policy@v5"]
-    assert all(v["ok"] for v in data["verifier"]) and len(data["verifier"]) == 5
+    assert [v["label"] for v in data["policy_versions"]] == ["rulebook@v0", "rulebook@v1", "rulebook@v2"]
+    assert all(v["ok"] for v in data["verifier"])
+    assert [v["stage"] for v in data["verifier"]].count("day-zero rulebook") == 22
+    assert [v["stage"] for v in data["verifier"]].count("hardening") == 2
     assert any(r["capability"] == "client.read_pii" and not r["effective"] for r in data["delegation_chain"])
     # Tampering with the downloaded pack is detectable.
     records[3]["decision"] = "allow" if records[3]["decision"] != "allow" else "deny"

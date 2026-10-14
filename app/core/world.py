@@ -9,7 +9,7 @@ from app.core.containment import Sessions
 from app.core.envelopes import DemoClock, JitBook
 from app.core.gateway import Gateway
 from app.core.identity import Registry, assign_owner, discover
-from app.core.policies import PolicyStore, initial_policy
+from app.core.policies import PolicyStore, day_zero_policy
 from app.estate.systems import Estate, load
 
 
@@ -18,7 +18,7 @@ class World:
         self.estate = Estate()
         self.signals = load("signals.json")
         self.registry = Registry()
-        self.policy = PolicyStore(initial_policy())
+        self.policy = PolicyStore(day_zero_policy(self.signals["owner_declarations"]))
         self.audit = AuditLog()
         self.clock = DemoClock()
         self.jit = JitBook(self.clock)
@@ -43,3 +43,10 @@ class World:
             if a.owner is None:
                 done.append((a.id, assign_owner(a, self.signals["system_owners"])))
         return done
+
+    def onboard_all(self) -> list[dict]:
+        """Act 2: every agent onboarded without a code change, each with its own swap."""
+        return [self.registry.onboard(a) for a in ("recon-agent", "kyc-agent", "enrichment-agent", "settlement-agent")]
+
+    def owners(self) -> dict:
+        return {a.id: a.owner for a in self.registry.agents.values()}

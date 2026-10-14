@@ -7,9 +7,9 @@
       "owner": "Reconciliation Ops"
     },
     {
-      "path": "kv/settlement/settlement-agent",
-      "principal": "settlement-agent",
-      "kind": "per-agent credential",
+      "path": "kv/db/settle_rw",
+      "principal": "db:settle_rw",
+      "kind": "database login",
       "owner": "Settlement Ops"
     }
   ],
@@ -27,7 +27,7 @@
       ]
     },
     {
-      "principal": "settlement-agent",
+      "principal": "db:settle_rw",
       "user_agent": "settlement-agent/1.4",
       "systems": [
         "trade",
@@ -48,7 +48,8 @@
       "user_agent": "kyc-agent/0.9",
       "systems": [
         "client",
-        "refdata"
+        "refdata",
+        "fileshare"
       ]
     }
   ],
@@ -73,6 +74,13 @@
       "host": "ops-batch-01",
       "interactive": false,
       "db": "recon"
+    },
+    {
+      "login": "db:settle_rw",
+      "program": "settlement-agent",
+      "host": "settle-app-02",
+      "interactive": false,
+      "db": "settlement"
     }
   ],
   "cloud_roles": [
@@ -97,5 +105,82 @@
     "client": "Client Onboarding",
     "refdata": "Reference Data",
     "ledger": "Finance"
+  },
+  "owner_declarations": {
+    "recon-agent": {
+      "purpose": "reconciliation",
+      "statement": "Resolve reconciliation breaks between trade, settlement and ledger.",
+      "capabilities": [
+        "trade.read",
+        "settlement.read",
+        "client.read_masked",
+        "refdata.read",
+        "recon.update",
+        "ledger.read_quarter_end"
+      ]
+    },
+    "settlement-agent": {
+      "purpose": "settlement",
+      "statement": "Keep settlement status and instructions current; verify SSIs.",
+      "capabilities": [
+        "trade.read",
+        "settlement.read",
+        "settlement.update",
+        "ssi.amend",
+        "client.read_masked",
+        "client.read_pii"
+      ],
+      "restricted_purposes": {
+        "client.read_pii": "ssi_verification"
+      }
+    },
+    "enrichment-agent": {
+      "purpose": "enrichment",
+      "statement": "Enrich new trades with reference data.",
+      "capabilities": [
+        "trade.read",
+        "refdata.read"
+      ]
+    },
+    "kyc-agent": {
+      "purpose": "kyc_refresh",
+      "statement": "Refresh client KYC records.",
+      "capabilities": [
+        "client.read_masked",
+        "refdata.read"
+      ]
+    }
+  },
+  "credential_entitlements": {
+    "svc_ops_batch": [
+      "trade.read",
+      "settlement.read",
+      "settlement.update",
+      "client.read_masked",
+      "refdata.read",
+      "ledger.read_quarter_end",
+      "recon.update",
+      "fx.read",
+      "fileshare.export"
+    ],
+    "db:settle_rw": [
+      "trade.read",
+      "settlement.read",
+      "settlement.update",
+      "ssi.amend",
+      "client.read_masked",
+      "client.read_pii"
+    ],
+    "role/trade-enrichment": [
+      "trade.read",
+      "refdata.read",
+      "settlement.read"
+    ],
+    "apikey:kyc-refresh": [
+      "client.read_masked",
+      "client.read_pii",
+      "refdata.read",
+      "fileshare.export"
+    ]
   }
 }

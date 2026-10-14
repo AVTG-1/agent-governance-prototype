@@ -1,8 +1,10 @@
 """The policy decision point: evaluate(request) -> decision.  (Cedar or OPA in production.)
 
 Read top to bottom: rules are checked in a fixed order, the first one that speaks decides.
-Hard rules come first so nothing later can override them. Anything not explicitly allowed
-falls through to default deny. No model is ever consulted here.
+Hard rules come first so nothing later can override them. On day zero (rulebook@v0) only the
+people-written guardrails decide; everything else is observed (R-OBS-00). Once the owners approve
+a rulebook, default deny is on and anything not explicitly allowed is refused. No model is ever
+consulted here.
 
 Shadow mode (enforce=False) runs exactly the same checks, then turns every block into a
 "would_deny"/"would_hold" record. Shadow mode never blocks anything.
@@ -158,7 +160,15 @@ def _decide(req: RequestEnvelope, policy: PolicySet, jit: JitBook | None) -> Dec
 
     grants = policy.grants_of(req.agent.id)
 
-    # 7. Restricted PII: purpose-bound grant only, and never on untrusted content.
+    # 7. Maker-checker for SSI amendments (a day-zero guardrail).
+    if cap == "ssi.amend" and (cap in grants or not policy.default_deny):
+        return _d("hold", "R-SSI-01", "SSI amendment held for a second person (maker-checker).", ["notify_checker"])
+
+    # 8. Day zero: no guardrail applies and default deny is not on yet, so the call is observed.
+    if not policy.default_deny:
+        return _d("allow", "R-OBS-00", "Observed: no guardrail applies; default deny is not on yet.", ["record_only"])
+
+    # 9. Restricted PII: purpose-bound grant only, and never on untrusted content.
     if cap == "client.read_pii" or req.data_class == RESTRICTED:
         if ctx.source_taint:
             return _d("deny", "R-PII-01", "Restricted PII requested on the strength of untrusted content.",
@@ -170,11 +180,7 @@ def _decide(req: RequestEnvelope, policy: PolicySet, jit: JitBook | None) -> Dec
         return _d("deny", "R-PII-01", "Restricted PII without a matching purpose-bound grant.",
                   ["alert_investigator"])
 
-    # 8. Maker-checker for SSI amendments.
-    if cap == "ssi.amend" and cap in grants:
-        return _d("hold", "R-SSI-01", "SSI amendment held for a second person (maker-checker).", ["notify_checker"])
-
-    # 9. Standing grant, within its fields and conditions.
+    # 10. Approved grant, within its fields and conditions.
     g = grants.get(cap)
     if g and _fields_ok(a.fields, g.fields):
         for name, value in g.conditions:
@@ -184,19 +190,19 @@ def _decide(req: RequestEnvelope, policy: PolicySet, jit: JitBook | None) -> Dec
                 return _d("deny", "R-GRANT-01", f"Grant condition: at most {value} rows.")
             if name == "require_human":
                 return _d("hold", "R-GRANT-01", "Grant condition: a person must approve.", ["notify_owner"])
-        return _d("allow", "R-GRANT-01", f"Standing grant {cap}.", effective=grants)
+        return _d("allow", "R-GRANT-01", f"Approved grant {cap}.", effective=grants)
 
-    # 10. Just-in-time envelope.
+    # 11. Just-in-time envelope.
     if ctx.jit_grant:
         ok, reason = jit.check(ctx.jit_grant, req, policy) if jit else (False, "No envelope book.")
         if ok:
             return _d("allow", "R-JIT-01", reason, ["expire_on_ttl"], [cap])
         return _d("deny", "R-JIT-01", reason)
 
-    # 11. Default deny.
+    # 12. Default deny.
     if g:
         extra = sorted(set(a.fields) - (g.fields or set()))
-        return _d("deny", "R-DEF-00", f"Fields {extra} are outside the standing grant and no envelope applies.")
+        return _d("deny", "R-DEF-00", f"Fields {extra} are outside the approved grant and no envelope applies.")
     if cap not in CAPABILITIES:
         return _d("deny", "R-DEF-00", f"Unknown capability '{cap}'.")
     return _d("deny", "R-DEF-00", f"{req.agent.id} holds no grant for {cap}.")

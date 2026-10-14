@@ -28,7 +28,7 @@ CAPABILITIES: dict[str, Capability] = {
     "ledger.read_quarter_end": Capability("ledger", "read", "Read quarter-end ledger balances (rare but required)"),
     "recon.update": Capability("recon", "write", "Update a break in the agent's own reconciliation system"),
     "fx.read": Capability("fx", "read", "Read FX positions"),
-    "fileshare.export": Capability("fileshare", "write", "Export to the shared file drive"),
+    "fileshare.export": Capability("fileshare", "write", "Export to the shared drive (an external service, outside the firm)"),
     "external.post": Capability("external", "egress", "Send data outside the firm (never with restricted data)"),
     # Control-plane capabilities. No agent may ever hold these (R-SELF-01).
     "policy.update": Capability("policy", "control", "Change policy or grants"),
@@ -65,18 +65,30 @@ class Rule:
 
 
 RULES: dict[str, Rule] = {r.id: r for r in [
-    Rule("R-DEF-00", 1, "Default deny: anything not explicitly allowed is refused."),
-    Rule("R-ID-01", 1, "Caller must be a registered agent with a live, audience-bound credential.", hard=True),
-    Rule("R-SELF-01", 1, "No agent may change policy or its own grants.", hard=True),
-    Rule("R-VOL-01", 1, "Volume above 10x baseline in 60 s quarantines the agent."),
-    Rule("R-CNT-01", 1, "A contained session may only do what its containment allows."),
+    # Day-zero guardrails: written by people, firm-wide, on from the moment an agent is onboarded.
     Rule("R-EGR-01", 2, "Restricted data never leaves the firm. No override exists.", hard=True),
-    Rule("R-DLG-02", 1, "Delegated calls get caller ∩ callee ∩ task ∩ policy; depth ≤ 2."),
-    Rule("R-PII-01", 3, "Restricted PII needs a purpose-bound grant; never on untrusted content."),
-    Rule("R-JIT-01", 1, "Just-in-time access only within a live, matching envelope."),
     Rule("R-SSI-01", 1, "SSI amendments are held for a second person (maker-checker)."),
-    Rule("R-GRANT-01", 2, "Allowed: the capability is a standing grant and nothing else denies it."),
+    Rule("R-DLG-02", 1, "Delegation only narrows: caller ∩ callee ∩ task ∩ policy; depth ≤ 2."),
+    Rule("R-SELF-01", 1, "No agent may change policy or its own grants.", hard=True),
+    # The plane's own mechanics, always on.
+    Rule("R-ID-01", 1, "Caller must be a registered agent with a live, audience-bound credential.", hard=True),
+    Rule("R-CNT-01", 1, "A contained session may only do what its containment allows."),
+    Rule("R-VOL-01", 1, "Volume above 10x baseline in 60 s quarantines the agent."),
+    # Day zero only: everything the guardrails don't cover is observed, not decided.
+    Rule("R-OBS-00", 1, "Observed: no guardrail applies and default deny is not on yet."),
+    # Once the owners approve the rulebook (default deny on).
+    Rule("R-PII-01", 3, "Restricted PII needs a purpose-bound grant; never on untrusted content."),
+    Rule("R-GRANT-01", 2, "Allowed: the capability is an approved grant and nothing else denies it."),
+    Rule("R-JIT-01", 1, "Just-in-time access only within a live, matching envelope."),
+    Rule("R-DEF-00", 1, "Default deny: anything not explicitly allowed is refused."),
 ]}
+GUARDRAILS = ("R-EGR-01", "R-SSI-01", "R-DLG-02", "R-SELF-01")
+GUARDRAIL_TEXT = {
+    "R-EGR-01": "No restricted data leaves the firm",
+    "R-SSI-01": "SSI changes need maker-checker",
+    "R-DLG-02": "Delegation only narrows",
+    "R-SELF-01": "No agent changes policy or its own access",
+}
 
 # --- Grants, delegation, envelopes ---------------------------------------------------------
 
@@ -102,14 +114,7 @@ class Grant:
 @dataclass
 class AgentPolicy:
     agent: str
-    version: int
     grants: dict[str, Grant]
-    # caller -> callee -> capabilities the caller may NOT delegate to that callee
-    delegate_to: dict[str, frozenset[str]] = field(default_factory=dict)
-
-    @property
-    def label(self) -> str:
-        return f"{self.agent}-policy@v{self.version}"
 
 
 @dataclass(frozen=True)
@@ -127,8 +132,14 @@ class EnvelopeDef:
 
 @dataclass
 class PolicySet:
+    """The firm's rulebook. v0 is guardrails only (default deny off); v1 is the owner-approved rulebook."""
     agents: dict[str, AgentPolicy]
     envelopes: dict[str, EnvelopeDef]
+    version: int = 0
+    default_deny: bool = False
+    declared: dict[str, frozenset[str]] = field(default_factory=dict)       # owner-declared capabilities
+    # caller -> callee (or "*") -> capabilities the caller may NOT delegate to that callee
+    delegation_blocks: dict[str, dict[str, frozenset[str]]] = field(default_factory=dict)
     envelope_human_days: dict[str, int] = field(default_factory=dict)   # envelope -> days a person must approve
 
     def grants_of(self, agent: str) -> dict[str, Grant]:
@@ -136,30 +147,26 @@ class PolicySet:
         return p.grants if p else {}
 
     def capabilities_of(self, agent: str) -> frozenset[str]:
-        return frozenset(self.grants_of(agent))
+        """What an agent may do: its approved grants, or (on day zero, before any) what its owner declared."""
+        if self.default_deny:
+            return frozenset(self.grants_of(agent))
+        return self.declared.get(agent, frozenset())
 
-    def version_label(self, agent: str = "recon-agent") -> str:
-        return self.agents[agent].label
+    def version_label(self, agent: str | None = None) -> str:
+        return f"rulebook@v{self.version}"
 
     def with_changes(self, changes: list[dict], bump: bool = True) -> "PolicySet":
         """Return a copy with verified, normalised narrowing changes applied (see verifier.py)."""
         new = copy.deepcopy(self)
-        touched: set[str] = set()
         for ch in changes:
             kind, agent = ch["kind"], ch["agent"]
             ap = new.agents[agent]
-            touched.add(agent)
             if kind == "remove_grant":
                 ap.grants.pop(ch["capability"], None)
             elif kind == "restrict_delegation":
-                callees = list(ap.delegate_to) if ch["callee"] == "*" else [ch["callee"]]
-                for callee in callees:
-                    if callee not in ap.delegate_to:
-                        continue
-                    if ch["capabilities"] is None:
-                        del ap.delegate_to[callee]
-                    else:
-                        ap.delegate_to[callee] = ap.delegate_to[callee] | frozenset(ch["capabilities"])
+                blocks = new.delegation_blocks.setdefault(agent, {})
+                caps = frozenset(ch["capabilities"]) if ch["capabilities"] is not None else frozenset(CAPABILITIES)
+                blocks[ch["callee"]] = blocks.get(ch["callee"], frozenset()) | caps
             elif kind == "require_human_for_envelope":
                 new.envelope_human_days[ch["envelope"]] = int(ch["days"])
             elif kind == "add_condition":
@@ -168,16 +175,16 @@ class PolicySet:
                                                     g.conditions + ((ch["condition"], ch["value"]),))
             else:
                 raise ValueError(f"not a narrowing change: {kind}")
-        if bump:
-            for agent in touched:
-                new.agents[agent].version += 1
+        if bump and changes:
+            new.version += 1
         return new
 
 
-# --- The Kaiyo Securities policy, as it stands at each point of the story ------------------
+# --- The Kaiyo Securities rulebook on day zero ------------------------------------------------
 
 MASKED_PROFILE = frozenset({"client_id", "name", "country", "client_type"})
 QUARTER_END = (RARE_BUT_REQUIRED, "quarter-end close")
+AGENT_IDS = ("recon-agent", "settlement-agent", "enrichment-agent", "kyc-agent", "investigator")
 
 ENVELOPES = {
     "env-recon-cm-01": EnvelopeDef(
@@ -187,59 +194,26 @@ ENVELOPES = {
 }
 
 
-def _g(cap: str, **kw) -> tuple[str, Grant]:
-    return cap, Grant(cap, **kw)
-
-
-def initial_policy() -> PolicySet:
-    """recon-agent-policy@v3: what the shared account could do, as first observed (before baselining)."""
-    recon = AgentPolicy("recon-agent", 3, dict([
-        _g("trade.read"), _g("settlement.read"), _g("client.read_masked", fields=MASKED_PROFILE),
-        _g("recon.update"),
-        # legacy grants, unused in 90 days
-        _g("settlement.update"), _g("fx.read"), _g("fileshare.export"),
-    ]), delegate_to={"settlement-agent": frozenset()})
-    settlement = AgentPolicy("settlement-agent", 2, dict([
-        _g("trade.read"), _g("settlement.read"), _g("settlement.update"), _g("ssi.amend"),
-        _g("client.read_masked", fields=MASKED_PROFILE),
-        _g("client.read_pii", purpose="ssi_verification", fields=frozenset({"client_id", "tax_id", "email", "dob", "name"})),
-    ]))
-    enrichment = AgentPolicy("enrichment-agent", 1, dict([_g("trade.read"), _g("refdata.read"), _g("settlement.read")]))
-    kyc = AgentPolicy("kyc-agent", 1, dict([_g("client.read_masked", fields=MASKED_PROFILE), _g("refdata.read")]))
-    investigator = AgentPolicy("investigator", 1, {})   # advises only: no capabilities on any system
-    return PolicySet(
-        agents={p.agent: p for p in (recon, settlement, enrichment, kyc, investigator)},
-        envelopes=dict(ENVELOPES),
-    )
-
-
-def baseline_policy(policy: PolicySet | None = None) -> PolicySet:
-    """recon-agent-policy@v4: the shadow week added one missing permission and one protected rare flow."""
-    p = copy.deepcopy(policy or initial_policy())
-    recon = p.agents["recon-agent"]
-    recon.grants["refdata.read"] = Grant("refdata.read")
-    recon.grants["ledger.read_quarter_end"] = Grant("ledger.read_quarter_end", tags=QUARTER_END)
-    recon.version = 4
-    return p
+def day_zero_policy(declarations: dict | None = None) -> PolicySet:
+    """rulebook@v0: only the people-written guardrails. No grants yet; default deny is off."""
+    declared = {a: frozenset(d["capabilities"]) for a, d in (declarations or {}).items()}
+    return PolicySet(agents={a: AgentPolicy(a, {}) for a in AGENT_IDS}, envelopes=dict(ENVELOPES),
+                     version=0, default_deny=False, declared=declared)
 
 
 class PolicyStore:
-    """Holds the live policy. Only `adopt` (baselining, Act 2) and `approve` (owner, Act 5) change it."""
+    """Holds the live rulebook. Only `approve` (a named owner, or the demo's labelled auto-approval) changes it."""
 
     def __init__(self, policy: PolicySet) -> None:
         self.current = policy
-        self.history: list[dict] = [{"label": policy.version_label(), "note": "initial, as observed"}]
+        self.history: list[dict] = [{"label": policy.version_label(), "note": "day zero: guardrails only, default deny off"}]
 
-    def adopt(self, policy: PolicySet, note: str) -> None:
-        self.current = policy
-        self.history.append({"label": policy.version_label(), "note": note})
-
-    def approve(self, candidate: PolicySet, owner: str, how: str) -> tuple[str, str]:
+    def approve(self, candidate: PolicySet, owner: str, how: str, note: str = "") -> tuple[str, str]:
         """The approval step: a named person (or the demo's labelled auto-approval) swaps the policy in."""
         if not owner:
             raise PermissionError("a policy change needs an owner's approval")
         before = self.current.version_label()
         self.current = candidate
         after = candidate.version_label()
-        self.history.append({"label": after, "note": f"approved by {owner} ({how})"})
+        self.history.append({"label": after, "note": f"{note + ': ' if note else ''}approved by {owner} ({how})"})
         return before, after

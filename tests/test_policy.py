@@ -5,7 +5,7 @@ import itertools
 import pytest
 
 from app.core.gateway import Call
-from app.core.policies import CAPABILITIES, Grant, PolicyStore, baseline_policy
+from app.core.policies import CAPABILITIES, Grant, PolicyStore
 from app.core.verifier import ProposedChange, verify
 
 TAINT = ["untrusted_settlement_note"]
@@ -40,6 +40,8 @@ def test_routine_calls_allowed(world):
 def test_default_deny_and_investigator_has_no_access(world):
     gw = world.gateway
     assert gw.handle(Call("recon-agent", "ssi.amend")).decision.rule == "R-DEF-00"
+    assert gw.handle(Call("recon-agent", "fx.read")).decision.rule == "R-DEF-00"        # legacy, never granted
+    assert gw.handle(Call("kyc-agent", "fileshare.export", fields=["name"])).decision.rule == "R-DEF-00"
     assert gw.handle(Call("recon-agent", "teleport.read")).decision.rule == "R-DEF-00"
     for cap in CAPABILITIES:
         assert gw.handle(Call("investigator", cap)).decision.decision != "allow"
