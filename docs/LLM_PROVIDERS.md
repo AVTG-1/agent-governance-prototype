@@ -7,7 +7,14 @@ async def complete(role: str, system: str, user: str, *, json_mode: bool = True)
 async def test_model(provider, model_ref, token, settings) -> TestResult   # used by the connection gate
 ```
 
-`LLMResult` holds `text`, `latency_ms`, `model_ref` and `usage` (if returned). There is no plugin system: just one function per request family below.
+`LLMResult` holds `text`, `latency_ms`, `model_ref`, `usage` (if returned) and `stop_reason` (`"max_tokens"` when the provider says the reply was cut off). There is no plugin system: just one function per request family below.
+
+**Every contract is built to survive a real model** (`complete_json`):
+- **Output budget:** `max_tokens` 4,096 (`maxTokens` for Bedrock), and 12,000 as `max_completion_tokens` / `maxOutputTokens` for reasoning models (gpt-5 family, o-series, Gemini), which spend part of it thinking. The compact rulebook contract is about 800 tokens.
+- **JSON mode where it exists:** `response_format: {"type": "json_object"}` for azure/openai (Foundry accepts it; the probe confirmed), `responseMimeType: application/json` for Gemini. Bedrock has none.
+- **Parsing:** strip ``` fences and prose, take the outermost JSON object (string-aware), forgive trailing commas. A reply cut off at the output limit (OpenAI `finish_reason: "length"`, Bedrock `stopReason: "max_tokens"`, Gemini `finishReason: "MAX_TOKENS"`, or an object that never closes) is reported as cut off.
+- **One retry** with the reason appended and "Return only the JSON object", then a plain error naming the call. The raw unusable reply is printed to the terminal for diagnosis; it never contains the token.
+- **429:** back off once (the gateway's `Retry-After`, at most 8 s), then a plain "rate-limiting" error.
 
 > **Tokens:** examples use `<YOUR_FOUNDRY_TOKEN>`. Real tokens are pasted by the presenter into the connection screen, held in memory, and never written anywhere. Any token in old notes is expired. Do not copy one.
 
@@ -124,17 +131,18 @@ There are only two LLM roles, and **neither ever makes an access decision**.
 | Role | What it must do | Recommended (Foundry) | Good alternatives | Avoid, and why |
 |---|---|---|---|---|
 | **Agent**: the reconciliation agent that gets fooled | Produce a small, valid JSON tool plan fast; follow operational notes the way a naive legacy agent would | **`azure:gpt-4.1-mini`**: fast, cheap, reliable JSON, accepts temperature 0 for repeatable runs | `azure:gpt-4o-mini` (cheaper, a little more likely to follow the injected note); `azure:gpt-4.1` (most reliable JSON) | Claude models: strong prompt-injection resistance means they often refuse, which triggers the recorded-plan fallback more often. gpt-5 family: fixed temperature and reasoning latency make runs less repeatable. |
-| **Investigator**: writes the case and drafts a narrower policy | Reason over a short event log; return a clear 4-sentence narrative and a schema-valid diff; respect "only narrow" instructions | **`bedrock:claude-sonnet-4.5`**: strong reasoning and clear writing, on the "safe-private" route | `azure:gpt-5.1` (temperature 0 supported); `gemini:gemini-3-flash-preview` (fast, cheap) | Opus 4.1 (cost 16, slow for live use); nano, micro and lite models (weak at the diff); o1-mini (slow, no system prompt) |
+| **Investigator**: writes the case and drafts a narrower policy | Draft a compact rulebook from a usage summary; reason over a short event log; return a clear 3-sentence narrative and a schema-valid diff; respect "only narrow" instructions | **`bedrock:claude-sonnet-4.5`**: strong reasoning and clear writing, on the "safe-private" route | `azure:gpt-4.1` (JSON mode, reliable on the rulebook contract: the one to switch to if a Claude reply is cut off or malformed); `azure:gpt-5.1` (temperature 0 supported); `gemini:gemini-3-flash-preview` (fast, cheap) | Opus 4.1 (cost 16, slow for live use); nano, micro and lite models (weak at the diff); o1-mini (slow, no system prompt) |
 
 - **OpenRouter equivalents:** agent `openai/gpt-4.1-mini`; investigator `anthropic/claude-sonnet-4.5`.
 - **Cost of one run:** 4 live calls (investigator rulebook draft, agent plan, investigator case, investigator hardening diff) plus 2 connection tests, a few thousand tokens in total. That is well under one US dollar at the listed rates.
-- **Rehearse with the exact pair you will present with.** The agent role is deliberately sensitive to model choice. If your chosen agent model resists the injection in rehearsal, the recorded-plan fallback (SPEC §5.4) keeps the story honest. That is a talking point, not a failure.
+- **Rehearse with the exact pair you will present with.** The agent role is deliberately sensitive to model choice. If your chosen agent model resists the injection in rehearsal, the recorded-plan fallback (SPEC §5.5) keeps the story honest. That is a talking point, not a failure.
 
 ## 4. Networking on the work laptop
 
 - Use one `httpx.AsyncClient` with `trust_env=True` (honours `HTTPS_PROXY` and `NO_PROXY`) and a 30 s timeout.
 - Optional non-secret setting `LLM_CA_BUNDLE`, read from an environment variable or the *Advanced* section: a path to a corporate CA bundle passed as `verify=`. Never disable TLS verification.
-- Errors shown to the presenter: 401/403 → "Token rejected or expired. Paste a fresh token." Timeout → "No response in 30 s. Check VPN or proxy." 404 → "Model or endpoint not found on this gateway."
+- Errors shown to the presenter: 401/403 → "Token rejected or expired. Paste a fresh token." Timeout → "No response in 30 s. Check VPN or proxy." 404 → "Model or endpoint not found on this gateway." 429 → "the gateway is rate-limiting this token. Wait a few seconds, then retry."
+- A pasted token or suffix is cleaned before it is used: whitespace and invisible characters are dropped, and any other non-ASCII character is refused with "The token contains a character that can't be sent. Paste it again from the source." HTTP headers carry ASCII only.
 
 ## 5. `scripts/probe_llm.py` (presenter tool, run on the work laptop)
 
@@ -146,3 +154,4 @@ python scripts/probe_llm.py --provider openrouter --model openai/gpt-4.1-mini
 
 - It prompts for the token with `getpass` (never as an argument and never from a file).
 - It sends "Reply with the JSON {\"ok\": true}", then prints status, latency, the endpoint variant that worked (non-stream or stream) and the parsed reply.
+- To test the four real contracts with the real prompts, use **Preflight** on the connection screen after *Test connection*. It reports pass or fail, latency and what came back (for example "16 of 16 grants verified · export flagged · quarter-end kept"), for this session only.

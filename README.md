@@ -1,8 +1,8 @@
 # Agent governance control plane: demo prototype
 
-A self-playing, 5-minute demo showing how a control plane governs the AI agents that bridge a bank's post-trade systems. It finds the agents, onboards all four without changing their code, watches a recorded week before enforcing anything, has an AI draft the rulebook that a verifier checks and a person approves, stops a fooled agent, hardens access after the incident and produces measured evidence. Policy decides. AI advises. People approve. Everything is synthetic.
+A self-playing, 5-minute demo showing how a control plane governs the AI agents that bridge a bank's post-trade systems. It finds the agents, onboards all four without changing their code, watches a recorded week before enforcing anything, has an AI draft the rulebook that a verifier checks and the owners sign, stops a fooled agent, tightens access after the incident and produces measured evidence. The six acts are the deck's: Discover, Shadow and learn, People sign, Enforce, Attack, Tighten and prove. Policy decides. AI advises. People approve. Everything is synthetic.
 
-**Status:** built (milestones M0–M12 in `docs/TASKS.md`). Four live model calls per run. Screenshots are in `docs/screens/`. Interpretations of the spec are in `docs/DECISIONS.md`.
+**Status:** built (milestones M0–M13 in `docs/TASKS.md`). Four live model calls per run. Screenshots are in `docs/screens/`. Interpretations of the spec are in `docs/DECISIONS.md`.
 
 ## Repository map
 
@@ -13,7 +13,7 @@ A self-playing, 5-minute demo showing how a control plane governs the AI agents 
 | `docs/ARCHITECTURE.md` | Small single-process design and folder layout |
 | `docs/LLM_PROVIDERS.md` | Foundry and OpenRouter request shapes, model catalogue, **model recommendations** |
 | `docs/DEMO_SCRIPT.md` | Captions and presenter notes, minute by minute |
-| `docs/TASKS.md` | Milestones M0–M12 with acceptance checks |
+| `docs/TASKS.md` | Milestones M0–M13 with acceptance checks |
 | `docs/DESIGN.md` | Visual rules (shared with the proposal deck) |
 | `design/` | Colour tokens and fonts from the deck |
 | `reference/` | The proposal deck and background research (read-only) |
@@ -45,6 +45,7 @@ The browser opens on the **connection screen**:
 1. Keep **LLM Foundry** selected (recommended). Paste a **fresh** token; the project suffix defaults to `llmproxy-playground`.
 2. Keep the recommended models (Agent `azure:gpt-4.1-mini`, Investigator `bedrock:claude-sonnet-4.5`), or pick others.
 3. Click **Test connection**. When both show ✓, **Start demo** unlocks.
+4. Optional, before the audience arrives: **Preflight** runs the four real model calls once and shows pass or fail and latency for each. If one fails, switch that model, test again and re-run it.
 
 After the run, press **K** (or click **Key views**) to jump back to the eight key moments with no model calls. *Download key views* saves an offline HTML recording you can present later without a token.
 
@@ -52,7 +53,7 @@ The token is held in memory only. It is never saved, logged or shown again. If i
 
 **Behind a corporate proxy:** the app honours `HTTPS_PROXY` and `NO_PROXY`. In PowerShell: `$env:HTTPS_PROXY = "http://proxy.example:8080"` before `python run.py`. If TLS fails, set `$env:LLM_CA_BUNDLE = "C:\path\to\corporate-ca.pem"` (or paste the path in the connection screen's *Advanced* section). Never disable verification.
 
-**Controls during the run:** Space pause/resume · → next step · R restart · click an act to jump · 0.5×/1×/2× speed · D theme · K key views · click a timeline row for its full decision record. The owner approvals (the rulebook in Act 2, the hardening in Act 5) auto-approve after 8 s, or click *Approve*.
+**Controls during the run:** Space pause/resume (or retry a failed model call) · → next step · R restart · click an act to jump · 0.5×/1×/2× speed (a fresh start is 1×) · D theme · K key views · L all decisions (click one for its full record) · click an agent or a line on the map to filter · Esc closes. The owners' signatures (the rulebook in Act 3, the hardening in Act 6) auto-sign after 8 s, labelled, or click *Sign*. If a model call fails, the run pauses with *Retry*, *Switch model* and *Restart*. Drive the run from one tab; another tab opens as a viewer.
 
 **Tests (offline, no token):** `python -m pytest -q` and `python scripts/check_no_secrets.py`.
 

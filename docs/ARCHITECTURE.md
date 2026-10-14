@@ -55,7 +55,8 @@ app/
     director.py            # plays script.py; prefetches LLM calls; pause/seek/speed
     acts.py                # what each scripted step does (calls the core, emits events)
     keyviews.py            # last completed run's events + key-view markers; builds the export HTML (SPEC §5.8)
-    recorded_plan.json     # the ONLY sanctioned fallback (SPEC §5.4), shown as "recorded plan"
+    preflight.py           # optional, from the gate: the four real contracts once, results in memory only
+    recorded_plan.json     # the ONLY sanctioned fallback (SPEC §5.5), shown as "recorded plan"
   prompts/
     recon_agent.md
     investigator_case.md
@@ -82,9 +83,11 @@ tests/
 3. `policy_engine.evaluate` returns a decision (allow, deny, hold or would-deny).
 4. The gateway executes or blocks.
 5. `audit.record` hash-chains the record and the bus publishes the event.
-6. The UI updates the map, timeline and panel.
+6. The UI updates the agent-action map (the edge agent → plane → system), the ticker and the act panel.
 
-**Today mode:** the same tool calls go straight to `estate.systems` with no gateway. The events are tagged `mode: "ungoverned"` so the UI draws dashed bypass edges.
+**Today mode:** the same tool calls go straight to `estate.systems` with no gateway. The events are tagged `mode: "ungoverned"` so the UI draws dashed lines straight through the plane band.
+
+**One director, many viewers:** the tab that starts a run sends its console id (`X-Console-Id`) and becomes the controller; control calls from any other tab get 403 until it clicks *Take control*. Start is serialised by a lock and idempotent for a double click. Every tab gets the same SSE stream; a reconnecting tab gets the run's log again and skips what it already folded (by `seq`).
 
 **Director**
 - `script.py` is a list of `Step(act, at_s, caption, action, wait_for=None, timeout_s=25)`.
@@ -94,9 +97,10 @@ tests/
 **Prefetch**
 - The investigator's rulebook draft is requested at Start (the fixtures are deterministic).
 - The agent plan is requested at the start of Act 2.
-- The investigator's case is requested at the first Act 4 denial.
+- The investigator's case is requested at the first Act 5 denial.
 - The investigator's hardening diff is requested as soon as the case is ready.
-- Results are cached per run.
+- Results are cached per run. Each call's task belongs to its run: a restart cancels it, and a late reply for an older run is dropped (no event, no data).
+- Every call emits readiness events (`pending → requested → ready → used`, or `failed`) for the lights in the ticker. A step that needs a result holds the scripted clock until it arrives. On a failure the run pauses with the call, the time it is needed and three actions: retry (re-send), switch model (tested live first if needed), restart.
 
 **Key views (SPEC §5.8)**
 - The browser keeps the run's events and renders `render(events.reduce(apply, initialState))`. The live console and key views use the same reducer.
@@ -112,7 +116,7 @@ tests/
  "payload": {...}, "prev_hash": "…", "hash": "…"}
 ```
 
-Only `decision` events join the hash chain. `llm` events carry `{role, model_ref, latency_ms, status}`, never prompts containing secrets, and **never the token**.
+Only `decision` events join the hash chain. `llm` events carry `{job, role, model, status, needed_at, latency_ms}`, never prompts containing secrets, and **never the token**.
 
 ## Security posture of the prototype itself
 

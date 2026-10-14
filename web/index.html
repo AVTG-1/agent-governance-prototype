@@ -19,17 +19,18 @@
     <div>
       <h3>The next five minutes</h3>
       <ol>
-        <li><span class="n">1</span>Discover<small>Deck: The estate today</small></li>
-        <li><span class="n">2</span>Shadow and learn<small>Deck: Agents we can't see inside · Rolling it out · Who decides</small></li>
-        <li><span class="n">3</span>Enforce<small>Deck: The control plane</small></li>
-        <li><span class="n">4</span>Attack<small>Deck: Catching a rogue agent · Agent to agent</small></li>
-        <li><span class="n">5</span>Harden<small>Deck: Optimising permissions</small></li>
-        <li><span class="n">6</span>Prove<small>Deck: What's being asked</small></li>
+        <li><span class="n">1</span>Discover<small>Find every agent · Deck: The estate today</small></li>
+        <li><span class="n">2</span>Shadow and learn<small>Watch, don’t block · Deck: Rolling it out</small></li>
+        <li><span class="n">3</span>People sign<small>Nothing enforced unsigned · Deck: Human in the loop</small></li>
+        <li><span class="n">4</span>Enforce<small>Normal work flows · Deck: The control plane</small></li>
+        <li><span class="n">5</span>Attack<small>The model is fooled · Deck: Catching a rogue agent</small></li>
+        <li><span class="n">6</span>Tighten and prove<small>Signed, measured · Deck: Optimising permissions</small></li>
       </ol>
     </div>
     <div class="real">
       <span><b>Real in every run:</b> every allow, deny and hold from the policy engine; four live model calls; the verifier and replay; every number on the evidence screen; the hash chain.</span>
-      <span><b>Simulated, and labelled:</b> the firm, its systems and data; three of the four agents; last week's traffic; the clock for just-in-time expiry.</span>
+      <span><b>Simulated, and labelled:</b> the firm, its systems and data; three of the four agents; last week's traffic; the clock for two-minute access.</span>
+      <span><b>People sign:</b> the owner's approval auto-signs after 8 seconds in the demo only, labelled; in production nothing auto-approves.</span>
     </div>
   </aside>
   <div class="gate-main">
@@ -47,7 +48,7 @@
 
       <div class="field">
         <label class="label" for="g-token">Token</label>
-        <div class="row">
+        <div class="frow">
           <input id="g-token" type="password" autocomplete="off" spellcheck="false" placeholder="Paste a fresh token">
           <span id="g-masked" class="masked" hidden></span>
           <button type="button" id="g-forget" class="btn btn-quiet" hidden>Forget token</button>
@@ -81,10 +82,13 @@
       </details>
 
       <div class="actions">
+        <button type="button" id="g-preflight" class="btn btn-quiet" disabled title="Optional: run each of the four real model calls once, before anyone is watching">Preflight</button>
+        <span class="grow"></span>
         <button type="button" id="g-test" class="btn btn-quiet">Test connection</button>
         <button type="button" id="g-start" class="btn btn-primary" disabled>Start demo</button>
       </div>
       <ul id="g-results" class="results" aria-live="polite"></ul>
+      <ul id="g-preflight-results" class="results" aria-live="polite"></ul>
     </div>
   </div>
 </main>
@@ -92,32 +96,19 @@
 
 <div id="console" class="console" hidden>
   <header class="top">
-    <div class="top-row">
-      <div class="logo">
-        <svg class="mark" viewBox="0 0 34 34" aria-hidden="true"><defs><linearGradient id="mk-c" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6f86ff"/><stop offset="1" stop-color="#3049d1"/></linearGradient></defs><rect width="34" height="34" rx="9" fill="url(#mk-c)"/><circle cx="17" cy="17" r="8" fill="none" stroke="#fff" stroke-width="3"/><circle cx="17" cy="17" r="2.8" fill="#3cc79f"/></svg>
-        <div><b>Governing the agent estate</b> <span>· live demo · Kaiyo Securities (synthetic)</span></div>
-      </div>
-      <div id="h-status" class="status"></div>
-      <div id="h-controls" class="controls"></div>
+    <div class="logo" title="Live demo · Kaiyo Securities (synthetic)">
+      <svg class="mark" viewBox="0 0 34 34" aria-hidden="true"><defs><linearGradient id="mk-c" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6f86ff"/><stop offset="1" stop-color="#3049d1"/></linearGradient></defs><rect width="34" height="34" rx="9" fill="url(#mk-c)"/><circle cx="17" cy="17" r="8" fill="none" stroke="#fff" stroke-width="3"/><circle cx="17" cy="17" r="2.8" fill="#3cc79f"/></svg>
+      <b>Governing the agent estate</b>
     </div>
-    <div class="top-row">
-      <nav id="h-acts" class="stepper" aria-label="Acts"></nav>
-      <div id="h-right" class="status"></div>
-    </div>
+    <nav id="h-acts" class="stepper" aria-label="Acts"></nav>
+    <div id="h-controls" class="controls"></div>
   </header>
-  <section class="pane map-pane">
-    <div class="pane-head">
-      <h2><svg class="i" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>The control plane</h2>
-      <span class="xs dim">deck: “One control plane, six parts”</span>
-    </div>
-    <div id="map" class="map"></div>
-  </section>
-  <section class="pane timeline-pane">
-    <div class="pane-head"><h2><svg class="i" viewBox="0 0 24 24"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>Live decision timeline</h2><span id="tl-meta" class="xs dim"></span></div>
-    <div id="timeline" class="timeline"></div>
-  </section>
-  <section class="pane panel-pane"><div id="panel" class="panel"></div></section>
-  <footer id="caption" class="caption"></footer>
+  <section class="pane map-pane" aria-label="Agent-action map"><div id="map" class="amap"></div></section>
+  <section class="pane panel-pane" aria-label="Act panel"><div id="panel" class="panel"></div><div id="panel-over" class="panel-over"></div></section>
+  <footer class="bottom">
+    <div id="caption" class="caption" aria-live="polite"><span id="cap-act" class="act-label"></span><span id="cap-text" class="text"></span></div>
+    <div id="ticker" class="ticker"></div>
+  </footer>
   <div id="overlays"></div>
 </div>
 <script type="module" src="app.js"></script>

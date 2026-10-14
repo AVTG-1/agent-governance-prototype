@@ -29,7 +29,7 @@ If you are unsure whether something is core or plumbing: would the client notice
 2. **The demo cannot start without a live, user-pasted key.** On launch the app shows a connection screen. The presenter picks a provider (**LLM Foundry, default and recommended**, or OpenRouter), pastes a token, and clicks *Test connection*. A real call to each selected model must succeed before *Start demo* is enabled. There is no environment-variable or file-based way to supply the token, and no "skip" button. Key views (SPEC §5.8) aren't an exception: they only replay a run that already passed the gate, are always labelled as recorded, and can't start a run.
 3. **Tokens live only in server memory** for the life of the process. Never write them to disk, logs, the event stream, error messages or the browser's storage. Mask them in the UI (show last 4 characters at most). If a call returns 401/403 mid-demo, pause the demo and ask for a fresh token.
 4. **The mock LLM is for automated tests only.** `app/llm/mock.py` may exist for `pytest`, selected only by test fixtures. It must not be reachable from the UI or from any setting a presenter can change.
-5. **Never fake a live result silently.** If an LLM call fails, pause and say so plainly. The one sanctioned fallback is in SPEC §5.4 (the agent resists the injection): it is shown on screen as a recorded plan, clearly labelled.
+5. **Never fake a live result silently.** If an LLM call fails, pause and say so plainly. The one sanctioned fallback is in SPEC §5.5 (the agent resists the injection): it is shown on screen as a recorded plan, clearly labelled.
 6. **You cannot reach LLM Foundry from this environment.** Foundry is only reachable from the presenter's work laptop. Do not try to call `llmfoundry.straive.com`. Build against the documented request shapes in `docs/LLM_PROVIDERS.md`, test with the mock, and keep `scripts/probe_llm.py` working so the presenter can verify connectivity on the laptop.
 7. **Target machine:** Windows work laptop with Python (conda or venv), possibly behind a corporate proxy. Use `pathlib`, no bash-only scripts, no symlinks. `python run.py` must start everything and open the browser. Respect `HTTPS_PROXY` and an optional CA bundle path (see `docs/LLM_PROVIDERS.md`).
 8. **Dependencies:** keep to `requirements.txt` (FastAPI, Uvicorn, httpx, pydantic, pytest). Ask before adding anything else, and never add anything that needs a compiler or Node.
@@ -57,7 +57,7 @@ python scripts/probe_llm.py --provider foundry --model gpt-4.1-mini   # presente
 ## Definition of done
 
 - `python run.py` on a fresh Windows Python environment opens the connection screen.
-- With a valid Foundry token, *Test connection* passes and *Start demo* plays the full story in 5:00 ± 0:20 with at most one optional presenter click (the owner approval in Act 5, which auto-approves after a short countdown).
+- With a valid Foundry token, *Test connection* passes and *Start demo* plays the full story in 5:00 ± 0:20 with at most two optional presenter clicks (the owners' signatures in Acts 3 and 6, each of which auto-signs after an 8-second countdown, labelled "auto-signed for demo").
 - After the run, **Key views** shows all eight moments instantly, and *Download key views* produces an offline, token-free HTML file labelled as a recording.
 - All tests pass offline. `check_no_secrets.py` passes. No token is stored anywhere but process memory.
 - The UI matches `docs/DESIGN.md` in light and dark mode and is legible at 1440×900 and 1920×1080.

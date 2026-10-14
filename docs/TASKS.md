@@ -113,3 +113,19 @@ Work top to bottom. Tick each box when its acceptance checks pass, then commit. 
 - [x] Screenshots of every step at 1440×900 and 1920×1080 in both themes compared against the deck; overflow sweep clean; final set in `docs/screens/`.
 
 **Accept:** someone who has just seen the deck recognises every screen as the same product.
+
+# Round 3: live-test fixes and a calmer console
+
+## M13 — Live-test fixes, the agent-action map, robustness
+- [x] Bug (a): pasted token and suffix cleaned (whitespace, invisible characters); other non-ASCII refused with a plain gate message, never a 500; the masked value is never sent back. Test pastes `·`, `•`, a newline and a trailing space.
+- [x] Bug (b): every contract robust: fences and prose stripped, outermost object, trailing commas, cut-off detection (stop reason or unclosed object), larger output budget, compact rulebook contract, JSON mode where it exists, one retry with the parse error, raw reply printed to the terminal. Parser tests for fenced, truncated, prose-wrapped and trailing-comma replies.
+- [x] Bug (c): the pause card names the failed call and when it is needed, with Retry (re-send), Switch model (tested live first) and Restart.
+- [x] Bug (d): nothing needs scrolling during autoplay; drawers scroll with wheel, trackpad, touch and keyboard, with a visible scrollbar.
+- [x] Bug (e): the caption has a fixed height; errors, pauses and signatures float over the act panel and never change the layout.
+- [x] Two areas and a ticker: the agent-action map (60%), the act panel (40%), the caption and a one-row decision ticker; the full timeline is a drawer (L). Header: title, stepper, clock, controls only.
+- [x] The agent-action map: agents → plane band (six parts) → systems by business area; edges by decision, thickness by shadow-week usage; unknown in Act 1, filled in by Act 2, kyc export red when rejected, the attack path stopping at the plane; click to filter; in key views and the export.
+- [x] Acts and deck chips follow the updated deck (Prototype chapter; chapter 4 "Human in the loop"): Discover, Shadow and learn, People sign, Enforce, Attack, Tighten and prove. Still 5:00.
+- [x] Robustness: readiness lights per call; the clock holds for a late result; a fresh Start plays at 1×; optional Preflight of the four contracts; late replies from an old run dropped; one controlling tab, others view; a double-clicked Start is one run; SSE reconnect and resync; 429 back-off once; 401 resumes the same step; approvals work at 0.5×, 1× and 2×.
+- [x] Sweep: every step at 1280×720, 1366×768, 1536×864 and 1920×1080, at 90/100/110% zoom, in both themes: no overflow, nothing clipped.
+
+**Accept:** `pytest -q` is green; the sweep is clean; a mocked run plays all six acts in 5:00; the key-views export works offline with the map.
