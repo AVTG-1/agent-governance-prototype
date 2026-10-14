@@ -49,9 +49,9 @@ def client(mock_llm):
     llm.CONNECTION = llm.Connection()
 
 
-def pass_gate(client, token="fake-gate-token-0001"):
+def pass_gate(client, fake="fake-gate-token-0001"):
     r = client.post("/api/connection/test", json={
-        "provider": "foundry", "token": token, "project": "llmproxy-playground",
+        "provider": "foundry", "token": fake, "project": "llmproxy-playground",
         "models": {"agent": "azure:gpt-4.1-mini", "investigator": "bedrock:claude-sonnet-4.5"}})
     assert r.status_code == 200 and r.json()["ready"], r.text
     return r

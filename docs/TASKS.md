@@ -34,10 +34,10 @@ Work top to bottom. Tick each box when its acceptance checks pass, then commit. 
 **Accept:** parser tests are green. Grep confirms no route imports `mock`.
 
 ## M4 — Connection gate
-- [ ] The screen in SPEC §4.1, with Foundry selected by default and the recommended models preselected.
-- [ ] `secrets_store` holds the token in memory only; *Forget token* clears it; the UI shows a masked token.
-- [ ] `POST /api/demo/start` returns 409 until both role tests pass in this process.
-- [ ] `tests/test_no_token_leak.py` passes.
+- [x] The screen in SPEC §4.1, with Foundry selected by default and the recommended models preselected.
+- [x] `secrets_store` holds the token in memory only; *Forget token* clears it; the UI shows a masked token.
+- [x] `POST /api/demo/start` returns 409 until both role tests pass in this process.
+- [x] `tests/test_no_token_leak.py` passes.
 
 **Accept:** without a passing test the Start button is disabled and the API refuses; after a mocked pass (in tests) it starts.
 

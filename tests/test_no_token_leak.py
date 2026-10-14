@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 def test_token_never_leaves_memory(client, caplog):
     caplog.set_level(logging.DEBUG)
     bodies = []
-    bodies.append(pass_gate(client, token=FAKE).text)
+    bodies.append(pass_gate(client, fake=FAKE).text)
     bodies.append(client.get("/api/connection/status").text)
     bodies.append(client.get("/api/catalog").text)
     bodies.append(client.post("/api/demo/start").text)
@@ -58,7 +58,7 @@ def test_errors_are_redacted(client):
 
 
 def test_401_mid_demo_pauses_and_asks_for_a_fresh_token(client):
-    pass_gate(client, token=FAKE)
+    pass_gate(client, fake=FAKE)
     client.mock.fail_role = "case"
     client.mock.fail_kind = "once"
     client.post("/api/demo/start")

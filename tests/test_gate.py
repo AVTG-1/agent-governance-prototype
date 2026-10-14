@@ -33,7 +33,7 @@ def test_environment_variable_cannot_supply_token(client, monkeypatch):
 
 
 def test_forget_token_closes_gate_and_masking(client):
-    body = pass_gate(client, token="fake-gate-token-abcd").json()
+    body = pass_gate(client, fake="fake-gate-token-abcd").json()
     assert body["token"] == "••••abcd"
     assert client.post("/api/connection/forget").json()["token"] is None
     assert client.post("/api/demo/start").status_code == 409
