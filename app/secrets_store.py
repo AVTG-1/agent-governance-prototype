@@ -44,9 +44,11 @@ def redact(text: str) -> str:
 class RedactFilter(logging.Filter):
     def filter(self, record: logging.LogRecord) -> bool:
         if _token:
-            record.msg = redact(str(record.msg))
-            if record.args:
-                record.args = tuple(redact(str(a)) for a in record.args) if isinstance(record.args, tuple) else record.args
+            try:
+                message = record.getMessage()
+            except (TypeError, ValueError):
+                message = str(record.msg)
+            record.msg, record.args = redact(message), None
         return True
 
 
