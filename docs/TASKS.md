@@ -58,12 +58,12 @@ Work top to bottom. Tick each box when its acceptance checks pass, then commit. 
 **Accept:** manual check against the DESIGN checklist; screenshot both themes into `docs/screens/` if a headless browser is available.
 
 ## M7 — Story details that make it credible
-- [ ] Today mode with dashed bypass edges and the red outcome.
-- [ ] The agent-resists fallback with the exact banner text from SPEC §5.4.
-- [ ] The verifier shows a real ✓/✗ per change; replay computes "0 of 600 broken" and "20 of 20 blocked".
-- [ ] Owner approval modal with an 8 s auto-approve countdown, labelled.
-- [ ] Evidence numbers computed from the run; downloadable Markdown and JSON pack with a verifiable hash chain.
-- [ ] The *Extra: malfunction* button (SPEC §5.7).
+- [x] Today mode with dashed bypass edges and the red outcome.
+- [x] The agent-resists fallback with the exact banner text from SPEC §5.4.
+- [x] The verifier shows a real ✓/✗ per change; replay computes "0 of 600 broken" and "20 of 20 blocked".
+- [x] Owner approval modal with an 8 s auto-approve countdown, labelled.
+- [x] Evidence numbers computed from the run; downloadable Markdown and JSON pack with a verifiable hash chain.
+- [x] The *Extra: malfunction* button (SPEC §5.7).
 
 **Accept:** a full mocked run produces an evidence pack whose chain verifies in a test.
 
