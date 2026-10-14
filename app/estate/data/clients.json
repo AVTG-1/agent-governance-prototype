@@ -1,0 +1,209 @@
+{
+  "column_tags": {
+    "tax_id": "restricted-pii",
+    "email": "restricted-pii",
+    "dob": "restricted-pii"
+  },
+  "rows": [
+    {
+      "client_id": "C-101",
+      "name": "Bellmont Partners",
+      "legal_entity_id": "KY00LEI95822412",
+      "country": "JP",
+      "client_type": "fund",
+      "tax_id": "TX-859-45-5012",
+      "email": "ops@bellmont-partners.example",
+      "dob": "1969-03-24"
+    },
+    {
+      "client_id": "C-102",
+      "name": "Arden Capital LLP",
+      "legal_entity_id": "KY00LEI23756669",
+      "country": "JP",
+      "client_type": "partnership",
+      "tax_id": "TX-132-13-2535",
+      "email": "ops@arden-capital-llp.example",
+      "dob": "1968-04-17"
+    },
+    {
+      "client_id": "C-103",
+      "name": "Calder Vale Asset Management",
+      "legal_entity_id": "KY00LEI90801586",
+      "country": "GB",
+      "client_type": "pension",
+      "tax_id": "TX-833-93-9928",
+      "email": "ops@calder-vale-asset.example",
+      "dob": "1981-04-15"
+    },
+    {
+      "client_id": "C-104",
+      "name": "Dunmore Quay Holdings",
+      "legal_entity_id": "KY00LEI89089901",
+      "country": "DE",
+      "client_type": "fund",
+      "tax_id": "TX-877-30-7924",
+      "email": "ops@dunmore-quay-holdi.example",
+      "dob": "1976-05-05"
+    },
+    {
+      "client_id": "C-105",
+      "name": "Eastvale Pension Trust",
+      "legal_entity_id": "KY00LEI38898923",
+      "country": "FR",
+      "client_type": "fund",
+      "tax_id": "TX-194-58-2584",
+      "email": "ops@eastvale-pension-t.example",
+      "dob": "1977-06-20"
+    },
+    {
+      "client_id": "C-106",
+      "name": "Fenwick & Rowe LLP",
+      "legal_entity_id": "KY00LEI45503389",
+      "country": "GB",
+      "client_type": "partnership",
+      "tax_id": "TX-649-25-7201",
+      "email": "ops@fenwick-and-rowe-l.example",
+      "dob": "1960-09-10"
+    },
+    {
+      "client_id": "C-107",
+      "name": "Glenhaven Capital",
+      "legal_entity_id": "KY00LEI94374605",
+      "country": "FR",
+      "client_type": "pension",
+      "tax_id": "TX-821-18-1750",
+      "email": "ops@glenhaven-capital.example",
+      "dob": "1969-05-03"
+    },
+    {
+      "client_id": "C-108",
+      "name": "Harrow Bay Investors",
+      "legal_entity_id": "KY00LEI41244663",
+      "country": "JP",
+      "client_type": "partnership",
+      "tax_id": "TX-384-68-6977",
+      "email": "ops@harrow-bay-investo.example",
+      "dob": "1965-06-12"
+    },
+    {
+      "client_id": "C-109",
+      "name": "Ivelle Group",
+      "legal_entity_id": "KY00LEI38119557",
+      "country": "DE",
+      "client_type": "fund",
+      "tax_id": "TX-723-91-3803",
+      "email": "ops@ivelle-group.example",
+      "dob": "1989-12-08"
+    },
+    {
+      "client_id": "C-110",
+      "name": "Juniper Ridge Fund",
+      "legal_entity_id": "KY00LEI31931511",
+      "country": "CH",
+      "client_type": "partnership",
+      "tax_id": "TX-376-91-4598",
+      "email": "ops@juniper-ridge-fund.example",
+      "dob": "1975-01-08"
+    },
+    {
+      "client_id": "C-111",
+      "name": "Kestrel Point Advisors",
+      "legal_entity_id": "KY00LEI14308421",
+      "country": "FR",
+      "client_type": "partnership",
+      "tax_id": "TX-374-18-4456",
+      "email": "ops@kestrel-point-advi.example",
+      "dob": "1975-04-21"
+    },
+    {
+      "client_id": "C-112",
+      "name": "Larkspur Holdings",
+      "legal_entity_id": "KY00LEI77005685",
+      "country": "HK",
+      "client_type": "partnership",
+      "tax_id": "TX-246-43-3287",
+      "email": "ops@larkspur-holdings.example",
+      "dob": "1970-12-18"
+    },
+    {
+      "client_id": "C-113",
+      "name": "Marlow Street Capital",
+      "legal_entity_id": "KY00LEI82340307",
+      "country": "DE",
+      "client_type": "partnership",
+      "tax_id": "TX-697-61-6930",
+      "email": "ops@marlow-street-capi.example",
+      "dob": "1969-03-17"
+    },
+    {
+      "client_id": "C-114",
+      "name": "Northcombe Mutual",
+      "legal_entity_id": "KY00LEI76238574",
+      "country": "JP",
+      "client_type": "fund",
+      "tax_id": "TX-981-24-3504",
+      "email": "ops@northcombe-mutual.example",
+      "dob": "1965-11-14"
+    },
+    {
+      "client_id": "C-115",
+      "name": "Oakhurst Lane Partners",
+      "legal_entity_id": "KY00LEI90048665",
+      "country": "JP",
+      "client_type": "partnership",
+      "tax_id": "TX-490-86-8668",
+      "email": "ops@oakhurst-lane-part.example",
+      "dob": "1988-05-18"
+    },
+    {
+      "client_id": "C-116",
+      "name": "Pellham Trust",
+      "legal_entity_id": "KY00LEI11540956",
+      "country": "JP",
+      "client_type": "corporate",
+      "tax_id": "TX-887-92-6573",
+      "email": "ops@pellham-trust.example",
+      "dob": "1962-05-14"
+    },
+    {
+      "client_id": "C-117",
+      "name": "Quayside Asset Management",
+      "legal_entity_id": "KY00LEI31227574",
+      "country": "CH",
+      "client_type": "fund",
+      "tax_id": "TX-839-43-9201",
+      "email": "ops@quayside-asset-man.example",
+      "dob": "1966-09-04"
+    },
+    {
+      "client_id": "C-118",
+      "name": "Rookwood Capital",
+      "legal_entity_id": "KY00LEI93926371",
+      "country": "DE",
+      "client_type": "pension",
+      "tax_id": "TX-256-57-3646",
+      "email": "ops@rookwood-capital.example",
+      "dob": "1989-09-01"
+    },
+    {
+      "client_id": "C-119",
+      "name": "Selby & March LLP",
+      "legal_entity_id": "KY00LEI90388981",
+      "country": "FR",
+      "client_type": "partnership",
+      "tax_id": "TX-119-24-6947",
+      "email": "ops@selby-and-march-ll.example",
+      "dob": "1974-04-02"
+    },
+    {
+      "client_id": "C-120",
+      "name": "Thornbury Investments",
+      "legal_entity_id": "KY00LEI42329237",
+      "country": "JP",
+      "client_type": "fund",
+      "tax_id": "TX-849-72-2133",
+      "email": "ops@thornbury-investme.example",
+      "dob": "1989-03-05"
+    }
+  ]
+}

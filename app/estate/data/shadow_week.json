@@ -1,0 +1,8120 @@
+[
+  {
+    "ts": "2026-09-29T06:05:02",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1106"
+    },
+    "id": "sh-0001"
+  },
+  {
+    "ts": "2026-09-29T06:06:16",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1084"
+    },
+    "id": "sh-0002"
+  },
+  {
+    "ts": "2026-09-29T06:16:13",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-105"
+    },
+    "id": "sh-0003"
+  },
+  {
+    "ts": "2026-09-29T06:19:28",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1093"
+    },
+    "id": "sh-0004"
+  },
+  {
+    "ts": "2026-09-29T07:14:38",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1084"
+    },
+    "id": "sh-0005"
+  },
+  {
+    "ts": "2026-09-29T07:18:24",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-120"
+    },
+    "id": "sh-0006"
+  },
+  {
+    "ts": "2026-09-29T07:27:22",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1074"
+    },
+    "id": "sh-0007"
+  },
+  {
+    "ts": "2026-09-29T07:28:38",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1073"
+    },
+    "id": "sh-0008"
+  },
+  {
+    "ts": "2026-09-29T07:50:21",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1085"
+    },
+    "id": "sh-0009"
+  },
+  {
+    "ts": "2026-09-29T07:50:25",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1102"
+    },
+    "id": "sh-0010"
+  },
+  {
+    "ts": "2026-09-29T07:53:35",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1102"
+    },
+    "id": "sh-0011"
+  },
+  {
+    "ts": "2026-09-29T07:54:55",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1070"
+    },
+    "id": "sh-0012"
+  },
+  {
+    "ts": "2026-09-29T08:53:05",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-103"
+    },
+    "id": "sh-0013"
+  },
+  {
+    "ts": "2026-09-29T09:12:01",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1098"
+    },
+    "id": "sh-0014"
+  },
+  {
+    "ts": "2026-09-29T09:15:56",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-118"
+    },
+    "id": "sh-0015"
+  },
+  {
+    "ts": "2026-09-29T09:18:05",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1080"
+    },
+    "id": "sh-0016"
+  },
+  {
+    "ts": "2026-09-29T09:27:14",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1074"
+    },
+    "id": "sh-0017"
+  },
+  {
+    "ts": "2026-09-29T09:33:09",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1085"
+    },
+    "id": "sh-0018"
+  },
+  {
+    "ts": "2026-09-29T09:40:50",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1099"
+    },
+    "id": "sh-0019"
+  },
+  {
+    "ts": "2026-09-29T09:54:41",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1105"
+    },
+    "id": "sh-0020"
+  },
+  {
+    "ts": "2026-09-29T09:59:54",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1080"
+    },
+    "id": "sh-0021"
+  },
+  {
+    "ts": "2026-09-29T10:04:15",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1093"
+    },
+    "id": "sh-0022"
+  },
+  {
+    "ts": "2026-09-29T10:06:10",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-115"
+    },
+    "id": "sh-0023"
+  },
+  {
+    "ts": "2026-09-29T10:17:05",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-110"
+    },
+    "id": "sh-0024"
+  },
+  {
+    "ts": "2026-09-29T10:22:19",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-111"
+    },
+    "id": "sh-0025"
+  },
+  {
+    "ts": "2026-09-29T10:45:21",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1100"
+    },
+    "id": "sh-0026"
+  },
+  {
+    "ts": "2026-09-29T10:48:07",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1107"
+    },
+    "id": "sh-0027"
+  },
+  {
+    "ts": "2026-09-29T10:54:38",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1098"
+    },
+    "id": "sh-0028"
+  },
+  {
+    "ts": "2026-09-29T11:17:44",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1089"
+    },
+    "id": "sh-0029"
+  },
+  {
+    "ts": "2026-09-29T11:26:41",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-116"
+    },
+    "id": "sh-0030"
+  },
+  {
+    "ts": "2026-09-29T11:28:22",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1083"
+    },
+    "id": "sh-0031"
+  },
+  {
+    "ts": "2026-09-29T11:40:43",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1097"
+    },
+    "id": "sh-0032"
+  },
+  {
+    "ts": "2026-09-29T11:59:36",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1097"
+    },
+    "id": "sh-0033"
+  },
+  {
+    "ts": "2026-09-29T12:03:17",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1094"
+    },
+    "id": "sh-0034"
+  },
+  {
+    "ts": "2026-09-29T12:13:17",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1074"
+    },
+    "id": "sh-0035"
+  },
+  {
+    "ts": "2026-09-29T12:19:13",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-105"
+    },
+    "id": "sh-0036"
+  },
+  {
+    "ts": "2026-09-29T12:24:26",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1099"
+    },
+    "id": "sh-0037"
+  },
+  {
+    "ts": "2026-09-29T12:32:29",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1093"
+    },
+    "id": "sh-0038"
+  },
+  {
+    "ts": "2026-09-29T12:37:09",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1095"
+    },
+    "id": "sh-0039"
+  },
+  {
+    "ts": "2026-09-29T12:41:40",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1108"
+    },
+    "id": "sh-0040"
+  },
+  {
+    "ts": "2026-09-29T12:51:09",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1104"
+    },
+    "id": "sh-0041"
+  },
+  {
+    "ts": "2026-09-29T13:05:59",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1097"
+    },
+    "id": "sh-0042"
+  },
+  {
+    "ts": "2026-09-29T13:19:07",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1081"
+    },
+    "id": "sh-0043"
+  },
+  {
+    "ts": "2026-09-29T13:19:55",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1072"
+    },
+    "id": "sh-0044"
+  },
+  {
+    "ts": "2026-09-29T13:25:38",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-102"
+    },
+    "id": "sh-0045"
+  },
+  {
+    "ts": "2026-09-29T13:30:01",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1109"
+    },
+    "id": "sh-0046"
+  },
+  {
+    "ts": "2026-09-29T13:34:22",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1070"
+    },
+    "id": "sh-0047"
+  },
+  {
+    "ts": "2026-09-29T13:41:18",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1101"
+    },
+    "id": "sh-0048"
+  },
+  {
+    "ts": "2026-09-29T14:24:15",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1098"
+    },
+    "id": "sh-0049"
+  },
+  {
+    "ts": "2026-09-29T14:28:15",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1079"
+    },
+    "id": "sh-0050"
+  },
+  {
+    "ts": "2026-09-29T14:34:07",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1099"
+    },
+    "id": "sh-0051"
+  },
+  {
+    "ts": "2026-09-29T14:42:55",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1101"
+    },
+    "id": "sh-0052"
+  },
+  {
+    "ts": "2026-09-29T14:54:09",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1078"
+    },
+    "id": "sh-0053"
+  },
+  {
+    "ts": "2026-09-29T15:10:36",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1085"
+    },
+    "id": "sh-0054"
+  },
+  {
+    "ts": "2026-09-29T15:12:02",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1082"
+    },
+    "id": "sh-0055"
+  },
+  {
+    "ts": "2026-09-29T15:26:58",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1075"
+    },
+    "id": "sh-0056"
+  },
+  {
+    "ts": "2026-09-29T16:04:21",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1076"
+    },
+    "id": "sh-0057"
+  },
+  {
+    "ts": "2026-09-29T16:10:51",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1109"
+    },
+    "id": "sh-0058"
+  },
+  {
+    "ts": "2026-09-29T16:38:14",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1071"
+    },
+    "id": "sh-0059"
+  },
+  {
+    "ts": "2026-09-29T16:41:06",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1080"
+    },
+    "id": "sh-0060"
+  },
+  {
+    "ts": "2026-09-29T16:42:22",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1074"
+    },
+    "id": "sh-0061"
+  },
+  {
+    "ts": "2026-09-29T16:59:06",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1091"
+    },
+    "id": "sh-0062"
+  },
+  {
+    "ts": "2026-09-29T16:59:19",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1102"
+    },
+    "id": "sh-0063"
+  },
+  {
+    "ts": "2026-09-29T17:00:31",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1078"
+    },
+    "id": "sh-0064"
+  },
+  {
+    "ts": "2026-09-29T17:13:28",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1098"
+    },
+    "id": "sh-0065"
+  },
+  {
+    "ts": "2026-09-29T17:27:07",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1088"
+    },
+    "id": "sh-0066"
+  },
+  {
+    "ts": "2026-09-29T17:32:04",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1089"
+    },
+    "id": "sh-0067"
+  },
+  {
+    "ts": "2026-09-29T18:03:36",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1105"
+    },
+    "id": "sh-0068"
+  },
+  {
+    "ts": "2026-09-29T18:23:16",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1071"
+    },
+    "id": "sh-0069"
+  },
+  {
+    "ts": "2026-09-29T18:23:32",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1080"
+    },
+    "id": "sh-0070"
+  },
+  {
+    "ts": "2026-09-29T18:24:24",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1105"
+    },
+    "id": "sh-0071"
+  },
+  {
+    "ts": "2026-09-29T18:40:19",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1084"
+    },
+    "id": "sh-0072"
+  },
+  {
+    "ts": "2026-09-29T18:48:21",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1097"
+    },
+    "id": "sh-0073"
+  },
+  {
+    "ts": "2026-09-29T18:50:31",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1081"
+    },
+    "id": "sh-0074"
+  },
+  {
+    "ts": "2026-09-29T18:55:19",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1091"
+    },
+    "id": "sh-0075"
+  },
+  {
+    "ts": "2026-09-29T19:00:01",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1103"
+    },
+    "id": "sh-0076"
+  },
+  {
+    "ts": "2026-09-29T19:32:23",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1071"
+    },
+    "id": "sh-0077"
+  },
+  {
+    "ts": "2026-09-29T19:38:52",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-106"
+    },
+    "id": "sh-0078"
+  },
+  {
+    "ts": "2026-09-29T19:42:08",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1085"
+    },
+    "id": "sh-0079"
+  },
+  {
+    "ts": "2026-09-29T20:39:38",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1073"
+    },
+    "id": "sh-0080"
+  },
+  {
+    "ts": "2026-09-29T20:45:13",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1098"
+    },
+    "id": "sh-0081"
+  },
+  {
+    "ts": "2026-09-29T21:00:21",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1109"
+    },
+    "id": "sh-0082"
+  },
+  {
+    "ts": "2026-09-29T21:42:31",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1071"
+    },
+    "id": "sh-0083"
+  },
+  {
+    "ts": "2026-09-29T21:47:27",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1081"
+    },
+    "id": "sh-0084"
+  },
+  {
+    "ts": "2026-09-29T21:54:27",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1091"
+    },
+    "id": "sh-0085"
+  },
+  {
+    "ts": "2026-09-30T06:24:50",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1092"
+    },
+    "id": "sh-0086"
+  },
+  {
+    "ts": "2026-09-30T07:02:19",
+    "agent": "recon-agent",
+    "capability": "refdata.read",
+    "system": "refdata",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "key": "instruments"
+    },
+    "id": "sh-0087"
+  },
+  {
+    "ts": "2026-09-30T07:25:28",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1084"
+    },
+    "id": "sh-0088"
+  },
+  {
+    "ts": "2026-09-30T07:30:23",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1094"
+    },
+    "id": "sh-0089"
+  },
+  {
+    "ts": "2026-09-30T07:33:02",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1074"
+    },
+    "id": "sh-0090"
+  },
+  {
+    "ts": "2026-09-30T07:43:05",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-109"
+    },
+    "id": "sh-0091"
+  },
+  {
+    "ts": "2026-09-30T08:04:19",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-113"
+    },
+    "id": "sh-0092"
+  },
+  {
+    "ts": "2026-09-30T08:10:27",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1087"
+    },
+    "id": "sh-0093"
+  },
+  {
+    "ts": "2026-09-30T08:12:08",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1107"
+    },
+    "id": "sh-0094"
+  },
+  {
+    "ts": "2026-09-30T08:18:54",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-104"
+    },
+    "id": "sh-0095"
+  },
+  {
+    "ts": "2026-09-30T08:33:23",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-103"
+    },
+    "id": "sh-0096"
+  },
+  {
+    "ts": "2026-09-30T08:45:15",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1092"
+    },
+    "id": "sh-0097"
+  },
+  {
+    "ts": "2026-09-30T09:01:47",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1081"
+    },
+    "id": "sh-0098"
+  },
+  {
+    "ts": "2026-09-30T09:08:54",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1074"
+    },
+    "id": "sh-0099"
+  },
+  {
+    "ts": "2026-09-30T09:09:16",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1082"
+    },
+    "id": "sh-0100"
+  },
+  {
+    "ts": "2026-09-30T09:12:50",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1078"
+    },
+    "id": "sh-0101"
+  },
+  {
+    "ts": "2026-09-30T09:15:42",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1085"
+    },
+    "id": "sh-0102"
+  },
+  {
+    "ts": "2026-09-30T09:22:54",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1105"
+    },
+    "id": "sh-0103"
+  },
+  {
+    "ts": "2026-09-30T09:54:52",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1099"
+    },
+    "id": "sh-0104"
+  },
+  {
+    "ts": "2026-09-30T10:10:20",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1103"
+    },
+    "id": "sh-0105"
+  },
+  {
+    "ts": "2026-09-30T10:18:27",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1070"
+    },
+    "id": "sh-0106"
+  },
+  {
+    "ts": "2026-09-30T10:21:45",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1081"
+    },
+    "id": "sh-0107"
+  },
+  {
+    "ts": "2026-09-30T10:30:20",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-108"
+    },
+    "id": "sh-0108"
+  },
+  {
+    "ts": "2026-09-30T10:45:20",
+    "agent": "recon-agent",
+    "capability": "refdata.read",
+    "system": "refdata",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "key": "currencies"
+    },
+    "id": "sh-0109"
+  },
+  {
+    "ts": "2026-09-30T10:46:34",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1101"
+    },
+    "id": "sh-0110"
+  },
+  {
+    "ts": "2026-09-30T10:48:48",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1074"
+    },
+    "id": "sh-0111"
+  },
+  {
+    "ts": "2026-09-30T11:31:32",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1099"
+    },
+    "id": "sh-0112"
+  },
+  {
+    "ts": "2026-09-30T11:43:24",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1080"
+    },
+    "id": "sh-0113"
+  },
+  {
+    "ts": "2026-09-30T11:43:49",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1105"
+    },
+    "id": "sh-0114"
+  },
+  {
+    "ts": "2026-09-30T11:46:00",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1106"
+    },
+    "id": "sh-0115"
+  },
+  {
+    "ts": "2026-09-30T11:46:27",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-116"
+    },
+    "id": "sh-0116"
+  },
+  {
+    "ts": "2026-09-30T11:49:08",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1097"
+    },
+    "id": "sh-0117"
+  },
+  {
+    "ts": "2026-09-30T11:59:54",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1072"
+    },
+    "id": "sh-0118"
+  },
+  {
+    "ts": "2026-09-30T12:04:53",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1105"
+    },
+    "id": "sh-0119"
+  },
+  {
+    "ts": "2026-09-30T12:25:58",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1085"
+    },
+    "id": "sh-0120"
+  },
+  {
+    "ts": "2026-09-30T12:52:34",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1087"
+    },
+    "id": "sh-0121"
+  },
+  {
+    "ts": "2026-09-30T12:52:55",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-108"
+    },
+    "id": "sh-0122"
+  },
+  {
+    "ts": "2026-09-30T12:57:55",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1106"
+    },
+    "id": "sh-0123"
+  },
+  {
+    "ts": "2026-09-30T13:03:06",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-114"
+    },
+    "id": "sh-0124"
+  },
+  {
+    "ts": "2026-09-30T13:04:45",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1079"
+    },
+    "id": "sh-0125"
+  },
+  {
+    "ts": "2026-09-30T13:19:51",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1100"
+    },
+    "id": "sh-0126"
+  },
+  {
+    "ts": "2026-09-30T13:37:20",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1092"
+    },
+    "id": "sh-0127"
+  },
+  {
+    "ts": "2026-09-30T13:44:04",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-112"
+    },
+    "id": "sh-0128"
+  },
+  {
+    "ts": "2026-09-30T13:51:33",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1072"
+    },
+    "id": "sh-0129"
+  },
+  {
+    "ts": "2026-09-30T14:03:08",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1096"
+    },
+    "id": "sh-0130"
+  },
+  {
+    "ts": "2026-09-30T14:05:41",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1093"
+    },
+    "id": "sh-0131"
+  },
+  {
+    "ts": "2026-09-30T14:17:28",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-105"
+    },
+    "id": "sh-0132"
+  },
+  {
+    "ts": "2026-09-30T14:19:17",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1101"
+    },
+    "id": "sh-0133"
+  },
+  {
+    "ts": "2026-09-30T14:52:22",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1087"
+    },
+    "id": "sh-0134"
+  },
+  {
+    "ts": "2026-09-30T15:07:03",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1085"
+    },
+    "id": "sh-0135"
+  },
+  {
+    "ts": "2026-09-30T15:10:10",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-111"
+    },
+    "id": "sh-0136"
+  },
+  {
+    "ts": "2026-09-30T15:10:49",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1099"
+    },
+    "id": "sh-0137"
+  },
+  {
+    "ts": "2026-09-30T15:14:52",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1106"
+    },
+    "id": "sh-0138"
+  },
+  {
+    "ts": "2026-09-30T15:24:11",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1104"
+    },
+    "id": "sh-0139"
+  },
+  {
+    "ts": "2026-09-30T15:49:44",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1071"
+    },
+    "id": "sh-0140"
+  },
+  {
+    "ts": "2026-09-30T16:35:27",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1099"
+    },
+    "id": "sh-0141"
+  },
+  {
+    "ts": "2026-09-30T16:49:10",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1074"
+    },
+    "id": "sh-0142"
+  },
+  {
+    "ts": "2026-09-30T16:53:28",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1109"
+    },
+    "id": "sh-0143"
+  },
+  {
+    "ts": "2026-09-30T16:55:45",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1090"
+    },
+    "id": "sh-0144"
+  },
+  {
+    "ts": "2026-09-30T16:59:39",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1090"
+    },
+    "id": "sh-0145"
+  },
+  {
+    "ts": "2026-09-30T17:06:43",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1093"
+    },
+    "id": "sh-0146"
+  },
+  {
+    "ts": "2026-09-30T17:07:11",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1104"
+    },
+    "id": "sh-0147"
+  },
+  {
+    "ts": "2026-09-30T17:10:16",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1076"
+    },
+    "id": "sh-0148"
+  },
+  {
+    "ts": "2026-09-30T17:20:10",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1075"
+    },
+    "id": "sh-0149"
+  },
+  {
+    "ts": "2026-09-30T17:20:12",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1099"
+    },
+    "id": "sh-0150"
+  },
+  {
+    "ts": "2026-09-30T17:35:18",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1074"
+    },
+    "id": "sh-0151"
+  },
+  {
+    "ts": "2026-09-30T17:35:24",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1097"
+    },
+    "id": "sh-0152"
+  },
+  {
+    "ts": "2026-09-30T17:55:45",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1109"
+    },
+    "id": "sh-0153"
+  },
+  {
+    "ts": "2026-09-30T18:04:37",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1106"
+    },
+    "id": "sh-0154"
+  },
+  {
+    "ts": "2026-09-30T18:05:00",
+    "agent": "recon-agent",
+    "capability": "ledger.read_quarter_end",
+    "system": "ledger",
+    "rows": 1,
+    "fields": [],
+    "purpose": "quarter-end close",
+    "args": {},
+    "id": "sh-0155"
+  },
+  {
+    "ts": "2026-09-30T18:05:23",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1084"
+    },
+    "id": "sh-0156"
+  },
+  {
+    "ts": "2026-09-30T18:05:49",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1109"
+    },
+    "id": "sh-0157"
+  },
+  {
+    "ts": "2026-09-30T18:09:10",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1081"
+    },
+    "id": "sh-0158"
+  },
+  {
+    "ts": "2026-09-30T18:15:16",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-107"
+    },
+    "id": "sh-0159"
+  },
+  {
+    "ts": "2026-09-30T18:19:29",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1074"
+    },
+    "id": "sh-0160"
+  },
+  {
+    "ts": "2026-09-30T18:29:23",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1104"
+    },
+    "id": "sh-0161"
+  },
+  {
+    "ts": "2026-09-30T18:32:02",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1072"
+    },
+    "id": "sh-0162"
+  },
+  {
+    "ts": "2026-09-30T18:34:45",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1084"
+    },
+    "id": "sh-0163"
+  },
+  {
+    "ts": "2026-09-30T18:35:32",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1101"
+    },
+    "id": "sh-0164"
+  },
+  {
+    "ts": "2026-09-30T18:39:47",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1089"
+    },
+    "id": "sh-0165"
+  },
+  {
+    "ts": "2026-09-30T18:40:11",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1081"
+    },
+    "id": "sh-0166"
+  },
+  {
+    "ts": "2026-09-30T18:52:27",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1102"
+    },
+    "id": "sh-0167"
+  },
+  {
+    "ts": "2026-09-30T19:28:35",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1105"
+    },
+    "id": "sh-0168"
+  },
+  {
+    "ts": "2026-09-30T19:31:03",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1079"
+    },
+    "id": "sh-0169"
+  },
+  {
+    "ts": "2026-09-30T19:37:25",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1103"
+    },
+    "id": "sh-0170"
+  },
+  {
+    "ts": "2026-09-30T19:52:13",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1101"
+    },
+    "id": "sh-0171"
+  },
+  {
+    "ts": "2026-09-30T19:54:35",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1109"
+    },
+    "id": "sh-0172"
+  },
+  {
+    "ts": "2026-09-30T19:56:53",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1081"
+    },
+    "id": "sh-0173"
+  },
+  {
+    "ts": "2026-09-30T19:58:03",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-109"
+    },
+    "id": "sh-0174"
+  },
+  {
+    "ts": "2026-09-30T20:00:00",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1091"
+    },
+    "id": "sh-0175"
+  },
+  {
+    "ts": "2026-09-30T20:04:30",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1098"
+    },
+    "id": "sh-0176"
+  },
+  {
+    "ts": "2026-09-30T20:23:23",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1098"
+    },
+    "id": "sh-0177"
+  },
+  {
+    "ts": "2026-09-30T20:37:27",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1094"
+    },
+    "id": "sh-0178"
+  },
+  {
+    "ts": "2026-09-30T20:47:38",
+    "agent": "recon-agent",
+    "capability": "refdata.read",
+    "system": "refdata",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "key": "instruments"
+    },
+    "id": "sh-0179"
+  },
+  {
+    "ts": "2026-09-30T20:58:34",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-111"
+    },
+    "id": "sh-0180"
+  },
+  {
+    "ts": "2026-09-30T21:01:23",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1105"
+    },
+    "id": "sh-0181"
+  },
+  {
+    "ts": "2026-09-30T21:04:08",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1107"
+    },
+    "id": "sh-0182"
+  },
+  {
+    "ts": "2026-09-30T21:29:48",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1106"
+    },
+    "id": "sh-0183"
+  },
+  {
+    "ts": "2026-09-30T21:40:34",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1081"
+    },
+    "id": "sh-0184"
+  },
+  {
+    "ts": "2026-10-01T06:13:59",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1082"
+    },
+    "id": "sh-0185"
+  },
+  {
+    "ts": "2026-10-01T06:25:21",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-120"
+    },
+    "id": "sh-0186"
+  },
+  {
+    "ts": "2026-10-01T06:47:13",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1107"
+    },
+    "id": "sh-0187"
+  },
+  {
+    "ts": "2026-10-01T06:48:42",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1094"
+    },
+    "id": "sh-0188"
+  },
+  {
+    "ts": "2026-10-01T07:03:18",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1101"
+    },
+    "id": "sh-0189"
+  },
+  {
+    "ts": "2026-10-01T07:18:45",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1075"
+    },
+    "id": "sh-0190"
+  },
+  {
+    "ts": "2026-10-01T07:31:54",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-119"
+    },
+    "id": "sh-0191"
+  },
+  {
+    "ts": "2026-10-01T07:48:14",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1106"
+    },
+    "id": "sh-0192"
+  },
+  {
+    "ts": "2026-10-01T07:58:49",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1075"
+    },
+    "id": "sh-0193"
+  },
+  {
+    "ts": "2026-10-01T08:16:45",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1106"
+    },
+    "id": "sh-0194"
+  },
+  {
+    "ts": "2026-10-01T08:19:02",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1077"
+    },
+    "id": "sh-0195"
+  },
+  {
+    "ts": "2026-10-01T08:22:15",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1076"
+    },
+    "id": "sh-0196"
+  },
+  {
+    "ts": "2026-10-01T08:23:42",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1080"
+    },
+    "id": "sh-0197"
+  },
+  {
+    "ts": "2026-10-01T08:25:42",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-104"
+    },
+    "id": "sh-0198"
+  },
+  {
+    "ts": "2026-10-01T08:37:37",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1086"
+    },
+    "id": "sh-0199"
+  },
+  {
+    "ts": "2026-10-01T08:38:38",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1090"
+    },
+    "id": "sh-0200"
+  },
+  {
+    "ts": "2026-10-01T08:59:28",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1093"
+    },
+    "id": "sh-0201"
+  },
+  {
+    "ts": "2026-10-01T09:04:21",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1080"
+    },
+    "id": "sh-0202"
+  },
+  {
+    "ts": "2026-10-01T09:05:10",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-110"
+    },
+    "id": "sh-0203"
+  },
+  {
+    "ts": "2026-10-01T09:36:43",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1104"
+    },
+    "id": "sh-0204"
+  },
+  {
+    "ts": "2026-10-01T09:46:00",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1073"
+    },
+    "id": "sh-0205"
+  },
+  {
+    "ts": "2026-10-01T09:48:17",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1106"
+    },
+    "id": "sh-0206"
+  },
+  {
+    "ts": "2026-10-01T09:59:21",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1088"
+    },
+    "id": "sh-0207"
+  },
+  {
+    "ts": "2026-10-01T10:04:08",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1087"
+    },
+    "id": "sh-0208"
+  },
+  {
+    "ts": "2026-10-01T10:24:45",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1079"
+    },
+    "id": "sh-0209"
+  },
+  {
+    "ts": "2026-10-01T10:24:49",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1078"
+    },
+    "id": "sh-0210"
+  },
+  {
+    "ts": "2026-10-01T10:32:24",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1096"
+    },
+    "id": "sh-0211"
+  },
+  {
+    "ts": "2026-10-01T10:40:19",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1109"
+    },
+    "id": "sh-0212"
+  },
+  {
+    "ts": "2026-10-01T10:50:57",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1108"
+    },
+    "id": "sh-0213"
+  },
+  {
+    "ts": "2026-10-01T11:07:00",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1078"
+    },
+    "id": "sh-0214"
+  },
+  {
+    "ts": "2026-10-01T11:23:19",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1090"
+    },
+    "id": "sh-0215"
+  },
+  {
+    "ts": "2026-10-01T11:31:44",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1101"
+    },
+    "id": "sh-0216"
+  },
+  {
+    "ts": "2026-10-01T11:46:29",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1086"
+    },
+    "id": "sh-0217"
+  },
+  {
+    "ts": "2026-10-01T12:28:19",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1099"
+    },
+    "id": "sh-0218"
+  },
+  {
+    "ts": "2026-10-01T12:49:36",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1096"
+    },
+    "id": "sh-0219"
+  },
+  {
+    "ts": "2026-10-01T13:14:08",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1100"
+    },
+    "id": "sh-0220"
+  },
+  {
+    "ts": "2026-10-01T13:24:36",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1085"
+    },
+    "id": "sh-0221"
+  },
+  {
+    "ts": "2026-10-01T13:45:04",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1075"
+    },
+    "id": "sh-0222"
+  },
+  {
+    "ts": "2026-10-01T14:15:46",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1101"
+    },
+    "id": "sh-0223"
+  },
+  {
+    "ts": "2026-10-01T14:37:24",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1093"
+    },
+    "id": "sh-0224"
+  },
+  {
+    "ts": "2026-10-01T14:45:28",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1083"
+    },
+    "id": "sh-0225"
+  },
+  {
+    "ts": "2026-10-01T14:51:05",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-114"
+    },
+    "id": "sh-0226"
+  },
+  {
+    "ts": "2026-10-01T14:54:20",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1095"
+    },
+    "id": "sh-0227"
+  },
+  {
+    "ts": "2026-10-01T14:54:32",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1076"
+    },
+    "id": "sh-0228"
+  },
+  {
+    "ts": "2026-10-01T15:11:13",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1091"
+    },
+    "id": "sh-0229"
+  },
+  {
+    "ts": "2026-10-01T15:19:28",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1108"
+    },
+    "id": "sh-0230"
+  },
+  {
+    "ts": "2026-10-01T15:22:06",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1106"
+    },
+    "id": "sh-0231"
+  },
+  {
+    "ts": "2026-10-01T16:08:24",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1106"
+    },
+    "id": "sh-0232"
+  },
+  {
+    "ts": "2026-10-01T16:15:19",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1079"
+    },
+    "id": "sh-0233"
+  },
+  {
+    "ts": "2026-10-01T16:35:23",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1079"
+    },
+    "id": "sh-0234"
+  },
+  {
+    "ts": "2026-10-01T16:53:18",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1091"
+    },
+    "id": "sh-0235"
+  },
+  {
+    "ts": "2026-10-01T17:00:11",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1079"
+    },
+    "id": "sh-0236"
+  },
+  {
+    "ts": "2026-10-01T17:55:49",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-102"
+    },
+    "id": "sh-0237"
+  },
+  {
+    "ts": "2026-10-01T18:20:41",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-109"
+    },
+    "id": "sh-0238"
+  },
+  {
+    "ts": "2026-10-01T18:28:55",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1094"
+    },
+    "id": "sh-0239"
+  },
+  {
+    "ts": "2026-10-01T18:36:02",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1108"
+    },
+    "id": "sh-0240"
+  },
+  {
+    "ts": "2026-10-01T18:37:40",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1074"
+    },
+    "id": "sh-0241"
+  },
+  {
+    "ts": "2026-10-01T18:41:50",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1091"
+    },
+    "id": "sh-0242"
+  },
+  {
+    "ts": "2026-10-01T18:48:47",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1078"
+    },
+    "id": "sh-0243"
+  },
+  {
+    "ts": "2026-10-01T18:49:20",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1071"
+    },
+    "id": "sh-0244"
+  },
+  {
+    "ts": "2026-10-01T19:02:36",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1084"
+    },
+    "id": "sh-0245"
+  },
+  {
+    "ts": "2026-10-01T19:09:26",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1083"
+    },
+    "id": "sh-0246"
+  },
+  {
+    "ts": "2026-10-01T19:11:12",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1078"
+    },
+    "id": "sh-0247"
+  },
+  {
+    "ts": "2026-10-01T19:27:44",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1095"
+    },
+    "id": "sh-0248"
+  },
+  {
+    "ts": "2026-10-01T19:46:54",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1085"
+    },
+    "id": "sh-0249"
+  },
+  {
+    "ts": "2026-10-01T19:55:58",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1073"
+    },
+    "id": "sh-0250"
+  },
+  {
+    "ts": "2026-10-01T20:02:37",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1093"
+    },
+    "id": "sh-0251"
+  },
+  {
+    "ts": "2026-10-01T20:02:46",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1092"
+    },
+    "id": "sh-0252"
+  },
+  {
+    "ts": "2026-10-01T20:32:38",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-114"
+    },
+    "id": "sh-0253"
+  },
+  {
+    "ts": "2026-10-01T20:41:01",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-102"
+    },
+    "id": "sh-0254"
+  },
+  {
+    "ts": "2026-10-01T20:41:16",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1100"
+    },
+    "id": "sh-0255"
+  },
+  {
+    "ts": "2026-10-01T20:57:32",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1079"
+    },
+    "id": "sh-0256"
+  },
+  {
+    "ts": "2026-10-01T21:06:43",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1078"
+    },
+    "id": "sh-0257"
+  },
+  {
+    "ts": "2026-10-01T21:22:35",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1087"
+    },
+    "id": "sh-0258"
+  },
+  {
+    "ts": "2026-10-01T21:33:24",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1090"
+    },
+    "id": "sh-0259"
+  },
+  {
+    "ts": "2026-10-02T06:23:12",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1088"
+    },
+    "id": "sh-0260"
+  },
+  {
+    "ts": "2026-10-02T06:23:21",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1077"
+    },
+    "id": "sh-0261"
+  },
+  {
+    "ts": "2026-10-02T06:29:58",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1074"
+    },
+    "id": "sh-0262"
+  },
+  {
+    "ts": "2026-10-02T07:11:38",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1090"
+    },
+    "id": "sh-0263"
+  },
+  {
+    "ts": "2026-10-02T07:18:26",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1081"
+    },
+    "id": "sh-0264"
+  },
+  {
+    "ts": "2026-10-02T07:25:32",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1093"
+    },
+    "id": "sh-0265"
+  },
+  {
+    "ts": "2026-10-02T07:40:00",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1080"
+    },
+    "id": "sh-0266"
+  },
+  {
+    "ts": "2026-10-02T07:43:19",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1086"
+    },
+    "id": "sh-0267"
+  },
+  {
+    "ts": "2026-10-02T08:14:24",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-103"
+    },
+    "id": "sh-0268"
+  },
+  {
+    "ts": "2026-10-02T08:37:06",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1102"
+    },
+    "id": "sh-0269"
+  },
+  {
+    "ts": "2026-10-02T08:40:50",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1075"
+    },
+    "id": "sh-0270"
+  },
+  {
+    "ts": "2026-10-02T08:43:42",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1104"
+    },
+    "id": "sh-0271"
+  },
+  {
+    "ts": "2026-10-02T08:45:06",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1070"
+    },
+    "id": "sh-0272"
+  },
+  {
+    "ts": "2026-10-02T08:46:57",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1105"
+    },
+    "id": "sh-0273"
+  },
+  {
+    "ts": "2026-10-02T08:56:29",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1088"
+    },
+    "id": "sh-0274"
+  },
+  {
+    "ts": "2026-10-02T08:57:32",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1098"
+    },
+    "id": "sh-0275"
+  },
+  {
+    "ts": "2026-10-02T09:20:27",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-111"
+    },
+    "id": "sh-0276"
+  },
+  {
+    "ts": "2026-10-02T09:22:22",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1099"
+    },
+    "id": "sh-0277"
+  },
+  {
+    "ts": "2026-10-02T09:28:46",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-115"
+    },
+    "id": "sh-0278"
+  },
+  {
+    "ts": "2026-10-02T09:43:13",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1107"
+    },
+    "id": "sh-0279"
+  },
+  {
+    "ts": "2026-10-02T09:47:47",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1093"
+    },
+    "id": "sh-0280"
+  },
+  {
+    "ts": "2026-10-02T09:49:51",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1085"
+    },
+    "id": "sh-0281"
+  },
+  {
+    "ts": "2026-10-02T10:21:47",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-103"
+    },
+    "id": "sh-0282"
+  },
+  {
+    "ts": "2026-10-02T10:22:01",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1100"
+    },
+    "id": "sh-0283"
+  },
+  {
+    "ts": "2026-10-02T10:26:12",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1103"
+    },
+    "id": "sh-0284"
+  },
+  {
+    "ts": "2026-10-02T10:46:14",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1070"
+    },
+    "id": "sh-0285"
+  },
+  {
+    "ts": "2026-10-02T10:56:26",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-104"
+    },
+    "id": "sh-0286"
+  },
+  {
+    "ts": "2026-10-02T11:05:36",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1071"
+    },
+    "id": "sh-0287"
+  },
+  {
+    "ts": "2026-10-02T11:23:23",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1088"
+    },
+    "id": "sh-0288"
+  },
+  {
+    "ts": "2026-10-02T11:33:40",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-120"
+    },
+    "id": "sh-0289"
+  },
+  {
+    "ts": "2026-10-02T11:57:45",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1098"
+    },
+    "id": "sh-0290"
+  },
+  {
+    "ts": "2026-10-02T12:33:30",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1092"
+    },
+    "id": "sh-0291"
+  },
+  {
+    "ts": "2026-10-02T12:48:18",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1090"
+    },
+    "id": "sh-0292"
+  },
+  {
+    "ts": "2026-10-02T13:39:02",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1103"
+    },
+    "id": "sh-0293"
+  },
+  {
+    "ts": "2026-10-02T13:44:14",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1089"
+    },
+    "id": "sh-0294"
+  },
+  {
+    "ts": "2026-10-02T13:54:14",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-110"
+    },
+    "id": "sh-0295"
+  },
+  {
+    "ts": "2026-10-02T13:55:57",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1080"
+    },
+    "id": "sh-0296"
+  },
+  {
+    "ts": "2026-10-02T14:02:59",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-103"
+    },
+    "id": "sh-0297"
+  },
+  {
+    "ts": "2026-10-02T14:12:51",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1077"
+    },
+    "id": "sh-0298"
+  },
+  {
+    "ts": "2026-10-02T14:13:48",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1102"
+    },
+    "id": "sh-0299"
+  },
+  {
+    "ts": "2026-10-02T14:22:55",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1075"
+    },
+    "id": "sh-0300"
+  },
+  {
+    "ts": "2026-10-02T14:44:59",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1093"
+    },
+    "id": "sh-0301"
+  },
+  {
+    "ts": "2026-10-02T15:10:25",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1102"
+    },
+    "id": "sh-0302"
+  },
+  {
+    "ts": "2026-10-02T15:30:50",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1074"
+    },
+    "id": "sh-0303"
+  },
+  {
+    "ts": "2026-10-02T15:31:01",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-103"
+    },
+    "id": "sh-0304"
+  },
+  {
+    "ts": "2026-10-02T15:46:01",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1095"
+    },
+    "id": "sh-0305"
+  },
+  {
+    "ts": "2026-10-02T15:48:47",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1098"
+    },
+    "id": "sh-0306"
+  },
+  {
+    "ts": "2026-10-02T15:50:57",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1071"
+    },
+    "id": "sh-0307"
+  },
+  {
+    "ts": "2026-10-02T16:16:48",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1101"
+    },
+    "id": "sh-0308"
+  },
+  {
+    "ts": "2026-10-02T16:17:52",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1074"
+    },
+    "id": "sh-0309"
+  },
+  {
+    "ts": "2026-10-02T16:18:47",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1101"
+    },
+    "id": "sh-0310"
+  },
+  {
+    "ts": "2026-10-02T16:26:07",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1104"
+    },
+    "id": "sh-0311"
+  },
+  {
+    "ts": "2026-10-02T16:28:21",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1097"
+    },
+    "id": "sh-0312"
+  },
+  {
+    "ts": "2026-10-02T16:52:29",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1095"
+    },
+    "id": "sh-0313"
+  },
+  {
+    "ts": "2026-10-02T17:05:27",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1076"
+    },
+    "id": "sh-0314"
+  },
+  {
+    "ts": "2026-10-02T17:09:17",
+    "agent": "recon-agent",
+    "capability": "refdata.read",
+    "system": "refdata",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "key": "currencies"
+    },
+    "id": "sh-0315"
+  },
+  {
+    "ts": "2026-10-02T17:19:16",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-112"
+    },
+    "id": "sh-0316"
+  },
+  {
+    "ts": "2026-10-02T17:32:37",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1076"
+    },
+    "id": "sh-0317"
+  },
+  {
+    "ts": "2026-10-02T17:34:43",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-106"
+    },
+    "id": "sh-0318"
+  },
+  {
+    "ts": "2026-10-02T17:37:31",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1082"
+    },
+    "id": "sh-0319"
+  },
+  {
+    "ts": "2026-10-02T17:43:46",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-108"
+    },
+    "id": "sh-0320"
+  },
+  {
+    "ts": "2026-10-02T18:07:15",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1101"
+    },
+    "id": "sh-0321"
+  },
+  {
+    "ts": "2026-10-02T18:27:43",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1076"
+    },
+    "id": "sh-0322"
+  },
+  {
+    "ts": "2026-10-02T18:47:28",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-113"
+    },
+    "id": "sh-0323"
+  },
+  {
+    "ts": "2026-10-02T18:52:14",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1085"
+    },
+    "id": "sh-0324"
+  },
+  {
+    "ts": "2026-10-02T18:52:22",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1079"
+    },
+    "id": "sh-0325"
+  },
+  {
+    "ts": "2026-10-02T18:58:35",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1077"
+    },
+    "id": "sh-0326"
+  },
+  {
+    "ts": "2026-10-02T19:18:07",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1095"
+    },
+    "id": "sh-0327"
+  },
+  {
+    "ts": "2026-10-02T19:31:38",
+    "agent": "recon-agent",
+    "capability": "refdata.read",
+    "system": "refdata",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "key": "instruments"
+    },
+    "id": "sh-0328"
+  },
+  {
+    "ts": "2026-10-02T19:49:21",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1108"
+    },
+    "id": "sh-0329"
+  },
+  {
+    "ts": "2026-10-02T20:00:27",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1082"
+    },
+    "id": "sh-0330"
+  },
+  {
+    "ts": "2026-10-02T20:02:03",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1093"
+    },
+    "id": "sh-0331"
+  },
+  {
+    "ts": "2026-10-02T20:04:07",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1101"
+    },
+    "id": "sh-0332"
+  },
+  {
+    "ts": "2026-10-02T20:04:57",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1075"
+    },
+    "id": "sh-0333"
+  },
+  {
+    "ts": "2026-10-02T20:13:21",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1108"
+    },
+    "id": "sh-0334"
+  },
+  {
+    "ts": "2026-10-02T20:15:13",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1107"
+    },
+    "id": "sh-0335"
+  },
+  {
+    "ts": "2026-10-02T20:36:03",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1105"
+    },
+    "id": "sh-0336"
+  },
+  {
+    "ts": "2026-10-02T20:43:33",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1092"
+    },
+    "id": "sh-0337"
+  },
+  {
+    "ts": "2026-10-02T20:46:26",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1080"
+    },
+    "id": "sh-0338"
+  },
+  {
+    "ts": "2026-10-02T20:48:35",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1087"
+    },
+    "id": "sh-0339"
+  },
+  {
+    "ts": "2026-10-02T20:49:18",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1094"
+    },
+    "id": "sh-0340"
+  },
+  {
+    "ts": "2026-10-02T21:03:05",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1087"
+    },
+    "id": "sh-0341"
+  },
+  {
+    "ts": "2026-10-02T21:16:02",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1082"
+    },
+    "id": "sh-0342"
+  },
+  {
+    "ts": "2026-10-02T21:20:37",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1070"
+    },
+    "id": "sh-0343"
+  },
+  {
+    "ts": "2026-10-02T21:22:58",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1106"
+    },
+    "id": "sh-0344"
+  },
+  {
+    "ts": "2026-10-02T21:26:45",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1098"
+    },
+    "id": "sh-0345"
+  },
+  {
+    "ts": "2026-10-02T21:37:25",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1104"
+    },
+    "id": "sh-0346"
+  },
+  {
+    "ts": "2026-10-02T21:48:34",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1083"
+    },
+    "id": "sh-0347"
+  },
+  {
+    "ts": "2026-10-02T21:55:54",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1073"
+    },
+    "id": "sh-0348"
+  },
+  {
+    "ts": "2026-10-02T21:56:08",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1102"
+    },
+    "id": "sh-0349"
+  },
+  {
+    "ts": "2026-10-02T21:56:24",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1092"
+    },
+    "id": "sh-0350"
+  },
+  {
+    "ts": "2026-10-03T06:15:13",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1074"
+    },
+    "id": "sh-0351"
+  },
+  {
+    "ts": "2026-10-03T06:24:55",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1100"
+    },
+    "id": "sh-0352"
+  },
+  {
+    "ts": "2026-10-03T06:31:56",
+    "agent": "recon-agent",
+    "capability": "refdata.read",
+    "system": "refdata",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "key": "calendar"
+    },
+    "id": "sh-0353"
+  },
+  {
+    "ts": "2026-10-03T06:38:59",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1087"
+    },
+    "id": "sh-0354"
+  },
+  {
+    "ts": "2026-10-03T06:40:32",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1106"
+    },
+    "id": "sh-0355"
+  },
+  {
+    "ts": "2026-10-03T06:45:44",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1092"
+    },
+    "id": "sh-0356"
+  },
+  {
+    "ts": "2026-10-03T07:42:21",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1109"
+    },
+    "id": "sh-0357"
+  },
+  {
+    "ts": "2026-10-03T07:53:07",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1103"
+    },
+    "id": "sh-0358"
+  },
+  {
+    "ts": "2026-10-03T07:59:57",
+    "agent": "recon-agent",
+    "capability": "refdata.read",
+    "system": "refdata",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "key": "currencies"
+    },
+    "id": "sh-0359"
+  },
+  {
+    "ts": "2026-10-03T08:00:16",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1083"
+    },
+    "id": "sh-0360"
+  },
+  {
+    "ts": "2026-10-03T08:32:41",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1080"
+    },
+    "id": "sh-0361"
+  },
+  {
+    "ts": "2026-10-03T08:43:08",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1090"
+    },
+    "id": "sh-0362"
+  },
+  {
+    "ts": "2026-10-03T09:14:47",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-117"
+    },
+    "id": "sh-0363"
+  },
+  {
+    "ts": "2026-10-03T09:17:49",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1104"
+    },
+    "id": "sh-0364"
+  },
+  {
+    "ts": "2026-10-03T09:20:15",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1099"
+    },
+    "id": "sh-0365"
+  },
+  {
+    "ts": "2026-10-03T09:21:19",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1090"
+    },
+    "id": "sh-0366"
+  },
+  {
+    "ts": "2026-10-03T09:33:32",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-107"
+    },
+    "id": "sh-0367"
+  },
+  {
+    "ts": "2026-10-03T09:47:04",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1100"
+    },
+    "id": "sh-0368"
+  },
+  {
+    "ts": "2026-10-03T09:51:55",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1104"
+    },
+    "id": "sh-0369"
+  },
+  {
+    "ts": "2026-10-03T09:57:33",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1072"
+    },
+    "id": "sh-0370"
+  },
+  {
+    "ts": "2026-10-03T10:03:28",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1076"
+    },
+    "id": "sh-0371"
+  },
+  {
+    "ts": "2026-10-03T10:10:42",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1109"
+    },
+    "id": "sh-0372"
+  },
+  {
+    "ts": "2026-10-03T10:36:12",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-116"
+    },
+    "id": "sh-0373"
+  },
+  {
+    "ts": "2026-10-03T10:36:24",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1097"
+    },
+    "id": "sh-0374"
+  },
+  {
+    "ts": "2026-10-03T10:36:54",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1101"
+    },
+    "id": "sh-0375"
+  },
+  {
+    "ts": "2026-10-03T10:49:07",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1103"
+    },
+    "id": "sh-0376"
+  },
+  {
+    "ts": "2026-10-03T11:20:45",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1088"
+    },
+    "id": "sh-0377"
+  },
+  {
+    "ts": "2026-10-03T11:31:18",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1078"
+    },
+    "id": "sh-0378"
+  },
+  {
+    "ts": "2026-10-03T11:52:43",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-110"
+    },
+    "id": "sh-0379"
+  },
+  {
+    "ts": "2026-10-03T12:09:42",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-116"
+    },
+    "id": "sh-0380"
+  },
+  {
+    "ts": "2026-10-03T12:29:06",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1078"
+    },
+    "id": "sh-0381"
+  },
+  {
+    "ts": "2026-10-03T12:47:25",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1088"
+    },
+    "id": "sh-0382"
+  },
+  {
+    "ts": "2026-10-03T12:48:55",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1073"
+    },
+    "id": "sh-0383"
+  },
+  {
+    "ts": "2026-10-03T13:06:29",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1076"
+    },
+    "id": "sh-0384"
+  },
+  {
+    "ts": "2026-10-03T13:20:24",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-109"
+    },
+    "id": "sh-0385"
+  },
+  {
+    "ts": "2026-10-03T13:28:23",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1095"
+    },
+    "id": "sh-0386"
+  },
+  {
+    "ts": "2026-10-03T13:46:03",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-119"
+    },
+    "id": "sh-0387"
+  },
+  {
+    "ts": "2026-10-03T14:08:06",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1109"
+    },
+    "id": "sh-0388"
+  },
+  {
+    "ts": "2026-10-03T14:10:23",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1078"
+    },
+    "id": "sh-0389"
+  },
+  {
+    "ts": "2026-10-03T14:43:48",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1078"
+    },
+    "id": "sh-0390"
+  },
+  {
+    "ts": "2026-10-03T14:51:11",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-104"
+    },
+    "id": "sh-0391"
+  },
+  {
+    "ts": "2026-10-03T15:11:31",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1072"
+    },
+    "id": "sh-0392"
+  },
+  {
+    "ts": "2026-10-03T15:14:19",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1088"
+    },
+    "id": "sh-0393"
+  },
+  {
+    "ts": "2026-10-03T15:20:06",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1075"
+    },
+    "id": "sh-0394"
+  },
+  {
+    "ts": "2026-10-03T15:41:19",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1100"
+    },
+    "id": "sh-0395"
+  },
+  {
+    "ts": "2026-10-03T15:44:58",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1101"
+    },
+    "id": "sh-0396"
+  },
+  {
+    "ts": "2026-10-03T15:47:39",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1085"
+    },
+    "id": "sh-0397"
+  },
+  {
+    "ts": "2026-10-03T15:57:19",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1080"
+    },
+    "id": "sh-0398"
+  },
+  {
+    "ts": "2026-10-03T16:24:17",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1081"
+    },
+    "id": "sh-0399"
+  },
+  {
+    "ts": "2026-10-03T16:24:38",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1103"
+    },
+    "id": "sh-0400"
+  },
+  {
+    "ts": "2026-10-03T16:32:53",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1102"
+    },
+    "id": "sh-0401"
+  },
+  {
+    "ts": "2026-10-03T16:38:24",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1109"
+    },
+    "id": "sh-0402"
+  },
+  {
+    "ts": "2026-10-03T16:42:07",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1096"
+    },
+    "id": "sh-0403"
+  },
+  {
+    "ts": "2026-10-03T16:49:18",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1094"
+    },
+    "id": "sh-0404"
+  },
+  {
+    "ts": "2026-10-03T16:52:41",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1081"
+    },
+    "id": "sh-0405"
+  },
+  {
+    "ts": "2026-10-03T16:58:39",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1084"
+    },
+    "id": "sh-0406"
+  },
+  {
+    "ts": "2026-10-03T17:03:25",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1087"
+    },
+    "id": "sh-0407"
+  },
+  {
+    "ts": "2026-10-03T17:04:25",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1072"
+    },
+    "id": "sh-0408"
+  },
+  {
+    "ts": "2026-10-03T17:07:32",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1073"
+    },
+    "id": "sh-0409"
+  },
+  {
+    "ts": "2026-10-03T17:15:36",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-114"
+    },
+    "id": "sh-0410"
+  },
+  {
+    "ts": "2026-10-03T17:29:51",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1105"
+    },
+    "id": "sh-0411"
+  },
+  {
+    "ts": "2026-10-03T17:34:17",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1108"
+    },
+    "id": "sh-0412"
+  },
+  {
+    "ts": "2026-10-03T17:43:49",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1086"
+    },
+    "id": "sh-0413"
+  },
+  {
+    "ts": "2026-10-03T17:49:37",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1084"
+    },
+    "id": "sh-0414"
+  },
+  {
+    "ts": "2026-10-03T18:04:09",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-101"
+    },
+    "id": "sh-0415"
+  },
+  {
+    "ts": "2026-10-03T18:06:53",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1100"
+    },
+    "id": "sh-0416"
+  },
+  {
+    "ts": "2026-10-03T18:18:16",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1108"
+    },
+    "id": "sh-0417"
+  },
+  {
+    "ts": "2026-10-03T18:29:37",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-118"
+    },
+    "id": "sh-0418"
+  },
+  {
+    "ts": "2026-10-03T18:43:57",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1104"
+    },
+    "id": "sh-0419"
+  },
+  {
+    "ts": "2026-10-03T19:06:01",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-103"
+    },
+    "id": "sh-0420"
+  },
+  {
+    "ts": "2026-10-03T19:07:49",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-110"
+    },
+    "id": "sh-0421"
+  },
+  {
+    "ts": "2026-10-03T19:10:52",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1082"
+    },
+    "id": "sh-0422"
+  },
+  {
+    "ts": "2026-10-03T19:14:20",
+    "agent": "recon-agent",
+    "capability": "refdata.read",
+    "system": "refdata",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "key": "currencies"
+    },
+    "id": "sh-0423"
+  },
+  {
+    "ts": "2026-10-03T19:17:40",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1073"
+    },
+    "id": "sh-0424"
+  },
+  {
+    "ts": "2026-10-03T19:18:09",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1082"
+    },
+    "id": "sh-0425"
+  },
+  {
+    "ts": "2026-10-03T19:26:35",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1103"
+    },
+    "id": "sh-0426"
+  },
+  {
+    "ts": "2026-10-03T19:34:02",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1093"
+    },
+    "id": "sh-0427"
+  },
+  {
+    "ts": "2026-10-03T19:51:58",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1081"
+    },
+    "id": "sh-0428"
+  },
+  {
+    "ts": "2026-10-03T20:09:38",
+    "agent": "recon-agent",
+    "capability": "refdata.read",
+    "system": "refdata",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "key": "calendar"
+    },
+    "id": "sh-0429"
+  },
+  {
+    "ts": "2026-10-03T21:03:22",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1094"
+    },
+    "id": "sh-0430"
+  },
+  {
+    "ts": "2026-10-03T21:12:15",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-109"
+    },
+    "id": "sh-0431"
+  },
+  {
+    "ts": "2026-10-03T21:16:41",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1107"
+    },
+    "id": "sh-0432"
+  },
+  {
+    "ts": "2026-10-03T21:18:34",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1070"
+    },
+    "id": "sh-0433"
+  },
+  {
+    "ts": "2026-10-03T21:29:06",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-116"
+    },
+    "id": "sh-0434"
+  },
+  {
+    "ts": "2026-10-03T21:35:32",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-104"
+    },
+    "id": "sh-0435"
+  },
+  {
+    "ts": "2026-10-03T21:45:36",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1089"
+    },
+    "id": "sh-0436"
+  },
+  {
+    "ts": "2026-10-04T06:08:00",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1092"
+    },
+    "id": "sh-0437"
+  },
+  {
+    "ts": "2026-10-04T06:10:31",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1092"
+    },
+    "id": "sh-0438"
+  },
+  {
+    "ts": "2026-10-04T06:16:41",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1093"
+    },
+    "id": "sh-0439"
+  },
+  {
+    "ts": "2026-10-04T07:10:28",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1096"
+    },
+    "id": "sh-0440"
+  },
+  {
+    "ts": "2026-10-04T07:11:59",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1090"
+    },
+    "id": "sh-0441"
+  },
+  {
+    "ts": "2026-10-04T07:50:57",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1085"
+    },
+    "id": "sh-0442"
+  },
+  {
+    "ts": "2026-10-04T07:55:04",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-107"
+    },
+    "id": "sh-0443"
+  },
+  {
+    "ts": "2026-10-04T08:06:49",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1085"
+    },
+    "id": "sh-0444"
+  },
+  {
+    "ts": "2026-10-04T08:31:29",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-117"
+    },
+    "id": "sh-0445"
+  },
+  {
+    "ts": "2026-10-04T08:33:56",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1070"
+    },
+    "id": "sh-0446"
+  },
+  {
+    "ts": "2026-10-04T08:40:52",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1099"
+    },
+    "id": "sh-0447"
+  },
+  {
+    "ts": "2026-10-04T08:41:54",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1072"
+    },
+    "id": "sh-0448"
+  },
+  {
+    "ts": "2026-10-04T09:02:51",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1096"
+    },
+    "id": "sh-0449"
+  },
+  {
+    "ts": "2026-10-04T09:06:20",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1093"
+    },
+    "id": "sh-0450"
+  },
+  {
+    "ts": "2026-10-04T09:47:48",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1100"
+    },
+    "id": "sh-0451"
+  },
+  {
+    "ts": "2026-10-04T09:57:40",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1072"
+    },
+    "id": "sh-0452"
+  },
+  {
+    "ts": "2026-10-04T10:01:16",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1105"
+    },
+    "id": "sh-0453"
+  },
+  {
+    "ts": "2026-10-04T10:04:33",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1106"
+    },
+    "id": "sh-0454"
+  },
+  {
+    "ts": "2026-10-04T10:05:58",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1088"
+    },
+    "id": "sh-0455"
+  },
+  {
+    "ts": "2026-10-04T10:33:13",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1105"
+    },
+    "id": "sh-0456"
+  },
+  {
+    "ts": "2026-10-04T10:56:41",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1089"
+    },
+    "id": "sh-0457"
+  },
+  {
+    "ts": "2026-10-04T10:58:22",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1089"
+    },
+    "id": "sh-0458"
+  },
+  {
+    "ts": "2026-10-04T10:58:26",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1109"
+    },
+    "id": "sh-0459"
+  },
+  {
+    "ts": "2026-10-04T11:00:47",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-111"
+    },
+    "id": "sh-0460"
+  },
+  {
+    "ts": "2026-10-04T11:02:15",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1098"
+    },
+    "id": "sh-0461"
+  },
+  {
+    "ts": "2026-10-04T11:50:23",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1102"
+    },
+    "id": "sh-0462"
+  },
+  {
+    "ts": "2026-10-04T12:20:38",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1100"
+    },
+    "id": "sh-0463"
+  },
+  {
+    "ts": "2026-10-04T12:27:28",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1084"
+    },
+    "id": "sh-0464"
+  },
+  {
+    "ts": "2026-10-04T12:30:20",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1081"
+    },
+    "id": "sh-0465"
+  },
+  {
+    "ts": "2026-10-04T12:44:45",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1101"
+    },
+    "id": "sh-0466"
+  },
+  {
+    "ts": "2026-10-04T13:03:42",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1077"
+    },
+    "id": "sh-0467"
+  },
+  {
+    "ts": "2026-10-04T13:09:00",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1096"
+    },
+    "id": "sh-0468"
+  },
+  {
+    "ts": "2026-10-04T13:15:03",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-117"
+    },
+    "id": "sh-0469"
+  },
+  {
+    "ts": "2026-10-04T13:22:33",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1088"
+    },
+    "id": "sh-0470"
+  },
+  {
+    "ts": "2026-10-04T13:26:19",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1087"
+    },
+    "id": "sh-0471"
+  },
+  {
+    "ts": "2026-10-04T13:33:11",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1105"
+    },
+    "id": "sh-0472"
+  },
+  {
+    "ts": "2026-10-04T13:34:47",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1072"
+    },
+    "id": "sh-0473"
+  },
+  {
+    "ts": "2026-10-04T14:05:02",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1084"
+    },
+    "id": "sh-0474"
+  },
+  {
+    "ts": "2026-10-04T14:23:09",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1100"
+    },
+    "id": "sh-0475"
+  },
+  {
+    "ts": "2026-10-04T14:34:18",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1071"
+    },
+    "id": "sh-0476"
+  },
+  {
+    "ts": "2026-10-04T14:40:26",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1094"
+    },
+    "id": "sh-0477"
+  },
+  {
+    "ts": "2026-10-04T14:46:56",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-104"
+    },
+    "id": "sh-0478"
+  },
+  {
+    "ts": "2026-10-04T14:50:28",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-116"
+    },
+    "id": "sh-0479"
+  },
+  {
+    "ts": "2026-10-04T14:57:34",
+    "agent": "recon-agent",
+    "capability": "refdata.read",
+    "system": "refdata",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "key": "calendar"
+    },
+    "id": "sh-0480"
+  },
+  {
+    "ts": "2026-10-04T15:15:16",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1079"
+    },
+    "id": "sh-0481"
+  },
+  {
+    "ts": "2026-10-04T15:41:26",
+    "agent": "recon-agent",
+    "capability": "refdata.read",
+    "system": "refdata",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "key": "currencies"
+    },
+    "id": "sh-0482"
+  },
+  {
+    "ts": "2026-10-04T15:44:07",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1088"
+    },
+    "id": "sh-0483"
+  },
+  {
+    "ts": "2026-10-04T15:50:17",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-119"
+    },
+    "id": "sh-0484"
+  },
+  {
+    "ts": "2026-10-04T15:56:02",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1070"
+    },
+    "id": "sh-0485"
+  },
+  {
+    "ts": "2026-10-04T16:11:45",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1105"
+    },
+    "id": "sh-0486"
+  },
+  {
+    "ts": "2026-10-04T16:20:28",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1087"
+    },
+    "id": "sh-0487"
+  },
+  {
+    "ts": "2026-10-04T16:53:59",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-119"
+    },
+    "id": "sh-0488"
+  },
+  {
+    "ts": "2026-10-04T16:55:40",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1090"
+    },
+    "id": "sh-0489"
+  },
+  {
+    "ts": "2026-10-04T17:04:58",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1106"
+    },
+    "id": "sh-0490"
+  },
+  {
+    "ts": "2026-10-04T17:10:41",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1109"
+    },
+    "id": "sh-0491"
+  },
+  {
+    "ts": "2026-10-04T17:14:42",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1107"
+    },
+    "id": "sh-0492"
+  },
+  {
+    "ts": "2026-10-04T17:25:08",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-112"
+    },
+    "id": "sh-0493"
+  },
+  {
+    "ts": "2026-10-04T17:48:25",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-112"
+    },
+    "id": "sh-0494"
+  },
+  {
+    "ts": "2026-10-04T18:08:38",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1075"
+    },
+    "id": "sh-0495"
+  },
+  {
+    "ts": "2026-10-04T18:20:23",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1076"
+    },
+    "id": "sh-0496"
+  },
+  {
+    "ts": "2026-10-04T18:22:27",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1090"
+    },
+    "id": "sh-0497"
+  },
+  {
+    "ts": "2026-10-04T19:10:39",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1078"
+    },
+    "id": "sh-0498"
+  },
+  {
+    "ts": "2026-10-04T19:10:44",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1098"
+    },
+    "id": "sh-0499"
+  },
+  {
+    "ts": "2026-10-04T19:11:22",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1083"
+    },
+    "id": "sh-0500"
+  },
+  {
+    "ts": "2026-10-04T19:25:01",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1109"
+    },
+    "id": "sh-0501"
+  },
+  {
+    "ts": "2026-10-04T19:50:24",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1074"
+    },
+    "id": "sh-0502"
+  },
+  {
+    "ts": "2026-10-04T20:51:08",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1075"
+    },
+    "id": "sh-0503"
+  },
+  {
+    "ts": "2026-10-04T20:55:13",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1075"
+    },
+    "id": "sh-0504"
+  },
+  {
+    "ts": "2026-10-04T21:29:10",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1092"
+    },
+    "id": "sh-0505"
+  },
+  {
+    "ts": "2026-10-04T21:33:26",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1096"
+    },
+    "id": "sh-0506"
+  },
+  {
+    "ts": "2026-10-04T21:33:42",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1089"
+    },
+    "id": "sh-0507"
+  },
+  {
+    "ts": "2026-10-04T21:55:23",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1105"
+    },
+    "id": "sh-0508"
+  },
+  {
+    "ts": "2026-10-05T06:19:29",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1104"
+    },
+    "id": "sh-0509"
+  },
+  {
+    "ts": "2026-10-05T06:21:51",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1097"
+    },
+    "id": "sh-0510"
+  },
+  {
+    "ts": "2026-10-05T07:13:53",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1090"
+    },
+    "id": "sh-0511"
+  },
+  {
+    "ts": "2026-10-05T07:18:01",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1090"
+    },
+    "id": "sh-0512"
+  },
+  {
+    "ts": "2026-10-05T07:28:58",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1106"
+    },
+    "id": "sh-0513"
+  },
+  {
+    "ts": "2026-10-05T07:29:08",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1102"
+    },
+    "id": "sh-0514"
+  },
+  {
+    "ts": "2026-10-05T07:48:00",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-114"
+    },
+    "id": "sh-0515"
+  },
+  {
+    "ts": "2026-10-05T08:01:04",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1082"
+    },
+    "id": "sh-0516"
+  },
+  {
+    "ts": "2026-10-05T08:08:20",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1074"
+    },
+    "id": "sh-0517"
+  },
+  {
+    "ts": "2026-10-05T08:16:12",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1105"
+    },
+    "id": "sh-0518"
+  },
+  {
+    "ts": "2026-10-05T08:32:47",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1092"
+    },
+    "id": "sh-0519"
+  },
+  {
+    "ts": "2026-10-05T08:33:28",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1103"
+    },
+    "id": "sh-0520"
+  },
+  {
+    "ts": "2026-10-05T08:36:08",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1103"
+    },
+    "id": "sh-0521"
+  },
+  {
+    "ts": "2026-10-05T08:46:29",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1092"
+    },
+    "id": "sh-0522"
+  },
+  {
+    "ts": "2026-10-05T08:50:34",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-113"
+    },
+    "id": "sh-0523"
+  },
+  {
+    "ts": "2026-10-05T08:56:03",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1079"
+    },
+    "id": "sh-0524"
+  },
+  {
+    "ts": "2026-10-05T09:08:06",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1095"
+    },
+    "id": "sh-0525"
+  },
+  {
+    "ts": "2026-10-05T09:27:08",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1086"
+    },
+    "id": "sh-0526"
+  },
+  {
+    "ts": "2026-10-05T09:29:04",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1079"
+    },
+    "id": "sh-0527"
+  },
+  {
+    "ts": "2026-10-05T09:55:27",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1078"
+    },
+    "id": "sh-0528"
+  },
+  {
+    "ts": "2026-10-05T10:04:45",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1099"
+    },
+    "id": "sh-0529"
+  },
+  {
+    "ts": "2026-10-05T10:07:00",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1073"
+    },
+    "id": "sh-0530"
+  },
+  {
+    "ts": "2026-10-05T10:08:02",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1088"
+    },
+    "id": "sh-0531"
+  },
+  {
+    "ts": "2026-10-05T10:15:17",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1075"
+    },
+    "id": "sh-0532"
+  },
+  {
+    "ts": "2026-10-05T10:19:20",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1108"
+    },
+    "id": "sh-0533"
+  },
+  {
+    "ts": "2026-10-05T10:21:05",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1107"
+    },
+    "id": "sh-0534"
+  },
+  {
+    "ts": "2026-10-05T10:35:03",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1107"
+    },
+    "id": "sh-0535"
+  },
+  {
+    "ts": "2026-10-05T10:42:44",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1103"
+    },
+    "id": "sh-0536"
+  },
+  {
+    "ts": "2026-10-05T10:44:55",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1078"
+    },
+    "id": "sh-0537"
+  },
+  {
+    "ts": "2026-10-05T10:49:41",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1096"
+    },
+    "id": "sh-0538"
+  },
+  {
+    "ts": "2026-10-05T10:51:29",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1073"
+    },
+    "id": "sh-0539"
+  },
+  {
+    "ts": "2026-10-05T10:55:16",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1073"
+    },
+    "id": "sh-0540"
+  },
+  {
+    "ts": "2026-10-05T11:01:25",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1098"
+    },
+    "id": "sh-0541"
+  },
+  {
+    "ts": "2026-10-05T11:16:58",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1100"
+    },
+    "id": "sh-0542"
+  },
+  {
+    "ts": "2026-10-05T11:24:19",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1088"
+    },
+    "id": "sh-0543"
+  },
+  {
+    "ts": "2026-10-05T11:46:28",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1072"
+    },
+    "id": "sh-0544"
+  },
+  {
+    "ts": "2026-10-05T12:23:43",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1106"
+    },
+    "id": "sh-0545"
+  },
+  {
+    "ts": "2026-10-05T12:30:13",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1091"
+    },
+    "id": "sh-0546"
+  },
+  {
+    "ts": "2026-10-05T12:52:13",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1073"
+    },
+    "id": "sh-0547"
+  },
+  {
+    "ts": "2026-10-05T13:08:12",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1095"
+    },
+    "id": "sh-0548"
+  },
+  {
+    "ts": "2026-10-05T13:10:28",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1074"
+    },
+    "id": "sh-0549"
+  },
+  {
+    "ts": "2026-10-05T13:18:02",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1087"
+    },
+    "id": "sh-0550"
+  },
+  {
+    "ts": "2026-10-05T13:37:20",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1071"
+    },
+    "id": "sh-0551"
+  },
+  {
+    "ts": "2026-10-05T13:40:36",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-104"
+    },
+    "id": "sh-0552"
+  },
+  {
+    "ts": "2026-10-05T13:43:48",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1108"
+    },
+    "id": "sh-0553"
+  },
+  {
+    "ts": "2026-10-05T13:55:43",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1095"
+    },
+    "id": "sh-0554"
+  },
+  {
+    "ts": "2026-10-05T14:03:51",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-116"
+    },
+    "id": "sh-0555"
+  },
+  {
+    "ts": "2026-10-05T14:06:08",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1075"
+    },
+    "id": "sh-0556"
+  },
+  {
+    "ts": "2026-10-05T14:18:20",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1077"
+    },
+    "id": "sh-0557"
+  },
+  {
+    "ts": "2026-10-05T14:21:19",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1107"
+    },
+    "id": "sh-0558"
+  },
+  {
+    "ts": "2026-10-05T15:04:41",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1075"
+    },
+    "id": "sh-0559"
+  },
+  {
+    "ts": "2026-10-05T15:06:13",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1103"
+    },
+    "id": "sh-0560"
+  },
+  {
+    "ts": "2026-10-05T15:13:33",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1108"
+    },
+    "id": "sh-0561"
+  },
+  {
+    "ts": "2026-10-05T15:20:05",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1105"
+    },
+    "id": "sh-0562"
+  },
+  {
+    "ts": "2026-10-05T15:36:43",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1082"
+    },
+    "id": "sh-0563"
+  },
+  {
+    "ts": "2026-10-05T15:47:55",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1091"
+    },
+    "id": "sh-0564"
+  },
+  {
+    "ts": "2026-10-05T15:53:44",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1074"
+    },
+    "id": "sh-0565"
+  },
+  {
+    "ts": "2026-10-05T16:03:01",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1079"
+    },
+    "id": "sh-0566"
+  },
+  {
+    "ts": "2026-10-05T16:07:02",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1099"
+    },
+    "id": "sh-0567"
+  },
+  {
+    "ts": "2026-10-05T16:08:02",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1092"
+    },
+    "id": "sh-0568"
+  },
+  {
+    "ts": "2026-10-05T16:17:07",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1093"
+    },
+    "id": "sh-0569"
+  },
+  {
+    "ts": "2026-10-05T16:28:00",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1086"
+    },
+    "id": "sh-0570"
+  },
+  {
+    "ts": "2026-10-05T16:36:27",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1106"
+    },
+    "id": "sh-0571"
+  },
+  {
+    "ts": "2026-10-05T16:44:26",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1096"
+    },
+    "id": "sh-0572"
+  },
+  {
+    "ts": "2026-10-05T16:45:05",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1102"
+    },
+    "id": "sh-0573"
+  },
+  {
+    "ts": "2026-10-05T16:57:43",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1073"
+    },
+    "id": "sh-0574"
+  },
+  {
+    "ts": "2026-10-05T16:58:13",
+    "agent": "recon-agent",
+    "capability": "refdata.read",
+    "system": "refdata",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "key": "instruments"
+    },
+    "id": "sh-0575"
+  },
+  {
+    "ts": "2026-10-05T16:59:36",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1090"
+    },
+    "id": "sh-0576"
+  },
+  {
+    "ts": "2026-10-05T17:04:23",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1095"
+    },
+    "id": "sh-0577"
+  },
+  {
+    "ts": "2026-10-05T17:05:50",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1095"
+    },
+    "id": "sh-0578"
+  },
+  {
+    "ts": "2026-10-05T17:22:46",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1079"
+    },
+    "id": "sh-0579"
+  },
+  {
+    "ts": "2026-10-05T17:33:32",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1087"
+    },
+    "id": "sh-0580"
+  },
+  {
+    "ts": "2026-10-05T17:34:52",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-102"
+    },
+    "id": "sh-0581"
+  },
+  {
+    "ts": "2026-10-05T18:00:18",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1096"
+    },
+    "id": "sh-0582"
+  },
+  {
+    "ts": "2026-10-05T18:05:23",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1095"
+    },
+    "id": "sh-0583"
+  },
+  {
+    "ts": "2026-10-05T18:09:52",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1085"
+    },
+    "id": "sh-0584"
+  },
+  {
+    "ts": "2026-10-05T18:22:59",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1081"
+    },
+    "id": "sh-0585"
+  },
+  {
+    "ts": "2026-10-05T18:23:07",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1106"
+    },
+    "id": "sh-0586"
+  },
+  {
+    "ts": "2026-10-05T18:31:01",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1094"
+    },
+    "id": "sh-0587"
+  },
+  {
+    "ts": "2026-10-05T18:31:09",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-119"
+    },
+    "id": "sh-0588"
+  },
+  {
+    "ts": "2026-10-05T19:05:58",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1084"
+    },
+    "id": "sh-0589"
+  },
+  {
+    "ts": "2026-10-05T19:43:31",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1078"
+    },
+    "id": "sh-0590"
+  },
+  {
+    "ts": "2026-10-05T19:44:57",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1093"
+    },
+    "id": "sh-0591"
+  },
+  {
+    "ts": "2026-10-05T20:34:13",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1097"
+    },
+    "id": "sh-0592"
+  },
+  {
+    "ts": "2026-10-05T20:43:59",
+    "agent": "recon-agent",
+    "capability": "client.read_masked",
+    "system": "client",
+    "rows": 1,
+    "fields": [
+      "client_id",
+      "name",
+      "country"
+    ],
+    "purpose": "reconciliation",
+    "args": {
+      "client_id": "C-119"
+    },
+    "id": "sh-0593"
+  },
+  {
+    "ts": "2026-10-05T20:44:30",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1081"
+    },
+    "id": "sh-0594"
+  },
+  {
+    "ts": "2026-10-05T20:56:22",
+    "agent": "recon-agent",
+    "capability": "refdata.read",
+    "system": "refdata",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "key": "currencies"
+    },
+    "id": "sh-0595"
+  },
+  {
+    "ts": "2026-10-05T21:12:14",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1078"
+    },
+    "id": "sh-0596"
+  },
+  {
+    "ts": "2026-10-05T21:28:39",
+    "agent": "recon-agent",
+    "capability": "recon.update",
+    "system": "recon",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1070"
+    },
+    "id": "sh-0597"
+  },
+  {
+    "ts": "2026-10-05T21:39:26",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1087"
+    },
+    "id": "sh-0598"
+  },
+  {
+    "ts": "2026-10-05T21:44:53",
+    "agent": "recon-agent",
+    "capability": "trade.read",
+    "system": "trade",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1078"
+    },
+    "id": "sh-0599"
+  },
+  {
+    "ts": "2026-10-05T21:49:04",
+    "agent": "recon-agent",
+    "capability": "settlement.read",
+    "system": "settlement",
+    "rows": 1,
+    "fields": [],
+    "purpose": "reconciliation",
+    "args": {
+      "trade_id": "T-1071"
+    },
+    "id": "sh-0600"
+  }
+]

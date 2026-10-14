@@ -10,9 +10,9 @@ Work top to bottom. Tick each box when its acceptance checks pass, then commit. 
 **Accept:** `python run.py` shows a styled placeholder page; both commands pass.
 
 ## M1 — Synthetic estate
-- [ ] `scripts/gen_fixtures.py` (seed 42) writes the data described in SPEC §3.4 to `app/estate/data/`.
-- [ ] `app/estate/systems.py` exposes simple read/update functions per system. PII columns are tagged.
-- [ ] The poisoned note on `T-1097` exists verbatim, and the shadow week reproduces **586 allowed / 14 would-deny** under the initial policy (13 refdata, 1 quarter-end).
+- [x] `scripts/gen_fixtures.py` (seed 42) writes the data described in SPEC §3.4 to `app/estate/data/`.
+- [x] `app/estate/systems.py` exposes simple read/update functions per system. PII columns are tagged.
+- [x] The poisoned note on `T-1097` exists verbatim, and the shadow week reproduces **586 allowed / 14 would-deny** under the initial policy (13 refdata, 1 quarter-end).
 
 **Accept:** tests assert the fixture counts and the shadow outcome.
 

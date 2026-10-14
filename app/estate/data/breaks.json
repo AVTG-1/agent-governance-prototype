@@ -1,0 +1,50 @@
+[
+  {
+    "break_id": "RC-90026",
+    "trade_id": "T-1082",
+    "kind": "cash difference",
+    "amount_diff": -4256.61,
+    "status": "open",
+    "opened": "2026-10-04"
+  },
+  {
+    "break_id": "RC-90027",
+    "trade_id": "T-1071",
+    "kind": "fee difference",
+    "amount_diff": -1703.78,
+    "status": "open",
+    "opened": "2026-10-06"
+  },
+  {
+    "break_id": "RC-90028",
+    "trade_id": "T-1098",
+    "kind": "quantity mismatch",
+    "amount_diff": 16644.56,
+    "status": "open",
+    "opened": "2026-10-03"
+  },
+  {
+    "break_id": "RC-90029",
+    "trade_id": "T-1101",
+    "kind": "fee difference",
+    "amount_diff": 22303.1,
+    "status": "open",
+    "opened": "2026-10-06"
+  },
+  {
+    "break_id": "RC-90030",
+    "trade_id": "T-1081",
+    "kind": "fee difference",
+    "amount_diff": -5980.95,
+    "status": "open",
+    "opened": "2026-10-06"
+  },
+  {
+    "break_id": "RC-90031",
+    "trade_id": "T-1097",
+    "kind": "unmatched status; counterparty legal-entity ID missing on the settlement leg",
+    "amount_diff": 0.0,
+    "status": "open",
+    "opened": "2026-10-06"
+  }
+]

@@ -1,0 +1,118 @@
+{
+  "window_days": 90,
+  "as_of": "2026-10-06",
+  "agents": {
+    "recon-agent": {
+      "trade.read": {
+        "uses": 2918,
+        "last_used": "2026-10-05",
+        "calendar_tags": []
+      },
+      "settlement.read": {
+        "uses": 2966,
+        "last_used": "2026-10-05",
+        "calendar_tags": []
+      },
+      "client.read_masked": {
+        "uses": 1121,
+        "last_used": "2026-10-05",
+        "calendar_tags": []
+      },
+      "recon.update": {
+        "uses": 893,
+        "last_used": "2026-10-05",
+        "calendar_tags": []
+      },
+      "refdata.read": {
+        "uses": 166,
+        "last_used": "2026-10-05",
+        "calendar_tags": []
+      },
+      "ledger.read_quarter_end": {
+        "uses": 1,
+        "last_used": "2026-09-30",
+        "calendar_tags": [
+          "quarter-end close"
+        ]
+      },
+      "settlement.update": {
+        "uses": 0,
+        "last_used": "2026-02-11",
+        "calendar_tags": []
+      },
+      "fx.read": {
+        "uses": 0,
+        "last_used": "2025-12-03",
+        "calendar_tags": []
+      },
+      "fileshare.export": {
+        "uses": 0,
+        "last_used": "2026-01-20",
+        "calendar_tags": []
+      }
+    },
+    "settlement-agent": {
+      "trade.read": {
+        "uses": 2977,
+        "last_used": "2026-10-05",
+        "calendar_tags": []
+      },
+      "settlement.read": {
+        "uses": 975,
+        "last_used": "2026-10-05",
+        "calendar_tags": []
+      },
+      "settlement.update": {
+        "uses": 2787,
+        "last_used": "2026-10-05",
+        "calendar_tags": []
+      },
+      "ssi.amend": {
+        "uses": 3944,
+        "last_used": "2026-10-05",
+        "calendar_tags": []
+      },
+      "client.read_masked": {
+        "uses": 2078,
+        "last_used": "2026-10-05",
+        "calendar_tags": []
+      },
+      "client.read_pii": {
+        "uses": 42,
+        "last_used": "2026-10-02",
+        "calendar_tags": [
+          "SSI verification"
+        ]
+      }
+    },
+    "enrichment-agent": {
+      "trade.read": {
+        "uses": 943,
+        "last_used": "2026-10-05",
+        "calendar_tags": []
+      },
+      "refdata.read": {
+        "uses": 519,
+        "last_used": "2026-10-05",
+        "calendar_tags": []
+      },
+      "settlement.read": {
+        "uses": 714,
+        "last_used": "2026-10-05",
+        "calendar_tags": []
+      }
+    },
+    "kyc-agent": {
+      "client.read_masked": {
+        "uses": 1656,
+        "last_used": "2026-10-05",
+        "calendar_tags": []
+      },
+      "refdata.read": {
+        "uses": 1141,
+        "last_used": "2026-10-05",
+        "calendar_tags": []
+      }
+    }
+  }
+}
