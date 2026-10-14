@@ -62,9 +62,6 @@ class Estate:
     def settlement_read(self, trade_id: str) -> dict:
         return dict(self.settlements.get(trade_id, {"error": f"no settlement for {trade_id}"}))
 
-    def break_read(self, break_id: str) -> dict:
-        return dict(self.breaks.get(break_id, {"error": f"no break {break_id}"}))
-
     def client_read(self, client_id: str, fields: list[str], *, reveal_pii: bool) -> dict:
         row = self.clients.get(client_id)
         if row is None:

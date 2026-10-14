@@ -112,7 +112,3 @@ CLOSE_ASKS = [
     "The owner for each agent",
     "Latency budgets in settlement windows",
 ]
-
-
-def scripted_duration() -> float:
-    return END

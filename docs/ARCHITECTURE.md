@@ -44,6 +44,7 @@ app/
     verifier.py            # checks LLM policy diffs: narrow-only, protected grants, references valid
     rightsizing.py         # usage + calendar tags -> candidate removals (used to brief the LLM and to check it)
     audit.py               # decision records, hash chain, evidence pack builder
+    world.py               # one run's estate + registry + policy + audit + gateway (restart builds a new one)
   estate/
     systems.py             # tiny functions per system over fixtures
     agents.py              # scripted agents + the LLM-driven recon agent wrapper
@@ -51,6 +52,7 @@ app/
   demo/
     script.py              # the 5-minute step list: timings, captions, actions
     director.py            # plays script.py; prefetches LLM calls; pause/seek/speed
+    acts.py                # what each scripted step does (calls the core, emits events)
     keyviews.py            # last completed run's events + key-view markers; builds the export HTML (SPEC §5.8)
     recorded_plan.json     # the ONLY sanctioned fallback (SPEC §5.4), shown as "recorded plan"
   prompts/

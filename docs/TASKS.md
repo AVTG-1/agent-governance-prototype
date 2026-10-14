@@ -77,8 +77,8 @@ Work top to bottom. Tick each box when its acceptance checks pass, then commit. 
 **Accept:** after a mocked run, every key view renders the expected panel. Open the exported file from disk in a headless browser if one is available and screenshot views 4, 5 and 7 into `docs/screens/`.
 
 ## M9 — Hand-off
-- [ ] README "Run on the work laptop" steps checked line by line (Windows paths, venv or conda, proxy note).
-- [ ] `docs/DECISIONS.md` lists any spec interpretations you made.
-- [ ] A final pass removes dead code, unused files and any abstraction that isn't needed for the demo.
+- [x] README "Run on the work laptop" steps checked line by line (Windows paths, venv or conda, proxy note).
+- [x] `docs/DECISIONS.md` lists any spec interpretations you made.
+- [x] A final pass removes dead code, unused files and any abstraction that isn't needed for the demo.
 
 **Accept:** fresh clone, install, `python run.py`: the connection screen appears. All tests and the secrets check pass.

@@ -9,8 +9,6 @@ from __future__ import annotations
 
 import asyncio
 
-KINDS = {"run", "act", "caption", "panel", "map", "decision", "call", "llm", "system", "error", "keyview"}
-
 
 class Bus:
     def __init__(self) -> None:

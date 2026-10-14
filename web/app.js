@@ -95,7 +95,7 @@ const fold = (events) => events.reduce(apply, initialState());
 // ---------------------------------------------------------------------------------------------
 
 const ui = {
-  events: [], state: initialState(), kvData: null, kv: null, film: false, drawer: null,
+  state: initialState(), kvData: null, kv: null, film: false, drawer: null,
   catalog: null, conn: null, gate: { provider: 'foundry', busy: false }, frame: 0,
 };
 
@@ -715,12 +715,11 @@ function connectStream() {
   source.onmessage = (m) => {
     const ev = JSON.parse(m.data);
     if (ev.kind === 'run') {
-      ui.events = [ev]; ui.state = apply(initialState(), ev); ui.drawer = null; ui.closeHidden = false;
+      ui.state = apply(initialState(), ev); ui.drawer = null; ui.closeHidden = false;
       if (ui.kv) ui.kv = null;
       api('GET', '/api/connection/status').then((c) => { ui.conn = c; schedule(); }).catch(() => {});
     } else {
       if (ev.run !== ui.state.runId || ev.seq <= ui.state.lastSeq) return;
-      ui.events.push(ev);
       ui.state = apply(ui.state, ev);
       if (ev.kind === 'system' && (ev.payload.closed || ev.payload.done)) { ui.kvData = null; api('GET', '/api/connection/status').then((c) => { ui.conn = c; }).catch(() => {}); }
     }
