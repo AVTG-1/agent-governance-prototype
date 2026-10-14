@@ -42,6 +42,7 @@ app/
     gateway.py             # normalise action -> envelope -> decide -> (execute | block) -> log
     containment.py         # fixed allowed actions, applied by rules
     verifier.py            # checks LLM policy diffs: narrow-only, protected grants, references valid
+    rulebook.py            # day zero: usage summary from shadow records, rulebook verifier, rulebook@v1
     rightsizing.py         # usage + calendar tags -> candidate removals (used to brief the LLM and to check it)
     audit.py               # decision records, hash chain, evidence pack builder
     world.py               # one run's estate + registry + policy + audit + gateway (restart builds a new one)
@@ -91,9 +92,10 @@ tests/
 - Restart resets the estate, policies, audit log and demo clock to their initial state. The token and connection status stay.
 
 **Prefetch**
+- The investigator's rulebook draft is requested at Start (the fixtures are deterministic).
 - The agent plan is requested at the start of Act 2.
 - The investigator's case is requested at the first Act 4 denial.
-- The investigator's diff is requested as soon as the case is ready.
+- The investigator's hardening diff is requested as soon as the case is ready.
 - Results are cached per run.
 
 **Key views (SPEC §5.8)**

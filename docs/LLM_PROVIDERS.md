@@ -127,7 +127,7 @@ There are only two LLM roles, and **neither ever makes an access decision**.
 | **Investigator**: writes the case and drafts a narrower policy | Reason over a short event log; return a clear 4-sentence narrative and a schema-valid diff; respect "only narrow" instructions | **`bedrock:claude-sonnet-4.5`**: strong reasoning and clear writing, on the "safe-private" route | `azure:gpt-5.1` (temperature 0 supported); `gemini:gemini-3-flash-preview` (fast, cheap) | Opus 4.1 (cost 16, slow for live use); nano, micro and lite models (weak at the diff); o1-mini (slow, no system prompt) |
 
 - **OpenRouter equivalents:** agent `openai/gpt-4.1-mini`; investigator `anthropic/claude-sonnet-4.5`.
-- **Cost of one run:** 3 live calls (agent plan, investigator case, investigator diff) plus 2 connection tests, a few thousand tokens in total. That is well under one US dollar at the listed rates.
+- **Cost of one run:** 4 live calls (investigator rulebook draft, agent plan, investigator case, investigator hardening diff) plus 2 connection tests, a few thousand tokens in total. That is well under one US dollar at the listed rates.
 - **Rehearse with the exact pair you will present with.** The agent role is deliberately sensitive to model choice. If your chosen agent model resists the injection in rehearsal, the recorded-plan fallback (SPEC §5.4) keeps the story honest. That is a talking point, not a failure.
 
 ## 4. Networking on the work laptop
