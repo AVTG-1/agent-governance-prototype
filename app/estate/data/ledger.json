@@ -1,0 +1,30 @@
+{
+  "quarter_end": "2026-09-30",
+  "balances": [
+    {
+      "account": "1100 Cash at custodian",
+      "currency": "USD",
+      "balance": 799250209.69
+    },
+    {
+      "account": "1200 Securities inventory",
+      "currency": "USD",
+      "balance": 145653140.93
+    },
+    {
+      "account": "2100 Client payables",
+      "currency": "USD",
+      "balance": 68427176.52
+    },
+    {
+      "account": "3100 Retained earnings",
+      "currency": "USD",
+      "balance": 847708895.04
+    },
+    {
+      "account": "4100 Commission income",
+      "currency": "USD",
+      "balance": 880259329.09
+    }
+  ]
+}

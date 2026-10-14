@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agent governance · Kaiyo Securities (synthetic)</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 34 34%27%3E%3Crect width=%2734%27 height=%2734%27 rx=%279%27 fill=%27%233049d1%27/%3E%3C/svg%3E">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<!--gate-->
+<main id="gate" class="gate" hidden>
+  <div class="gate-card">
+    <div class="brand-row">
+      <svg class="mark" viewBox="0 0 34 34" aria-hidden="true"><rect x="1" y="1" width="32" height="32" rx="9" fill="var(--brand)"/><path d="M10 12h14M10 17h14M10 22h9" stroke="var(--on-brand)" stroke-width="2.4" stroke-linecap="round"/><circle cx="24" cy="22" r="2.6" fill="var(--allow)"/></svg>
+      <div>
+        <h1>Agent governance</h1>
+        <p class="sub">Kaiyo Securities (synthetic) · 5-minute demo</p>
+      </div>
+    </div>
+    <p class="lede">Connect a live model to begin. Both roles must pass a live test before the demo can start. There is no skip.</p>
+
+    <div class="field">
+      <span class="label">Provider</span>
+      <div class="seg" role="radiogroup" id="g-provider" aria-label="Provider">
+        <button type="button" role="radio" data-v="foundry" aria-checked="true">LLM Foundry <span class="rec">recommended</span></button>
+        <button type="button" role="radio" data-v="openrouter" aria-checked="false">OpenRouter</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="label" for="g-token">Token</label>
+      <div class="row">
+        <input id="g-token" type="password" autocomplete="off" spellcheck="false" placeholder="Paste a fresh token">
+        <span id="g-masked" class="masked" hidden></span>
+        <button type="button" id="g-forget" class="btn btn-quiet" hidden>Forget token</button>
+      </div>
+      <small>Held in this app's memory only. Never saved, logged or shown again.</small>
+    </div>
+
+    <div class="field" id="g-project-field">
+      <label class="label" for="g-project">Project suffix</label>
+      <input id="g-project" value="llmproxy-playground" spellcheck="false">
+      <small>Sent as <code>Bearer &lt;token&gt;:&lt;project&gt;</code>. A token that already ends in <code>:suffix</code> is sent as is.</small>
+    </div>
+
+    <div class="models">
+      <div class="field">
+        <label class="label" for="g-agent">Agent model <span class="tag tag-ai">gets fooled</span></label>
+        <select id="g-agent"></select>
+        <input id="g-agent-custom" placeholder="custom model id" spellcheck="false" hidden>
+      </div>
+      <div class="field">
+        <label class="label" for="g-investigator">Investigator model <span class="tag tag-ai">explains, drafts</span></label>
+        <select id="g-investigator"></select>
+        <input id="g-investigator-custom" placeholder="custom model id" spellcheck="false" hidden>
+      </div>
+    </div>
+
+    <details class="adv">
+      <summary>Advanced</summary>
+      <div class="field"><label class="label" for="g-base">Foundry base URL</label><input id="g-base" spellcheck="false"></div>
+      <div class="field"><label class="label" for="g-ca">Corporate CA bundle path (optional)</label><input id="g-ca" spellcheck="false" placeholder="C:\path\to\corporate-ca.pem"><small>Used for TLS verification behind a corporate proxy. Verification is never disabled.</small></div>
+    </details>
+
+    <div class="actions">
+      <button type="button" id="g-test" class="btn btn-quiet">Test connection</button>
+      <button type="button" id="g-start" class="btn btn-primary" disabled>Start demo</button>
+    </div>
+    <ul id="g-results" class="results" aria-live="polite"></ul>
+  </div>
+</main>
+<!--/gate-->
+
+<div id="console" class="console" hidden>
+  <header class="top">
+    <div class="top-row">
+      <div class="logo">
+        <svg class="mark" viewBox="0 0 34 34" aria-hidden="true"><rect x="1" y="1" width="32" height="32" rx="9" fill="var(--brand)"/><path d="M10 12h14M10 17h14M10 22h9" stroke="var(--on-brand)" stroke-width="2.4" stroke-linecap="round"/><circle cx="24" cy="22" r="2.6" fill="var(--allow)"/></svg>
+        <b>Agent governance</b><span class="dim">· Kaiyo Securities (synthetic)</span>
+      </div>
+      <div id="h-status" class="status"></div>
+    </div>
+    <div class="top-row">
+      <nav id="h-acts" class="acts" aria-label="Acts"></nav>
+      <div id="h-controls" class="controls"></div>
+    </div>
+  </header>
+  <section class="pane map-pane"><h2>Estate map</h2><div id="map" class="map"></div></section>
+  <section class="pane timeline-pane"><h2>Live decision timeline</h2><div id="timeline" class="timeline"></div></section>
+  <section class="pane panel-pane"><div id="panel" class="panel"></div></section>
+  <footer id="caption" class="caption"></footer>
+  <div id="overlays"></div>
+</div>
+<script type="module" src="app.js"></script>
+</body>
+</html>

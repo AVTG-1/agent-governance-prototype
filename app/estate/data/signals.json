@@ -1,0 +1,101 @@
+{
+  "vault_entries": [
+    {
+      "path": "kv/ops/svc_ops_batch",
+      "principal": "svc_ops_batch",
+      "kind": "shared service account",
+      "owner": "Reconciliation Ops"
+    },
+    {
+      "path": "kv/settlement/settlement-agent",
+      "principal": "settlement-agent",
+      "kind": "per-agent credential",
+      "owner": "Settlement Ops"
+    }
+  ],
+  "gateway_logs": [
+    {
+      "principal": "svc_ops_batch",
+      "user_agent": "recon-agent/2.3",
+      "systems": [
+        "trade",
+        "settlement",
+        "client",
+        "refdata",
+        "ledger",
+        "recon"
+      ]
+    },
+    {
+      "principal": "settlement-agent",
+      "user_agent": "settlement-agent/1.4",
+      "systems": [
+        "trade",
+        "settlement",
+        "client"
+      ]
+    },
+    {
+      "principal": "role/trade-enrichment",
+      "user_agent": "enrichment-agent/3.0",
+      "systems": [
+        "trade",
+        "refdata"
+      ]
+    },
+    {
+      "principal": "apikey:kyc-refresh",
+      "user_agent": "kyc-agent/0.9",
+      "systems": [
+        "client",
+        "refdata"
+      ]
+    }
+  ],
+  "db_sessions": [
+    {
+      "login": "svc_ops_batch",
+      "program": "recon-agent",
+      "host": "ops-batch-01",
+      "interactive": false,
+      "db": "recon"
+    },
+    {
+      "login": "svc_ops_batch",
+      "program": "SQL console",
+      "host": "WS-OPS-114",
+      "interactive": true,
+      "db": "recon"
+    },
+    {
+      "login": "recon_direct",
+      "program": "recon-agent",
+      "host": "ops-batch-01",
+      "interactive": false,
+      "db": "recon"
+    }
+  ],
+  "cloud_roles": [
+    {
+      "role": "role/trade-enrichment",
+      "workload": "enrichment-agent",
+      "owner": "Trade Support"
+    }
+  ],
+  "config_files": [
+    {
+      "file": "kyc-refresh/config.yaml",
+      "finding": "static API key in config",
+      "principal": "apikey:kyc-refresh",
+      "owner": null
+    }
+  ],
+  "system_owners": {
+    "trade": "Trade Support",
+    "settlement": "Settlement Ops",
+    "recon": "Reconciliation Ops",
+    "client": "Client Onboarding",
+    "refdata": "Reference Data",
+    "ledger": "Finance"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "currencies": [
+    "USD",
+    "JPY",
+    "GBP",
+    "EUR"
+  ],
+  "instruments": [
+    "KY-GOVT-2031",
+    "KY-GOVT-2034",
+    "ARDN-CORP-2029",
+    "MRLW-EQ",
+    "QSDE-EQ",
+    "THRN-CORP-2030"
+  ],
+  "calendar": {
+    "quarter_ends": [
+      "2026-03-31",
+      "2026-06-30",
+      "2026-09-30",
+      "2026-12-31"
+    ],
+    "holidays": [
+      "2026-10-12"
+    ]
+  }
+}
