@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+.pytest_cache/
+
+# Never commit credentials or local config (tokens are pasted into the app, never stored)
+.env
+.env.*
+*.token
+*token*.txt
+secrets.*
+
+# Runtime output
+evidence_packs/
+key-views-*.html
+*.log
+*.sqlite
+*.db
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
