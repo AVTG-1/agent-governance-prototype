@@ -42,10 +42,10 @@ Work top to bottom. Tick each box when its acceptance checks pass, then commit. 
 **Accept:** without a passing test the Start button is disabled and the API refuses; after a mocked pass (in tests) it starts.
 
 ## M5 — Director, script and stream
-- [ ] `app/demo/script.py` holds every step and caption from `docs/DEMO_SCRIPT.md` with SPEC §5 timings.
-- [ ] The director supports play, pause, next step, jump to act, restart and speed (0.5×, 1×, 2×), plus prefetch and `wait_for` with timeout and a visible pause on error.
-- [ ] The SSE stream carries events per `docs/ARCHITECTURE.md`.
-- [ ] `tests/test_director_timing.py` runs the full script with the mock LLM at high speed and asserts the total scripted duration is 300 s ± 20 s and that every act is reached.
+- [x] `app/demo/script.py` holds every step and caption from `docs/DEMO_SCRIPT.md` with SPEC §5 timings.
+- [x] The director supports play, pause, next step, jump to act, restart and speed (0.5×, 1×, 2×), plus prefetch and `wait_for` with timeout and a visible pause on error.
+- [x] The SSE stream carries events per `docs/ARCHITECTURE.md`.
+- [x] `tests/test_director_timing.py` runs the full script with the mock LLM at high speed and asserts the total scripted duration is 300 s ± 20 s and that every act is reached.
 
 **Accept:** the timing test is green; restart fully resets state.
 
