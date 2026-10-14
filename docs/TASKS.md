@@ -3,9 +3,9 @@
 Work top to bottom. Tick each box when its acceptance checks pass, then commit. Keep commits small and messages clear.
 
 ## M0 — Skeleton (keep it tiny)
-- [ ] `requirements.txt` installs cleanly; `run.py` starts Uvicorn on `127.0.0.1:8765` and opens the browser.
-- [ ] `/` serves `web/index.html` with `web/tokens.css` and the fonts from `design/` copied into `web/`.
-- [ ] `scripts/check_no_secrets.py` exists and passes; `pytest -q` runs (even with one placeholder test).
+- [x] `requirements.txt` installs cleanly; `run.py` starts Uvicorn on `127.0.0.1:8765` and opens the browser.
+- [x] `/` serves `web/index.html` with `web/tokens.css` and the fonts from `design/` copied into `web/`.
+- [x] `scripts/check_no_secrets.py` exists and passes; `pytest -q` runs (even with one placeholder test).
 
 **Accept:** `python run.py` shows a styled placeholder page; both commands pass.
 
