@@ -1,8 +1,8 @@
 # Agent governance control plane: demo prototype
 
-A self-playing, 5-minute demo showing how a control plane governs the AI agents that bridge a bank's post-trade systems. It finds the agents, wraps an existing one without changing its code, observes before enforcing, stops a fooled agent, tightens access safely and produces measured evidence. Everything is synthetic.
+A self-playing, 5-minute demo showing how a control plane governs the AI agents that bridge a bank's post-trade systems. It finds the agents, onboards all four without changing their code, watches a recorded week before enforcing anything, has an AI draft the rulebook that a verifier checks and a person approves, stops a fooled agent, hardens access after the incident and produces measured evidence. Policy decides. AI advises. People approve. Everything is synthetic.
 
-**Status:** built (milestones M0–M9 in `docs/TASKS.md`). Interpretations of the spec are in `docs/DECISIONS.md`.
+**Status:** built (milestones M0–M12 in `docs/TASKS.md`). Four live model calls per run. Screenshots are in `docs/screens/`. Interpretations of the spec are in `docs/DECISIONS.md`.
 
 ## Repository map
 
@@ -13,7 +13,7 @@ A self-playing, 5-minute demo showing how a control plane governs the AI agents 
 | `docs/ARCHITECTURE.md` | Small single-process design and folder layout |
 | `docs/LLM_PROVIDERS.md` | Foundry and OpenRouter request shapes, model catalogue, **model recommendations** |
 | `docs/DEMO_SCRIPT.md` | Captions and presenter notes, minute by minute |
-| `docs/TASKS.md` | Milestones M0–M9 with acceptance checks |
+| `docs/TASKS.md` | Milestones M0–M12 with acceptance checks |
 | `docs/DESIGN.md` | Visual rules (shared with the proposal deck) |
 | `design/` | Colour tokens and fonts from the deck |
 | `reference/` | The proposal deck and background research (read-only) |
@@ -52,7 +52,7 @@ The token is held in memory only. It is never saved, logged or shown again. If i
 
 **Behind a corporate proxy:** the app honours `HTTPS_PROXY` and `NO_PROXY`. In PowerShell: `$env:HTTPS_PROXY = "http://proxy.example:8080"` before `python run.py`. If TLS fails, set `$env:LLM_CA_BUNDLE = "C:\path\to\corporate-ca.pem"` (or paste the path in the connection screen's *Advanced* section). Never disable verification.
 
-**Controls during the run:** Space pause/resume · → next step · R restart · click an act to jump · 0.5×/1×/2× speed · D theme · K key views · click a timeline row for its full decision record. The owner approval in Act 5 auto-approves after 8 s, or click *Approve*.
+**Controls during the run:** Space pause/resume · → next step · R restart · click an act to jump · 0.5×/1×/2× speed · D theme · K key views · click a timeline row for its full decision record. The owner approvals (the rulebook in Act 2, the hardening in Act 5) auto-approve after 8 s, or click *Approve*.
 
 **Tests (offline, no token):** `python -m pytest -q` and `python scripts/check_no_secrets.py`.
 

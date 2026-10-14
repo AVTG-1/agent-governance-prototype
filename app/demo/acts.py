@@ -89,10 +89,20 @@ async def noop(d, step) -> None:
     return None
 
 
+def focus(d, *parts: str) -> None:
+    """The one place to look on the control-plane diagram for this beat (deck part names)."""
+    d.emit("map", {"focus": list(parts)})
+
+
+CRED_SHORT = {"brokered": "own identity", "token": "short-lived token", "federated": "federated identity",
+              "proxied": "behind data proxy"}
+
+
 # --- Act 1: Discover -----------------------------------------------------------------------------
 
 async def discover_start(d, step) -> None:
     d.emit("map", {"set": {"mode": "discovery", "plane": False}})
+    focus(d, "agents", "identity")
     d.panel("registry", scanning=True, sources=[{"name": n, "count": None} for n, _ in SIGNAL_SOURCES], rows=[],
             findings=[], assigned=None, note=None)
 
@@ -181,6 +191,7 @@ async def onboard_start(d, step) -> None:
         rows.append({"agent": agent_id, "name": a.name, "owner": a.owner, "before": a.credential.label,
                      "after": None, "swap": None, "path": None, "data": None, "attribution": None, "done": False})
     d.emit("map", {"set": {"mode": "shadow", "plane": True}})
+    focus(d, "identity", "enforce")
     d.panel("onboard", rows=rows, current=None, guardrails=None, default_deny=None)
     d.emit("system", {"policy": w.policy.current.version_label(), "enforce": False})
 
@@ -196,7 +207,8 @@ async def onboard_swaps(d, step) -> None:
                          attribution=info["attribution"], attaches=info["attaches"], retired=info["retired"], done=True)
         d.panel("onboard", rows=[dict(r) for r in rows], current=agent_id)
         a = w.registry.get(agent_id)
-        d.emit("map", {"agent": {"id": agent_id, "status": "onboarded", "flags": a.flags, "owner": a.owner}})
+        d.emit("map", {"agent": {"id": agent_id, "status": "onboarded", "flags": a.flags, "owner": a.owner,
+                                 "cred": CRED_SHORT.get(a.credential.kind, "onboarded")}})
         await d.sleep(3.5)
     d.panel("onboard", current=None)
 
@@ -209,6 +221,7 @@ def _last_rows(d) -> list[dict]:
 
 
 async def guardrails(d, step) -> None:
+    focus(d, "policy")
     gr = [{"rule": g, "version": RULES[g].version, "text": GUARDRAIL_TEXT[g]} for g in GUARDRAILS]
     d.panel("onboard", guardrails=gr, default_deny="not yet",
             policy=d.run.world.policy.current.version_label())
@@ -216,6 +229,7 @@ async def guardrails(d, step) -> None:
 
 async def shadow_week(d, step) -> None:
     w = d.run.world
+    focus(d, "policy", "monitor")
     calls = w.shadow_week
     per_agent: dict[str, dict] = {a: {"observed": 0, "would_deny": 0, "would_hold": 0, "caps": {}} for a in ONBOARD_ORDER}
     days: dict[str, dict] = {}
@@ -276,6 +290,7 @@ async def shadow_findings(d, step) -> None:
                 findings.append({"kind": "hold", "agent": a["agent"], "capability": o["capability"], "count": o["week"],
                                  "rule": o["guardrail"]["rule"],
                                  "text": f"{o['week']} amendments would each wait for a second person (maker-checker)."})
+    focus(d, "monitor", "policy")
     d.panel("shadow", findings=findings, highlight="kyc-agent")
 
 
@@ -287,6 +302,7 @@ async def rulebook_draft(d, step) -> None:
     candidate = rb.build_rulebook(w.policy.current, lines)
     decisions = rb.owner_decisions(summary, lines)
     grants = [l for l in lines if l.kind == "grant"]
+    focus(d, "monitor", "policy")
     d.run.data.update(rulebook_lines=lines, rulebook_candidate=candidate, owner_decisions=decisions,
                       rulebook_ok=sum(1 for l in grants if l.ok), rulebook_total=len(grants))
     d.panel("rulebook", stage="draft", model=res.model_ref, latency_ms=d.run.data.get("rulebook_latency_ms"),
@@ -305,6 +321,7 @@ async def rulebook_replay(d, step) -> None:
     w = d.run.world
     r = rb.replay_week(w.gateway, w.shadow_week, w.audit.records, d.run.data["rulebook_candidate"])
     d.run.data["rulebook_replay"] = r
+    focus(d, "policy", "evidence")
     for k in range(1, 6):
         d.panel("rulebook", stage="replay", replay={
             "calls": r["calls"], "checked": r["calls"] * k // 5, "running": k < 5,
@@ -330,6 +347,7 @@ async def owner_approval(d, payload: dict) -> bool:
 
 async def rulebook_approve(d, step) -> None:
     w = d.run.world
+    focus(d, "policy")
     lines = d.run.data["rulebook_lines"]
     decisions = d.run.data["owner_decisions"]
     candidate = d.run.data["rulebook_candidate"]
@@ -352,6 +370,7 @@ async def rulebook_approve(d, step) -> None:
 
 
 async def default_deny_on(d, step) -> None:
+    focus(d, "policy", "enforce")
     d.panel("rulebook", default_deny="on")
     d.emit("system", {"enforce": True})
     d.emit("map", {"set": {"mode": "governed"}})
@@ -382,6 +401,7 @@ async def enforce_routine(d, step) -> None:
 
 async def enforce_jit(d, step) -> None:
     w = d.run.world
+    focus(d, "jit", "policy")
     d.panel("enforce", need={"break": "RC-90031", "field": "legal_entity_id", "system": "Client master",
                              "why": "Counterparty legal-entity ID is missing on the settlement leg."})
     env = w.policy.current.envelopes["env-recon-cm-01"]
@@ -423,6 +443,7 @@ async def enforce_expired(d, step) -> None:
 # --- Act 4: Attack -------------------------------------------------------------------------------
 
 async def attack_note(d, step) -> None:
+    focus(d, "agents")
     s = d.run.world.estate.settlements["T-1097"]
     d.panel("attack", stage="note", note={"trade_id": "T-1097", "settlement_id": s["settlement_id"],
                                           "text": s["ops_note"], "injected": INJECTED,
@@ -541,6 +562,7 @@ def _start_case(d, denied_records: list[dict]) -> None:
 
 async def attack_case(d, step) -> None:
     w = d.run.world
+    focus(d, "monitor", "enforce")
     case, res = d.run.llm["case"].result()
     records = d.run.data.get("act4_denied_records", [])
     real_ids = {r["request_id"] for r in records}
@@ -574,6 +596,7 @@ async def attack_close(d, step) -> None:
 
 async def harden_draft(d, step) -> None:
     w = d.run.world
+    focus(d, "monitor", "policy", "evidence")
     diff, res = d.run.llm["diff"].result()
     checks, candidate, replay = verify_and_replay(diff.changes, w.policy.current, w.usage, w.gateway,
                                                   w.shadow_week, w.attack_suite)
@@ -689,6 +712,7 @@ def metrics(d) -> dict:
 
 
 async def prove_evidence(d, step) -> None:
+    focus(d, "evidence")
     m = metrics(d)
     d.run.data["metrics"] = m
     d.panel("evidence", metrics=m, policy=d.run.world.policy.current.version_label(),

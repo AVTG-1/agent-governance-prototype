@@ -106,10 +106,10 @@ Work top to bottom. Tick each box when its acceptance checks pass, then commit. 
 **Accept:** a mocked full run reaches every act in 5:00 and the evidence pack verifies.
 
 ## M12 — Console matches the deck
-- [ ] Deck chrome: deep navy header and caption in both themes, soft glow washes, card styles and shadows, rounded nodes, exact colour semantics (blue control, green allowed, red stopped, amber waits for a person, purple dashed AI advisory, grey dashed simulated); every status is icon plus word plus colour.
-- [ ] The estate map is the deck's control-plane diagram with the six parts named as in the deck and a moving decision dot.
-- [ ] Act intro cards and the "Deck: …" chapter chip; one focal point per step; purposeful motion only; `prefers-reduced-motion` honoured.
-- [ ] Connection screen and close card redesigned to the same standard.
-- [ ] Screenshots of every step at 1440×900 and 1920×1080 in both themes compared against the deck; overflow sweep clean; final set in `docs/screens/`.
+- [x] Deck chrome: deep navy header and caption in both themes, soft glow washes, card styles and shadows, rounded nodes, exact colour semantics (blue control, green allowed, red stopped, amber waits for a person, purple dashed AI advisory, grey dashed simulated); every status is icon plus word plus colour.
+- [x] The estate map is the deck's control-plane diagram with the six parts named as in the deck and a moving decision dot.
+- [x] Act intro cards and the "Deck: …" chapter chip; one focal point per step; purposeful motion only; `prefers-reduced-motion` honoured.
+- [x] Connection screen and close card redesigned to the same standard.
+- [x] Screenshots of every step at 1440×900 and 1920×1080 in both themes compared against the deck; overflow sweep clean; final set in `docs/screens/`.
 
 **Accept:** someone who has just seen the deck recognises every screen as the same product.
