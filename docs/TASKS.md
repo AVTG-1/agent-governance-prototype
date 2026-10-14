@@ -25,11 +25,11 @@ Work top to bottom. Tick each box when its acceptance checks pass, then commit. 
 **Accept:** `pytest -q` is green. Reading `policy_engine.py` takes under five minutes.
 
 ## M3 — LLM client
-- [ ] `app/llm/catalog.py` from `docs/LLM_PROVIDERS.md`.
-- [ ] Foundry: azure, openai, bedrock and gemini request builders and parsers, with non-stream first and stream fallback. OpenRouter. Unified `complete()` and `test_model()`.
-- [ ] `mock.py` for tests only. Tests prove it is not reachable from any route.
-- [ ] Parser unit tests with captured-style samples for each family, including the streaming variants.
-- [ ] `scripts/probe_llm.py`, which takes the token via `getpass` only.
+- [x] `app/llm/catalog.py` from `docs/LLM_PROVIDERS.md`.
+- [x] Foundry: azure, openai, bedrock and gemini request builders and parsers, with non-stream first and stream fallback. OpenRouter. Unified `complete()` and `test_model()`.
+- [x] `mock.py` for tests only. Tests prove it is not reachable from any route.
+- [x] Parser unit tests with captured-style samples for each family, including the streaming variants.
+- [x] `scripts/probe_llm.py`, which takes the token via `getpass` only.
 
 **Accept:** parser tests are green. Grep confirms no route imports `mock`.
 
