@@ -216,7 +216,7 @@ const n0 = (v) => Number(v || 0).toLocaleString('en-GB');
 const modelName = (ref) => String(ref || '').split(':').pop().split('/').pop();
 const plural = (n, one, many) => `${n} ${n === 1 ? one : many || `${one}s`}`;
 
-function cur() { return ui.kv ? ui.kv.state : ui.state; }
+function cur() { return ui.rp ? ui.rp.state : ui.kv ? ui.kv.state : ui.state; }
 const L = () => cur().labels || {};
 function plain(cap) { return ((L().capabilities || {})[cap]) || cap; }
 function agentName(id) { return ((L().agents || {})[id]) || short(id); }
@@ -246,6 +246,7 @@ function put(sel, html) {
 function render() {
   const s = cur();
   document.body.classList.toggle('still', !!ui.kv || REDUCED);
+  document.body.classList.toggle('replaying', !!ui.rp);
   put('#h-acts', renderActs(s));
   put('#h-controls', renderControls(s));
   const mapChanged = put('#map', renderMap(s));
@@ -262,6 +263,7 @@ function render() {
   fitTicker();
   put('#overlays', renderOverlays(s));
   drawEdges(s, mapChanged);
+  renderReplayLayer();
   tickClock();
 }
 
@@ -275,6 +277,10 @@ function schedule() {
 function viewer() { return !REPLAY && ui.conn && ui.conn.controller && ui.conn.controller.set && !ui.conn.controller.you; }
 
 function renderActs(s) {
+  if (ui.rp) {
+    const m = ui.rp.meta || {};
+    return `<span class="kv-badge">${ICON.play}Captioned replay · recorded from this run at ${esc(String(m.recorded_at || '').slice(11, 16))} · no live calls</span>`;
+  }
   if (ui.kv) {
     const v = ui.kvData.views[ui.kv.i];
     return `<span class="kv-badge">${ICON.info}Key view ${v.n} of ${ui.kvData.views.length} · recorded from this run at ${esc(hhmm(v.ts))} · no live calls</span>`;
@@ -289,6 +295,17 @@ function renderActs(s) {
 }
 
 function renderControls(s) {
+  if (ui.rp) {
+    const r = ui.rp;
+    return `<span class="clock" id="rp-time"><b>${mmss(r.pos)}</b> / ${mmss(r.total)}</span>
+      <button class="ibtn${r.playing ? '' : ' on'}" data-cmd="rp-toggle" title="${r.playing ? 'Pause' : 'Play'} (Space)">${r.playing ? ICON.pause : ICON.play}</button>
+      <button class="ibtn" data-cmd="rp-prev" title="Previous callout (←)">${ICON.prev}</button>
+      <button class="ibtn" data-cmd="rp-next" title="Next callout (→)">${ICON.fwd}</button>
+      <button class="ibtn" data-cmd="rp-restart" title="Replay from the start (R)">${ICON.restart}</button>
+      <button class="btn btn-quiet" data-cmd="film">Key views <span class="kbd">K</span></button>
+      <button class="btn btn-quiet" data-cmd="rp-exit">${REPLAY ? 'Stop' : 'Back'} <span class="kbd">Esc</span></button>
+      <button class="ibtn" data-cmd="theme" title="Theme (D)">${ICON.moon}</button>`;
+  }
   const clock = `<span class="clock" id="clock"><b>${mmss(s.t)}</b> / ${mmss(s.end)}</span>`;
   const theme = `<button class="ibtn" data-cmd="theme" title="Theme (D)">${ICON.moon}</button>`;
   if (ui.kv) {
@@ -319,7 +336,7 @@ function tickClock() {
   const el = $('#clock b');
   if (!el) return;
   let t = s.t;
-  if (!ui.kv && !REPLAY && ui.clock.seq === s.lastSeq && !s.paused && !s.waiting && !s.done && !s.approval && s.act) {
+  if (!ui.kv && !ui.rp && !REPLAY && ui.clock.seq === s.lastSeq && !s.paused && !s.waiting && !s.done && !s.approval && s.act) {
     t = Math.min(s.end, s.t + ((performance.now() - ui.clock.at) / 1000) * (s.speed || 1));
   }
   const txt = mmss(t);
@@ -841,7 +858,7 @@ function panelEvidence(s, p) {
   const out = [pHead(s, 'Measured, not claimed', 'Every number here was measured in this run.', m.plan_source === 'recorded' ? simTag('agent plan: recorded') : aiTag('agent plan: live'))];
   out.push(`<div class="evgrid">${tiles.map(([b, l, d]) => `<div class="ev"><b>${b}</b><span class="l">${esc(l)}</span><span class="d">${d}</span></div>`).join('')}</div>`);
   out.push(`<div class="card deep">${m.chain_ok ? ICON.allow : ICON.deny}<div><b>Hash chain ${m.chain_ok ? 'verified' : 'BROKEN'}: ${n0(m.decisions)} decision records</b><span class="xs">${m.agents_owned} of ${m.agents_total} agents with an identity and owner (${m.workload_only} at workload level) · head <span class="mono">${esc((m.chain_head || '').slice(0, 16))}</span> · altering any record breaks the chain</span></div></div>`);
-  if (!REPLAY && !ui.kv) {
+  if (!REPLAY && !ui.kv && !ui.rp) {
     out.push(`<div class="downloads"><a class="btn btn-quiet" href="/api/evidence.md" download>Evidence pack (.md)</a><a class="btn btn-quiet" href="/api/evidence.json" download>(.json)</a>${s.closed ? '<a class="btn btn-quiet" href="/api/keyviews/export" download>Download key views</a>' : ''}${p.close && ui.closeHidden ? '<button class="btn btn-quiet" data-cmd="close-show">Close card</button>' : ''}</div>`);
   }
   return out.join('');
@@ -865,7 +882,7 @@ function switchOptions(role) {
 
 function renderPanelOver(s) {
   if (ui.kv) return '';
-  const e = s.error;
+  const e = ui.rp ? null : s.error;
   if (e && e.message) {
     const role = e.role || 'investigator';
     const ctl = !REPLAY && !viewer();
@@ -885,7 +902,7 @@ function renderPanelOver(s) {
   }
   if (s.approval) {
     const ap = s.approval;
-    const btn = `<button class="btn btn-primary" data-cmd="approve" ${REPLAY || viewer() ? 'disabled' : ''}>${ICON.sign}${ap.kind === 'rulebook' ? 'Sign the rulebook, reject the export' : 'Sign'}</button>`;
+    const btn = `<button class="btn btn-primary" data-cmd="approve" ${REPLAY || ui.rp || viewer() ? 'disabled' : ''}>${ICON.sign}${ap.kind === 'rulebook' ? 'Sign the rulebook, reject the export' : 'Sign'}</button>`;
     const body = ap.kind === 'rulebook'
       ? `<div class="rows">${(ap.items || []).map((i) => `<div class="li">${tag('allow', plural(i.grants, 'grant'))}<span><b>${esc(agentName(i.agent))}</b> · signed by ${esc(i.owner || '')}</span></div>`).join('')}
          ${(ap.reject || []).map((r) => `<div class="li">${tag('deny', 'reject')}<span><b>${esc(plain(r.capability))}</b> · ${esc(short(r.agent))} · ${esc(r.pattern || `${r.observed}×`)} · decided by ${esc(r.owner)}</span></div>`).join('')}</div>
@@ -895,6 +912,7 @@ function renderPanelOver(s) {
       <div class="countdown"><b>${ap.remaining}</b><span>Auto-signs when the countdown ends, labelled “auto-signed for demo”. In production nothing auto-approves.</span></div>
       <div class="actions">${btn}</div></div>`;
   }
+  if (ui.rp) return '';
   if (s.waiting) {
     const job = s.waiting.job;
     return `<div class="over card-wait"><span class="eyebrow aitext">${ICON.ai}<span class="pulse">Waiting for the ${esc(s.waiting.role)} model</span></span>
@@ -956,8 +974,9 @@ function renderOverlays(s) {
       <span class="eyebrow">Synthetic estate · next step</span><h3>Run Acts 1–3 on a real slice of your estate</h3>
       <ol>${ev.close.asks.map((a) => `<li>${esc(a)}</li>`).join('')}</ol>
       <span class="motto">Policy decides. AI advises. People approve.</span>
-      <div class="downloads">${!REPLAY ? `<button class="btn btn-primary" data-cmd="film">Key views <span class="kbd">K</span></button>` : ''}
-      ${!REPLAY && s.done && !viewer() ? `<button class="btn btn-quiet" data-cmd="extra" ${s.extraDone ? 'disabled' : ''}>Extra: malfunction</button>` : ''}</div></div></div>`);
+      ${ui.rp ? '' : `<div class="downloads">${replayAvailable() ? '<button class="btn btn-primary" data-cmd="replay">' + ICON.play + 'Captioned replay <span class="kbd">P</span></button>' : ''}
+      ${!REPLAY ? `<button class="btn ${replayAvailable() ? 'btn-quiet' : 'btn-primary'}" data-cmd="film">Key views <span class="kbd">K</span></button>` : ''}
+      ${!REPLAY && s.done && !viewer() ? `<button class="btn btn-quiet" data-cmd="extra" ${s.extraDone ? 'disabled' : ''}>Extra: malfunction</button>` : ''}</div>`}</div></div>`);
   }
   if (ui.drawer) {
     const body = ui.drawer.kind === 'record' ? drawerRecord(s, ui.drawer.seq) : ui.drawer.kind === 'lines' ? drawerLines(s) : drawerLog(s);
@@ -967,7 +986,7 @@ function renderOverlays(s) {
     const curI = ui.kv ? ui.kv.i : -1;
     out.push(`<div class="scrim" data-cmd="film-close"><div class="film"><div class="ph"><h3>Key views · recorded from this run · no live calls</h3><button class="ibtn" data-cmd="film-close">${ICON.close}</button></div>
       <div class="film-cards">${ui.kvData.views.map((v, i) => `<button class="kcard ${i === curI ? 'current' : ''}" style="--actc:${ACT_COLOR[v.act] || 'var(--brand)'}" data-cmd="kv-go:${i}"><span class="n">${v.n}</span><span class="ti">${esc(v.title)}</span><span class="ca">${esc(v.caption)}</span></button>`).join('')}</div>
-      ${REPLAY ? '' : '<div class="downloads"><a class="btn btn-quiet" href="/api/keyviews/export" download>Download key views</a></div>'}</div></div>`);
+      <div class="downloads">${ui.kvData.replay ? `<button class="btn btn-primary" data-cmd="replay">${ICON.play}Captioned replay · ${mmss(ui.kvData.replay.total)}</button>` : ''}${REPLAY ? '' : '<a class="btn btn-quiet" href="/api/keyviews/export" download>Download key views and replay</a>'}</div></div></div>`);
   }
   return out.join('');
 }
@@ -982,6 +1001,7 @@ function enterKeyView(i) {
   const upto = views[i].seq;
   const state = fold(ui.kvData.events.filter((e) => e.seq <= upto));
   state.intro = null; state.approval = null; state.waiting = null; state.error = null; state.paused = false;
+  stopReplay();
   ui.kv = { i, state };
   ui.film = false;
   ui.drawer = null;
@@ -998,6 +1018,192 @@ async function openKeyViews() {
 }
 
 function exitKeyViews() { ui.kv = null; ui.film = false; ui.drawer = null; schedule(); }
+
+// ---------------------------------------------------------------------------------------------
+// Captioned replay (SPEC §5.9): the run's own log, re-folded on a compressed clock with callouts.
+// Playback only: no server calls, no decisions, no model. Section speeds and callout texts come from
+// app/demo/replay.py with the key-view data (and inside the exported file).
+// ---------------------------------------------------------------------------------------------
+
+function replayAvailable() {
+  if (REPLAY) return !!(ui.kvData && ui.kvData.replay);
+  return !!((ui.kvData && ui.kvData.replay) || (ui.conn && ui.conn.keyviews) || cur().closed);
+}
+
+const keepInReplay = (e) => e.kind !== 'error' && !(e.kind === 'system' && ('paused' in e.payload || 'waiting' in e.payload));
+
+function warpT(t) {
+  let r = 0;
+  for (const [a, b, sec] of ui.rp.warp) {
+    if (t >= b) r += sec;
+    else if (t > a) return r + ((t - a) / (b - a)) * sec;
+    else break;
+  }
+  return r;
+}
+
+async function openReplay(play) {
+  if (!REPLAY && !(ui.kvData && ui.kvData.replay)) {
+    try { ui.kvData = await api('GET', '/api/keyviews'); } catch (e) { return; }
+  }
+  const data = ui.kvData && ui.kvData.replay;
+  if (!data) return;
+  stopReplay();
+  ui.kv = null; ui.film = false; ui.drawer = null; ui.filter = null;
+  ui.rp = { warp: data.warp, total: data.total, callouts: data.callouts, meta: ui.kvData.meta || {},
+    events: ui.kvData.events.filter(keepInReplay), pos: 0, playing: false, started: false, ended: false,
+    i: 0, state: initialState(), base: 0, t0: 0, timer: 0, shown: -2 };
+  for (const e of ui.rp.events) e.rt = warpT(e.t);
+  seekReplay(0, play);
+}
+
+function seekReplay(pos, play) {
+  const r = ui.rp;
+  if (!r) return;
+  r.pos = Math.max(0, Math.min(r.total, pos));
+  const upto = r.events.filter((e) => e.rt <= r.pos + 1e-6);
+  r.state = fold(upto);
+  r.i = upto.length;
+  ui.animSeq = r.state.lastSeq;              // a seek lands on a still frame; only new events animate
+  r.ended = r.pos >= r.total;
+  if (play && !r.ended) startReplay(); else if (r.playing) pauseReplay();
+  schedule();
+}
+
+function startReplay() {
+  const r = ui.rp;
+  r.playing = true; r.started = true; r.ended = false;
+  r.base = r.pos; r.t0 = performance.now();
+  clearInterval(r.timer);
+  r.timer = setInterval(tickReplay, 50);
+  schedule();
+}
+
+function pauseReplay() {
+  const r = ui.rp;
+  r.playing = false; r.base = r.pos;
+  clearInterval(r.timer);
+  schedule();
+}
+
+function toggleReplay() {
+  const r = ui.rp;
+  if (!r) return;
+  if (r.ended) seekReplay(0, true);
+  else if (r.playing) pauseReplay();
+  else startReplay();
+}
+
+function tickReplay() {
+  const r = ui.rp;
+  if (!r || !r.playing) return;
+  r.pos = Math.min(r.total, r.base + (performance.now() - r.t0) / 1000);
+  let changed = false;
+  while (r.i < r.events.length && r.events[r.i].rt <= r.pos) { r.state = apply(r.state, r.events[r.i]); r.i += 1; changed = true; }
+  if (r.pos >= r.total) { r.playing = false; r.ended = true; clearInterval(r.timer); changed = true; }
+  if (changed || currentCallout() !== r.shown) schedule(); else updateReplayClock();
+}
+
+function stopReplay() {
+  if (ui.rp) clearInterval(ui.rp.timer);
+  ui.rp = null;
+}
+
+function exitReplay() {
+  stopReplay();
+  if (REPLAY && ui.kvData.views.length) enterKeyView(0); else schedule();
+}
+
+function currentCallout() {
+  const r = ui.rp;
+  if (!r || !r.started) return -1;
+  return r.callouts.findIndex((c) => r.pos >= c.at_r && r.pos < c.at_r + c.show_r);
+}
+
+function stepCallout(dir) {
+  const r = ui.rp;
+  if (!r) return;
+  const cs = r.callouts;
+  const target = dir > 0 ? cs.find((c) => c.at_r > r.pos + 0.05) : [...cs].reverse().find((c) => c.at_r < r.pos - 1.2);
+  r.started = true;
+  seekReplay(target ? target.at_r + 0.01 : dir > 0 ? r.total : 0, r.playing);
+}
+
+function updateReplayClock() {
+  const r = ui.rp;
+  const b = $('#rp-time b');
+  if (b) { const t = mmss(r.pos); if (b.textContent !== t) b.textContent = t; }
+  const fill = $('#rp-fill');
+  if (fill) fill.style.width = `${(100 * r.pos / r.total).toFixed(2)}%`;
+}
+
+function renderReplayLayer() {
+  let layer = $('#rp-layer');
+  if (!layer) { layer = document.createElement('div'); layer.id = 'rp-layer'; $('#console').appendChild(layer); }
+  const r = ui.rp;
+  if (!r) { if (layer.innerHTML) layer.innerHTML = ''; return; }
+  const idx = currentCallout();
+  const key = `${idx}|${r.started}|${r.ended}|${r.playing}|${document.documentElement.dataset.theme}`;
+  if (layer.dataset.key !== key || !layer.innerHTML) {
+    layer.dataset.key = key;
+    r.shown = idx;
+    const acts = [25, 80, 110, 140, 225].map((t) => `<i class="tick" style="left:${(100 * warpT(t) / r.total).toFixed(2)}%"></i>`).join('');
+    const dots = r.callouts.map((c, i) => `<i class="cdot${i === idx ? ' on' : ''}" style="left:${(100 * c.at_r / r.total).toFixed(2)}%" title="${esc(c.title)}"></i>`).join('');
+    const c = idx >= 0 ? r.callouts[idx] : null;
+    const card = !r.started
+      ? `<div class="rp-card"><span class="eyebrow">${ICON.play}Captioned replay · ${mmss(r.total)}</span><h3>The live run, in ${Math.round(r.total)} seconds</h3>
+          <p>A recording of the run at ${esc(String(r.meta.recorded_at || '').slice(11, 16))} (models ${esc(modelName(r.meta.agent_model))} / ${esc(modelName(r.meta.investigator_model))}). It plays by itself; callouts explain each step. Nothing runs live and no model is called.</p>
+          <div class="actions"><button class="btn btn-primary" data-cmd="rp-toggle">${ICON.play}Play <span class="kbd">Space</span></button><button class="btn btn-quiet" data-cmd="film">Key views</button></div></div>`
+      : r.ended
+        ? `<div class="rp-card"><span class="eyebrow">End of the replay</span><h3>Policy decides. AI advises. People approve.</h3>
+            <div class="actions"><button class="btn btn-primary" data-cmd="rp-restart">${ICON.restart}Replay again</button><button class="btn btn-quiet" data-cmd="film">Key views</button><button class="btn btn-quiet" data-cmd="rp-exit">${REPLAY ? 'Stop' : 'Back'}</button></div></div>`
+        : '';
+    layer.innerHTML = `<div class="rp-bar" id="rp-bar" title="Click to jump"><i class="fill" id="rp-fill"></i>${acts}${dots}</div>
+      ${c ? `<div class="spot" id="rp-spot"></div><div class="callout" id="rp-callout" role="status"><span class="ce">${idx + 1} / ${r.callouts.length} · ${esc(c.title)}</span><p>${esc(c.text)}</p></div>` : ''}
+      ${card ? `<div class="rp-scrim">${card}</div>` : ''}`;
+  }
+  updateReplayClock();
+  placeReplayLayer(idx >= 0 ? r.callouts[idx] : null);
+}
+
+// Put the bar under the header and the callout next to what it describes (presentation only).
+function placeReplayLayer(c) {
+  const top = $('.top');
+  const bar = $('#rp-bar');
+  if (top && bar) bar.style.top = `${top.getBoundingClientRect().bottom}px`;
+  const box = $('#rp-callout'), spot = $('#rp-spot');
+  if (!c || !box) return;
+  let el = null;
+  for (const sel of c.anchor) {
+    const x = document.querySelector(`#console ${sel}`) || document.querySelector(sel);
+    if (x && x.getBoundingClientRect().width > 0) { el = x; break; }
+  }
+  const a = (el || $('.panel-pane')).getBoundingClientRect();
+  const vw = innerWidth, vh = innerHeight, pad = 6, gap = 14;
+  const cap = $('.caption');
+  const bottom = cap ? cap.getBoundingClientRect().top - 8 : vh - 8;
+  const minTop = top ? top.getBoundingClientRect().bottom + 10 : 8;
+  spot.style.cssText = `left:${a.left - pad}px;top:${a.top - pad}px;width:${a.width + 2 * pad}px;height:${a.height + 2 * pad}px`;
+  const w = box.offsetWidth, h = box.offsetHeight;
+  let side, x, y;
+  if (a.right + gap + w <= vw - 8) { side = 'right'; x = a.right + gap; }
+  else if (a.left - gap - w >= 8) { side = 'left'; x = a.left - gap - w; }
+  else { side = 'inside'; x = Math.max(8, a.right - w - 12); }
+  y = side === 'inside' ? a.top + 12 : a.top + Math.min(a.height, 160) / 2 - h / 2;
+  y = Math.max(minTop, Math.min(bottom - h, y));
+  box.dataset.side = side;
+  box.style.left = `${x}px`; box.style.top = `${y}px`;
+  const ay = Math.max(14, Math.min(h - 14, a.top + Math.min(a.height, 160) / 2 - y));
+  box.style.setProperty('--ay', `${ay}px`);
+}
+
+document.addEventListener('click', (e) => {
+  const bar = e.target.closest('#rp-bar');
+  if (!bar || !ui.rp) return;
+  const rect = bar.getBoundingClientRect();
+  ui.rp.started = true;
+  seekReplay(((e.clientX - rect.left) / rect.width) * ui.rp.total, ui.rp.playing);
+});
 
 // ---------------------------------------------------------------------------------------------
 // Server calls (live mode only)
@@ -1087,6 +1293,12 @@ async function onCommand(cmd) {
     case 'kv-go': return enterKeyView(Number(arg));
     case 'kv-step': return ui.kv && enterKeyView(ui.kv.i + Number(arg));
     case 'kv-exit': return exitKeyViews();
+    case 'replay': return openReplay(true);
+    case 'rp-toggle': return toggleReplay();
+    case 'rp-restart': return seekReplay(0, true);
+    case 'rp-prev': return stepCallout(-1);
+    case 'rp-next': return stepCallout(1);
+    case 'rp-exit': return exitReplay();
     case 'log': return openDrawer({ kind: 'log' });
     case 'lines': return openDrawer({ kind: 'lines' });
     case 'record': return openDrawer({ kind: 'record', seq: Number(arg) });
@@ -1131,6 +1343,18 @@ document.addEventListener('click', (e) => {
 document.addEventListener('keydown', (e) => {
   if ($('#console').hidden || e.target.matches('input, select, textarea')) return;
   const s = ui.state;
+  if (ui.rp && !ui.film && !ui.drawer) {
+    const r = ui.rp;
+    if (e.key === 'Escape') { e.preventDefault(); onCommand('rp-exit'); }
+    else if (e.key === ' ') { e.preventDefault(); onCommand('rp-toggle'); }
+    else if (e.key === 'ArrowRight') { e.preventDefault(); onCommand('rp-next'); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); onCommand('rp-prev'); }
+    else if (e.key === 'r' || e.key === 'R') onCommand('rp-restart');
+    else if (e.key === 'k' || e.key === 'K') { e.preventDefault(); r.playing && onCommand('rp-toggle'); openKeyViews(); }
+    else if (e.key === 'd' || e.key === 'D') toggleTheme();
+    return;
+  }
+  if ((e.key === 'p' || e.key === 'P') && replayAvailable()) { e.preventDefault(); onCommand('replay'); return; }
   if (e.key === 'Escape') {
     if (ui.drawer) { ui.drawer = null; schedule(); } else if (ui.film) { ui.film = false; schedule(); } else if (ui.filter) { ui.filter = null; schedule(); } else if (ui.kv && !REPLAY) exitKeyViews();
     return;
@@ -1295,7 +1519,8 @@ function boot() {
     ui.kvData = { meta: m, events, views: events.filter((e) => e.kind === 'keyview').map((e) => ({ ...e.payload, seq: e.seq, ts: e.ts })) };
     ui.state = fold(events);
     $('#console').hidden = false;
-    if (ui.kvData.views.length) enterKeyView(0); else schedule();
+    ui.kvData.replay = REPLAY.replay || null;
+    if (ui.kvData.replay) openReplay(false); else if (ui.kvData.views.length) enterKeyView(0); else schedule();
     return;
   }
   wireGate();

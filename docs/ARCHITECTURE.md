@@ -56,6 +56,7 @@ app/
     acts.py                # what each scripted step does (calls the core, emits events)
     keyviews.py            # last completed run's events + key-view markers; builds the export HTML (SPEC §5.8)
     preflight.py           # optional, from the gate: the four real contracts once, results in memory only
+    replay.py              # captioned replay (SPEC §5.9): the time-warp table and callouts filled from the run
     recorded_plan.json     # the ONLY sanctioned fallback (SPEC §5.5), shown as "recorded plan"
   prompts/
     recon_agent.md

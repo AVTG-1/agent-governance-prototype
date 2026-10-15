@@ -2,7 +2,7 @@
 
 A self-playing, 5-minute demo showing how a control plane governs the AI agents that bridge a bank's post-trade systems. It finds the agents, onboards all four without changing their code, watches a recorded week before enforcing anything, has an AI draft the rulebook that a verifier checks and the owners sign, stops a fooled agent, tightens access after the incident and produces measured evidence. The six acts are the deck's: Discover, Shadow and learn, People sign, Enforce, Attack, Tighten and prove. Policy decides. AI advises. People approve. Everything is synthetic.
 
-**Status:** built (milestones M0–M13 in `docs/TASKS.md`). Four live model calls per run. Screenshots are in `docs/screens/`. Interpretations of the spec are in `docs/DECISIONS.md`.
+**Status:** built (milestones M0–M14 in `docs/TASKS.md`). Four live model calls per run. Screenshots are in `docs/screens/`. Interpretations of the spec are in `docs/DECISIONS.md`.
 
 ## Repository map
 
@@ -13,7 +13,7 @@ A self-playing, 5-minute demo showing how a control plane governs the AI agents 
 | `docs/ARCHITECTURE.md` | Small single-process design and folder layout |
 | `docs/LLM_PROVIDERS.md` | Foundry and OpenRouter request shapes, model catalogue, **model recommendations** |
 | `docs/DEMO_SCRIPT.md` | Captions and presenter notes, minute by minute |
-| `docs/TASKS.md` | Milestones M0–M13 with acceptance checks |
+| `docs/TASKS.md` | Milestones M0–M14 with acceptance checks |
 | `docs/DESIGN.md` | Visual rules (shared with the proposal deck) |
 | `design/` | Colour tokens and fonts from the deck |
 | `reference/` | The proposal deck and background research (read-only) |
@@ -47,7 +47,7 @@ The browser opens on the **connection screen**:
 3. Click **Test connection**. When both show ✓, **Start demo** unlocks.
 4. Optional, before the audience arrives: **Preflight** runs the four real model calls once and shows pass or fail and latency for each. If one fails, switch that model, test again and re-run it.
 
-After the run, press **K** (or click **Key views**) to jump back to the eight key moments with no model calls. *Download key views* saves an offline HTML recording you can present later without a token.
+After the run, press **K** (or click **Key views**) to jump back to the eight key moments with no model calls, or **P** for the **captioned replay**: the whole run in about 86 seconds with a callout at each step, for an audience to follow with little narration. *Download key views* saves an offline HTML recording (key views and the replay) you can present later without a token.
 
 The token is held in memory only. It is never saved, logged or shown again. If it expires mid-run, the demo pauses and asks for a new one.
 

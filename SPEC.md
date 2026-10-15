@@ -294,6 +294,17 @@ Once a live run has reached the close card, the presenter can go straight back t
 
 This is not a way around the connection gate. Key views only exist after a live, gated run. They never present themselves as live, and they cannot start a new run.
 
+### 5.9 Captioned replay (after the run, no model calls)
+
+A self-playing recording of the run just shown, for an audience that should follow it with little narration. It is **playback only**, like a recorded slideshow: nothing re-runs, no decision is made and no model is called. It exists only after a gated live run, exactly like key views, and is always labelled as a recording.
+
+- **At most 90 seconds** (currently 86 s). Sections play at different speeds by importance, from a time-warp table in `app/demo/replay.py`: slices of the 300 scripted seconds and the replay seconds each gets. Act 3 (*People sign*) and the Act 5 attack play slowest; onboarding, enforcement and the tightening play fastest.
+- **Callouts:** about seventeen popups, one per beat, each anchored to what it describes (an agent, the shared drive, the plane band, a panel card) with a highlight ring around the anchor and an arrow pointing at it. Each stays about 4 s, or until the next one.
+- **Callout text is templated from this run's own data**: the counts, the owner who rejected the habit, the verifier's result, the attack outcome, the containment and the evidence numbers. A callout whose facts the run doesn't have (a branch it didn't take) is left out, and branches have their own callouts (for example "The model declined" when the recorded plan was used). It never states something that didn't happen. No extra model call.
+- **How it works:** the console folds the run's own event log on a compressed clock, the same reducer key views use. A thin progress bar under the header shows the act boundaries and the callouts; clicking it seeks.
+- **Controls:** Space plays or pauses, ← and → go to the previous or next callout, R replays from the start, K opens key views, Esc leaves. A start card and an end card frame it.
+- **Where:** *Captioned replay* (or P) on the close card and in the key-views filmstrip. The exported key-views file (§5.8) carries it too and opens on its start card; it works offline with no server and no token.
+
 ## 6. Policy model (the core)
 
 ### 6.1 Request envelope
@@ -428,7 +439,7 @@ Real integrations, real identity infrastructure, persistence across restarts (th
 - Four live model calls per run (§5), each prefetched; the rulebook prompt and every other prompt contain no token.
 - Autoplay completes in 5:00 ± 0:20 at 1× (excluding model wait time beyond prefetch) with zero required clicks.
 - All invariants in §6.4 have passing tests. The evidence numbers are computed from the run.
-- After a completed run, all eight key views (§5.8) open instantly with no model calls and no new decisions. The exported key-views file works offline, is labelled as a recording and contains no token.
+- After a completed run, all eight key views (§5.8) open instantly with no model calls and no new decisions, and the captioned replay (§5.9) plays in at most 90 s, in the app and in the offline export. The exported key-views file works offline, is labelled as a recording and contains no token.
 - No token on disk, in logs or in the browser. `scripts/check_no_secrets.py` passes.
 - Nothing overflows or is clipped at 1280×720, 1366×768, 1536×864, 1440×900 and 1920×1080, at browser zoom 90%, 100% and 110%, in light and dark mode, consistent with `docs/DESIGN.md`. Anything that scrolls (drawers) scrolls with wheel, trackpad, touch and keyboard.
 - A failed model call pauses with Retry, Switch model and Restart; a pasted token with a stray character gets a plain message, never a 500; one tab drives the run, others watch.

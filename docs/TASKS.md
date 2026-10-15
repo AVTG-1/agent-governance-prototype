@@ -129,3 +129,14 @@ Work top to bottom. Tick each box when its acceptance checks pass, then commit. 
 - [x] Sweep: every step at 1280×720, 1366×768, 1536×864 and 1920×1080, at 90/100/110% zoom, in both themes: no overflow, nothing clipped.
 
 **Accept:** `pytest -q` is green; the sweep is clean; a mocked run plays all six acts in 5:00; the key-views export works offline with the map.
+
+# Round 4: captioned replay
+
+## M14 — A self-playing, captioned replay of the run
+- [x] Time-warp table: the 300 scripted seconds in at most 90 s, slower for important beats (`app/demo/replay.py`).
+- [x] About seventeen callouts anchored to what they describe, templated from this run's facts; branch-aware; nothing stated that didn't happen.
+- [x] Player in the console: progress bar with acts and callouts, play/pause, previous/next callout, restart, seek, start and end cards, labelled as a recording.
+- [x] Available on the close card and filmstrip (P), and in the offline export (opens on the start card).
+- [x] Tests: length ≤ 90 s, contiguous warp, callout spacing, facts match the run's metrics, the resisted-plan branch, export carries it with no token, no model call.
+
+**Accept:** after a mocked run, the replay plays in 86 s with every callout in view at 1280×720, 1366×768, 1440×900 and 1920×1080; the exported file plays it offline with no network requests.
