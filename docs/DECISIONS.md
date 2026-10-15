@@ -79,3 +79,10 @@ Where `SPEC.md` was ambiguous, these are the choices made, each picked to keep t
 52. **Fluid root size.** The root font size is `min(1.16vw, 1.86vh)` (11–22 px) and the console is sized in rem, so one layout fits 1280×720 to 1920×1080. Browser zoom changes the CSS viewport, so the layout keeps its proportions at 90–110%.
 53. **Preflight uses a deterministic stand-in rulebook** (everything observed that breaks no guardrail) only to produce realistic denied records for the case prompt; it is never shown as AI output. The diff runs on the live case if the case passes.
 54. **SSE resync by sequence number.** The server sends `id:` lines and replays the run's log on every (re)connect; the console ignores events it already folded and never resets for the run it already has.
+
+## Round 4: captioned replay
+
+55. **Callouts don't pause the replay.** The plan allowed short holds; in practice, giving the important sections more replay time reads more smoothly than stopping, and keeps the length predictable (86 s). Each callout stays about 4 s or until the next.
+56. **Callout text is templated, not AI-written.** The texts are written once and filled with this run's facts at the close card. Branches the run didn't take have no callout, and the ones it did take have their own wording. An AI rewrite was considered and left out: it would add a fifth model call, another failure point and a review step, for prose that must still match the run's numbers.
+57. **The replay folds the same event log as key views**, skipping only pause, wait and error events. A seek re-folds from the start (about 340 events, instant). The signature card appears as it did, with its button disabled.
+58. **The exported file opens on the replay's start card**, with key views one key away. A file from before this change (no replay data) still opens on key view 1.

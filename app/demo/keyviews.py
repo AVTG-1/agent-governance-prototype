@@ -10,6 +10,7 @@ import json
 import re
 from datetime import datetime
 
+from app.demo.replay import build_replay
 from app.settings import WEB_DIR
 
 SAFE_KINDS = ("run", "act", "caption", "panel", "map", "decision", "call", "llm", "system", "keyview")
@@ -19,6 +20,7 @@ class KeyViews:
     def __init__(self) -> None:
         self.meta: dict | None = None
         self.events: list[dict] = []
+        self.replay: dict | None = None
 
     @property
     def available(self) -> bool:
@@ -34,10 +36,11 @@ class KeyViews:
             "investigator_model": run.models.get("investigator"),
             "plan_source": run.data.get("plan_source"),
         }
+        self.replay = build_replay(run)       # the captioned replay (SPEC §5.9), from this run's own data
 
     def listing(self) -> dict:
         markers = [{**e["payload"], "seq": e["seq"], "ts": e["ts"]} for e in self.events if e["kind"] == "keyview"]
-        return {"meta": self.meta, "views": markers, "events": self.events}
+        return {"meta": self.meta, "views": markers, "events": self.events, "replay": self.replay}
 
     def export_html(self) -> tuple[str, str]:
         """(filename, html): one self-contained file, offline, playback only, no token or settings."""
@@ -49,7 +52,7 @@ class KeyViews:
         html = re.sub(r"<!--gate-->.*?<!--/gate-->", "", html, flags=re.S)
         html = html.replace('<link rel="stylesheet" href="tokens.css">', f"<style>\n{tokens}\n</style>")
         html = html.replace('<link rel="stylesheet" href="styles.css">', f"<style>\n{styles}\n</style>")
-        replay = json.dumps({"meta": self.meta, "events": self.events}, ensure_ascii=False).replace("</", "<\\/")
+        replay = json.dumps({"meta": self.meta, "events": self.events, "replay": self.replay}, ensure_ascii=False).replace("</", "<\\/")
         app_js = app_js.replace("</script", "<\\/script")
         html = html.replace('<script type="module" src="app.js"></script>',
                             "<script>window.__REPLAY__ = " + replay + ";</script>\n"

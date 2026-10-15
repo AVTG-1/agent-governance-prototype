@@ -56,7 +56,8 @@ The close card shows **Key views** (or press K). Nothing re-runs and no model is
 |---|---|
 | Answer "show me that again" | K, then click the card (for example **6 The system held**) |
 | Retell the story in about a minute | K, click **1**, then press → seven times. Each view has its own caption. |
-| Show it later or send it on | *Download key views* saves `key-views-….html`. It opens offline on any laptop, with no token, and is labelled "recorded from a live run". |
+| Show it later or send it on | *Download key views* saves `key-views-….html`. It opens offline on any laptop, with no token, and is labelled "recorded from a live run". It also carries the captioned replay. |
+| Let the room watch it back with little narration | **Captioned replay** (P) on the close card or the filmstrip: the whole run in about 86 seconds, with a callout at each step. Space pauses, ← → jump between callouts, Esc leaves. |
 
 Short retelling (≈ 60 s, one line per view):
 1. "We found four agents: one with no owner, one on a person's login."
