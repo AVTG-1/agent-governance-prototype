@@ -44,3 +44,32 @@ def test_day_zero_in_a_full_run(client):
         "One identity per agent; the shared account is retired", "Key swapped for a short-lived token from the broker",
         "Role federated to a registered agent identity", "Credential unchanged"}
     assert all(r["done"] for r in onboarded)
+
+
+def test_a_different_draft_is_shown_honestly(client):
+    """Model variability: the draft tries to grant the kyc export and misses the quarter-end grant. The verifier
+    shows ✗, the replay counts what breaks, captions say so, and the owner still rejects the habit."""
+    import copy
+
+    from app.llm.mock import RULEBOOK
+    import app.main as main
+    bad = copy.deepcopy(RULEBOOK)
+    bad["grants"] = [g for g in bad["grants"] if g["capability"] != "ledger.read_quarter_end"]
+    bad["grants"].append({"agent": "kyc-agent", "capability": "fileshare.export", "basis": "observed"})
+    bad["flags"] = []
+    client.mock.rulebook = bad
+    pass_gate(client)
+    client.post("/api/demo/start")
+    wait_done(client)
+    run = main.director.run
+    lines = run.data["rulebook_lines"]
+    export = [l for l in lines if l.kind == "grant" and l.capability == "fileshare.export"]
+    assert export and not export[0].ok and "R-EGR-01" in export[0].reason
+    assert any(l.kind == "missing" and l.capability == "ledger.read_quarter_end" for l in lines)
+    caps = [e["payload"]["text"] for e in run.events if e["kind"] == "caption"]
+    assert "A verifier checks every line the AI drafted, and rejects what it cannot back up." in caps
+    assert "Replayed against the week: the exports stop, and the replay shows exactly what else would." in caps
+    assert run.data["rulebook_replay"]["legit_broken"] == 1           # the quarter-end read, measured
+    assert run.data["rulebook_ok"] == 15 and run.data["rulebook_total"] == 16      # shown as "15 of 16 verified"
+    assert [d["by"] for d in run.data["owner_rejected"]] == ["Client Onboarding"]
+    assert run.data["owner_decisions"][0]["flagged_by"] == "engine"     # the AI did not flag it; the engine did

@@ -22,6 +22,21 @@ SYSTEMS = {
     "external": {"name": "Outside the firm", "interface": "Internet", "sensitive": "—"},
 }
 
+# The agent-action map groups systems by business area, as the deck's "The estate today" does.
+# "Outside the firm" is set apart: anything reaching it has left the firm.
+AREAS = [
+    {"id": "front", "name": "Front office", "systems": [["trade", "Trade capture"], ["fx", "FX positions"]]},
+    {"id": "middle", "name": "Middle office", "systems": [["client", "Client master"]]},
+    {"id": "settle", "name": "Settlement", "systems": [["settlement", "Settlement and SSIs"]]},
+    {"id": "recon", "name": "Reconciliation", "systems": [["recon", "Reconciliation"]]},
+    {"id": "ledger", "name": "Ledger and reporting", "systems": [["ledger", "General ledger"]]},
+    {"id": "ref", "name": "Reference data", "systems": [["refdata", "Reference data"]]},
+    {"id": "outside", "name": "Outside the firm", "outside": True,
+     "systems": [["fileshare", "Shared drive"], ["external", "Internet"]]},
+]
+AGENT_NAMES = {"recon-agent": "Reconciliation", "settlement-agent": "Settlement", "enrichment-agent": "Trade enrichment",
+               "kyc-agent": "KYC refresh"}
+
 PII_FIELDS = frozenset({"tax_id", "email", "dob"})
 EXTERNAL_HOST = "diagnostics.example.invalid"
 

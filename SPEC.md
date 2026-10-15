@@ -8,22 +8,21 @@ Source of truth for what to build. If anything in `reference/` disagrees, this f
 - **What the demo must prove, in order:**
   1. We can find and identify the agents they already run, including ones nobody owns.
   2. We can take over governance of an existing estate **from scratch, without rewriting a single agent**: every agent onboarded, each with a different credential swap.
-  3. We switch on control safely: on day zero only people-written guardrails hold; a week is observed by the deterministic engine; AI drafts a rulebook from what was recorded; a verifier checks it, a replay measures it, and the owner approves it. Only then does default deny switch on, so nothing legitimate breaks and the rare-but-required flows are protected.
+  3. We switch on control safely: on day zero only people-written guardrails hold; a week is observed by the deterministic engine; AI drafts a rulebook from what was recorded; a verifier checks it, a replay measures it, and the owners sign it. Nothing is enforced unsigned: only then does default deny switch on, so nothing legitimate breaks and the rare-but-required flows are protected.
   4. When an agent is fooled, the system still holds, because **policy decides, AI advises, people approve**.
   5. Access gets tighter after an incident without breaking legitimate work.
   6. Every decision is evidenced, with numbers measured from this run.
-- **Shape:** one click starts a self-playing 5-minute story. It needs no clicks; two optional ones (the owner approvals in Acts 2 and 5) auto-approve after a countdown. On-screen captions carry the narrative, so the presenter can talk over it or stay quiet.
+- **Shape:** one click starts a self-playing 5-minute story in six acts, the same six the deck's *Prototype* chapter lists. It needs no clicks; two optional ones (the owners' signatures in Acts 3 and 6) auto-sign after a countdown, labelled, in the demo only. On-screen captions carry the narrative, so the presenter can talk over it or stay quiet.
 
 ## 2. The story in one paragraph
 
 Kaiyo Securities (fictional) runs agents between its trade, settlement, reconciliation, client and ledger systems. Nobody governs them yet.
 
 1. The control plane **discovers** four agents. One has no owner, and the reconciliation agent shares a service account with a person.
-2. **Day zero.** We onboard all four **without code changes**, each with a different credential swap (the deck's "Mediate, don't modify"). The plane starts with **only four people-written guardrails**; default deny is not on yet. A recorded week of traffic for all four agents replays in **shadow**: the deterministic engine observes everything and blocks nothing. It finds one bad habit (the KYC agent exports client PII to an outside drive every night) and one rare-but-required flow (a quarter-end ledger read). The **AI investigator drafts a rulebook** from an aggregated summary of what was recorded. A deterministic **verifier** checks every line, a **replay** measures what the rulebook would have blocked, and the **owner approves** it and rejects the export. Then **default deny switches on**.
+2. **Day zero.** We onboard all four **without code changes**, each with a different credential swap (the deck's "Mediate, don't modify"). The plane starts with **only four people-written guardrails**; default deny is not on yet. A recorded week of traffic for all four agents replays in **shadow**: the deterministic engine observes everything and blocks nothing. It finds one bad habit (the KYC agent exports client PII to an outside drive every night) and one rare-but-required flow (a quarter-end ledger read). The **AI investigator drafts a rulebook** from an aggregated summary of what was recorded. Then **people sign**: a deterministic **verifier** checks every line, a **replay** measures what the rulebook would have blocked, and the **owners sign** it and reject the export. Nothing is enforced unsigned; once signed, **default deny switches on**.
 3. We **enforce**. Business flows run green, and a legitimate cross-domain need gets a two-minute grant.
 4. A poisoned settlement note then **fools the live agent**. We first show what happens today without the plane: client tax IDs leave the firm. Then we show the same attack with the plane: three moves, three denials, one AI-written case, and the session contained.
-5. **Post-incident hardening.** The investigator drafts two narrowing changes; the verifier checks them, a replay proves nothing legitimate breaks, and the owner approves. The same attack now stops at its first harmful step.
-6. The **evidence** screen shows measured numbers and a downloadable, hash-chained evidence pack.
+5. **Tighten and prove.** The investigator drafts two narrowing changes after the incident; the verifier checks them, a replay proves nothing legitimate breaks, and the owner signs. The same attack now stops at its first harmful step. The **evidence** screen shows measured numbers and a downloadable, hash-chained evidence pack.
 
 ## 3. The synthetic world
 
@@ -82,7 +81,7 @@ All of these are simulated in-process: Python functions over JSON or SQLite fixt
 
 **What the old credentials could reach** (for the "never-used legacy" story): `svc_ops_batch` also reached `settlement.update`, `fx.read` and `fileshare.export`; the enrichment role also reached `settlement.read`; the KYC key also reached `client.read_pii`. None of these were used in 90 days, so the rulebook leaves them out.
 
-**Day-zero rulebook (`rulebook@v0`)** holds only the guardrails (§6.3). After the owner approves the AI-drafted rulebook it becomes `rulebook@v1` (per-agent grants, default deny on). Act 5 hardening makes it `rulebook@v2`.
+**Day-zero rulebook (`rulebook@v0`)** holds only the guardrails (§6.3). After the owners sign the AI-drafted rulebook (Act 3) it becomes `rulebook@v1` (per-agent grants, default deny on). The post-incident hardening in Act 6 makes it `rulebook@v2`.
 
 ### 3.4 Data (small, seeded, deterministic)
 
@@ -103,58 +102,77 @@ Generate with `scripts/gen_fixtures.py` (seed 42) into `app/estate/data/`:
 
 - **Provider:** *LLM Foundry (recommended)*, selected by default, or *OpenRouter*.
 - **Token:** a password field. For Foundry, a second field holds the project suffix, defaulting to `llmproxy-playground`. The header is sent as `Bearer <token>:<suffix>`. If the pasted token already contains `:` followed by a suffix, use it as-is.
+- **Pasted values are cleaned, never trusted:** whitespace and invisible characters (line breaks, zero-width spaces, BOMs) are stripped from the token and the suffix. Anything else outside ASCII (for example `·` or `•` picked up while copying) is refused with a plain message on the gate: "The token contains a character that can't be sent. Paste it again from the source." Never a 500. The masked display value (`••••abcd`) is never sent back as a token.
 - **Models:** one picker per role (*Agent* and *Investigator*), preselected with the recommendations in `docs/LLM_PROVIDERS.md`. Each option is labelled with its family and cost. Advanced users can type a custom model id.
 - **Test connection:** sends one tiny live call per selected model and shows ✓ or ✗ with the latency and a plain error message (for example "401: token expired or wrong. Paste a fresh token.").
-- **Start demo** is disabled until both role tests pass in this session. There is no skip.
+- **Preflight (optional):** once both tests pass, *Preflight* runs each of the four real contracts once (rulebook, plan, case, hardening) with the real prompts, validates the JSON exactly as the demo does, and reports pass or fail, latency and what the reply contained (for example "16 of 16 grants verified · export flagged · quarter-end kept"). Results are for this session only and are never saved.
+- **Start demo** is disabled until both role tests pass in this session. There is no skip. A double-clicked Start is one run.
 - The token is kept in server memory only. A *Forget token* button clears it. The UI only ever shows `••••abcd`.
 
-### 4.2 Demo console (one screen, no scrolling at 1440×900)
+### 4.2 Demo console (one screen; nothing scrolls during autoplay)
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────────┐
-│ Agent governance · Kaiyo Securities (synthetic)   ● Foundry: gpt-4.1-mini /   │
-│ [1 Discover][2 Shadow and learn][3 Enforce][4 Attack][5 Harden][6 Prove] ⏸⏭↺ ☾│
-├───────────────────┬──────────────────────────────────┬───────────────────────┤
-│ ESTATE MAP        │ LIVE DECISION TIMELINE            │ ACT PANEL             │
-│ agents ↔ systems  │ time · agent · action · resource  │ changes per act:      │
-│ edges light up    │ decision tag · rule@version · ms  │ registry / shadow     │
-│ (green/red/amber) │ newest at top, max ~12 visible    │ stats / capability    │
-│ plane in centre   │                                   │ intersection / case / │
-│                   │                                   │ policy diff / evidence│
-├───────────────────┴──────────────────────────────────┴───────────────────────┤
-│ CAPTION: one sentence saying what is happening and why it matters             │
+│ ◉ Governing the agent estate  ①Discover ②Shadow… ③People sign …   1:09/5:00 ⏸⏭↺ │
+├────────────────────────────────────────────────┬─────────────────────────────┤
+│ WHO REACHES WHAT (the focal point, ~60%)       │ ACT PANEL (~40%)            │
+│ agents      control-plane band    systems by   │ Act 2 · Shadow and learn    │
+│ ┌──────┐    ┌──────────────┐      business area│ rulebook@v0 · Deck: …       │
+│ │recon │────│ Registry …   │────  Front office │ one card per beat:          │
+│ │settle│─ ─ │ Policy …   ◉ │─ ─   Middle office│ a big number or a short     │
+│ │enrich│────│ Enforcement  │────  Settlement … │ list (≤ ~6 items) and one   │
+│ │kyc   │──✕ │ JIT · Monit. │      Outside firm │ line of explanation         │
+│ └──────┘    │ Evidence     │                   │ (pause / error / signature  │
+│ AI investigator (advisory) └──────────────┘    │  cards float over it)       │
+├────────────────────────────────────────────────┴─────────────────────────────┤
+│ CAPTION (fixed height): one sentence saying what is happening and why          │
+│ [All decisions L] kyc · Export client file to shared drive → would stop · R-EGR-01 … │ ● Rulebook ● Plan ○ Case ○ Hardening │
 └──────────────────────────────────────────────────────────────────────────────┘
 ```
 
-- **Header:** act progress (clickable to jump), pause/resume, next step, restart, speed (0.5×, 1×, 2×), the theme toggle and, after a completed run, **Key views** (§5.8). Keyboard: Space pauses or resumes, → goes to the next step, R restarts, D toggles the theme, K opens key views.
-- **Estate map:** the deck's control-plane diagram come to life. The four agents (and the advisory investigator) sit on top; the six parts named exactly as in the deck (*Registry and identity*, *Policy decision*, *Just-in-time access*, *Enforcement points*, *Monitoring and investigation*, *Evidence and optimisation*) sit between them and the systems. Each decision sends a dot down the path (agent → registry → policy → enforcement → system), coloured by the decision, as in the deck's "Trace a request" view. In "today mode" the dot travels a dashed path that bypasses the plane.
-- **Act intro cards and deck chips:** each act opens with a ~1.5 s title card ("Act 2 · Shadow and learn") and a chip naming the deck chapter it proves ("Deck: Rolling it out"). The chip stays in the header during the act and changes when a beat proves a different chapter.
-- **One focal point per step:** what changed is highlighted; the rest is gently dimmed.
-- **Timeline:** each row shows the time, agent, action, resource, a decision tag (icon plus word plus colour), `rule-id@version` and the decision time in ms. Clicking a row opens a drawer with the full decision record.
-- **Act panel:** the per-act content defined in §5.
-- **Caption bar:** large text, one sentence per step. Captions come from `app/demo/script.py`, not hard-coded in the HTML.
+- **Header:** the title, the act stepper (clickable to jump), the clock and the controls only: pause/resume, next step, restart, speed (0.5×, 1×, 2×), the theme toggle and, after a completed run, **Key views** (§5.8). Keyboard: Space pauses or resumes (or retries a failed call), → goes to the next step, R restarts, D toggles the theme, K opens key views, L opens all decisions, Esc closes.
+- **The agent-action map (left, the focal point)**, in the style of the deck's *The estate today*: the four agents on the left (and the advisory AI investigator below them, dashed purple), their systems on the right grouped by business area as in the deck (front office, middle office, settlement, reconciliation, ledger and reporting, reference data), with **outside the firm** (shared drive, internet) set apart. The control plane sits between them as a thin band of the deck's six parts (*Registry and identity*, *Policy decision*, *Enforcement points*, *Just-in-time access*, *Monitoring and investigation*, *Evidence and optimisation*); the part in use lights up.
+  - Every real call draws or brightens an edge agent → plane → system, coloured by its decision: green allowed; red stopped (the line ends at the plane with ✕); amber waits for a person; grey dashed observed in shadow; a dashed line straight through the band in today mode (simulated). Edge thickness is how often that path was used in the recorded week.
+  - Act 1 shows the reach found by discovery as dotted "never checked" lines. Act 2 fills in the real usage map from the shadow week ("know which agents reach which systems", made visible). The kyc → shared drive line turns red when the owner rejects the export. Act 5 shows the attack path in red, stopping at the plane.
+  - Clicking an agent or an edge filters the ticker and the decisions drawer to those calls.
+- **The act panel (right):** one card per beat: a big number or a short list (about six items at most) and one line of explanation. Its header carries the act, the current `rulebook@vN` and the deck chapter ("Deck: Human in the loop"). Plain language first, the technical id underneath, never truncated: "Export client file to shared drive" over `fileshare.export`.
+- **Over the act panel, never in the caption row:** waiting for a model, paused, a failed model call (§5, robustness) and the owner's signature card. They never change the layout.
+- **Caption bar:** fixed height, large text, one sentence per step (at most two lines). Captions come from `app/demo/script.py`, not hard-coded in the HTML.
+- **Decision ticker:** one row under the caption: the last three or four decisions as plain-language pills ("kyc · Export client file to shared drive → would stop · R-EGR-01"), only as many as fit whole. On its right, a readiness light for each of the four model calls (not sent, in flight, ready, used, failed). *All decisions* (L) opens the full timeline as a drawer that scrolls with wheel, trackpad, touch and keyboard, with a visible scrollbar; clicking a row shows its full decision record.
+- **Act intro cards and deck chips:** each act opens with a ~1.5 s title card ("Act 3 of 6 · Nothing enforced unsigned · People sign") and the deck chapter it proves; beats that prove another chapter change the chip.
+- **Fits without scrolling** at 1280×720, 1366×768, 1536×864 (a 1080p screen at 125% Windows scaling), 1440×900 and 1920×1080, at browser zoom 90%, 100% and 110%, in both themes: sizes are in rem and the root size follows the viewport.
+- **One director:** the tab that starts a run controls it; any other tab is a read-only viewer until the presenter clicks *Take control* there.
 
 ## 5. The 5-minute run
 
-Timings are at 1× speed. The director is a deterministic step list. Each step has `at` (seconds from act start), `caption`, an action, and an optional `wait_for` (an LLM result) with a timeout. LLM calls are **prefetched** before they are needed so the audience rarely waits. If a needed result isn't ready, show a small "waiting for model" indicator. After the timeout (default 25 s), pause and show the error. Never invent output.
+Timings are at 1× speed (a fresh Start always plays at 1×). The director is a deterministic step list. Each step has `at` (seconds from act start), `caption`, an action, and an optional `wait_for` (an LLM result) with a timeout. LLM calls are **prefetched** before they are needed so the audience rarely waits. If a needed result isn't ready, the clock **holds** and a "waiting for model" card shows over the act panel; it never races ahead. After the timeout (default 25 s), or on any error, it pauses and says so. Never invent output.
 
-| Act | Window | Duration | Deck chapter it proves |
-|---|---|---|---|
-| 1 Discover | 0:00–0:25 | 25 s | The estate today; Rolling it out (Discover) |
-| 2 Shadow and learn | 0:25–1:50 | 85 s | Agents we can't see inside → Rolling it out (Observe) → Who decides |
-| 3 Enforce and exception | 1:50–2:20 | 30 s | The control plane |
-| 4 Attack | 2:20–3:45 | 85 s | Catching a rogue agent; Agent to agent |
-| 5 Harden | 3:45–4:30 | 45 s | Optimising permissions |
-| 6 Prove and close | 4:30–5:00 | 30 s | What's being asked (evidence) |
+The six acts are the deck's *Prototype* chapter ("The five-minute run"), with its one-line gists and the chapter each act proves:
+
+| Act | Gist | Window | Duration | Deck chapter it proves |
+|---|---|---|---|---|
+| 1 Discover | Find every agent | 0:00–0:25 | 25 s | The estate today |
+| 2 Shadow and learn | Watch, don't block | 0:25–1:20 | 55 s | Rolling it out (beats: Agents we can't see inside → Who decides → Rolling it out → Who decides) |
+| 3 People sign | Nothing enforced unsigned | 1:20–1:50 | 30 s | Human in the loop |
+| 4 Enforce | Normal work flows | 1:50–2:20 | 30 s | The control plane |
+| 5 Attack | The model is fooled | 2:20–3:45 | 85 s | Catching a rogue agent (beat: Agent to agent) |
+| 6 Tighten and prove | Signed, measured | 3:45–5:00 | 75 s | Optimising permissions (beats: Human in the loop → Optimising permissions → What's being asked) |
 
 **Four live model calls per run:**
 
 | Call | Role | Prefetched | Needed at |
 |---|---|---|---|
-| Rulebook draft (§7.2) | investigator | at Start (fixtures are deterministic, so the request can go out immediately) | Act 2, 0:25 + 46 s |
-| Agent plan (§7.1) | agent | at the start of Act 2 | Act 4, + 8 s |
-| Incident case (§7.3) | investigator | the moment the first Act 4 denial lands | Act 4, + 60 s |
-| Hardening diff (§7.4) | investigator | as soon as the case is ready | Act 5, + 0 s |
+| Rulebook draft (§7.2) | investigator | at Start (fixtures are deterministic, so the request can go out immediately) | 1:09 (Act 2 + 44 s) |
+| Agent plan (§7.1) | agent | at the start of Act 2 | 2:28 (Act 5 + 8 s) |
+| Incident case (§7.3) | investigator | the moment the first Act 5 denial lands | 3:20 (Act 5 + 60 s) |
+| Hardening diff (§7.4) | investigator | as soon as the case is ready | 3:46 (Act 6 + 1.5 s) |
+
+**Robustness (things a live demo can still hit):**
+- **A failed or late call** pauses the run with a card over the act panel naming the call and when it is needed ("Paused · the rulebook draft call failed · needed at 1:09 · investigator model claude-sonnet-4.5"). It offers **Retry** (re-sends that call), **Switch model** (a list of models that passed a live test this session, plus JSON-mode models that are tested live before use) and **Restart**. A timeout also offers *Keep waiting*. A 401 asks for a fresh token in the same card and then resumes the same step. A 429 backs off once (honouring `Retry-After`, at most 8 s) and then pauses with the reason.
+- **Speed vs prefetch:** at 2× the real time available for prefetching halves; the readiness lights show it, and a late result holds the clock instead of skipping.
+- **Restart while a call is in flight:** every call belongs to its run; a late reply for an earlier run is dropped and never reaches the new one.
+- **Connection drops** (laptop sleep, Wi-Fi blip): the event stream reconnects by itself and the console resyncs from the run's log. The clock is derived from the run's scripted time, so a background tab never drifts.
+- **Model variability:** the rulebook may differ between runs (it might try to grant the kyc export, or miss the quarter-end grant). The verifier shows what it actually proposed with ✓/✗, the replay counts what would break, and captions and numbers describe what happened (for example "A verifier checks every line the AI drafted, and rejects what it cannot back up").
 
 ### 5.1 Act 1 — Discover (25 s)
 
@@ -165,21 +183,24 @@ Timings are at 1× speed. The director is a deterministic step list. Each step h
 - **Captions:** "We start by finding what already runs." / "One agent had no owner. Another shares a login with a person."
 - **No LLM.**
 
-### 5.2 Act 2 — Shadow and learn (85 s): day zero
+### 5.2 Act 2 — Shadow and learn (55 s): day zero
 
 1. **Onboard all four, no code changes** (deck: *Agents we can't see inside*, "Mediate, don't modify"). One row per agent shows *before → after* with the deck's wording: recon "One identity per agent; the shared account is retired", kyc "Key swapped for a short-lived token from the broker", enrichment "Role federated to a registered agent identity", settlement "Connection moved behind a data proxy". Each row says *code unchanged* and the attribution level we can guarantee.
-2. **Day-zero guardrails** (people-written, deterministic): no restricted data leaves the firm (`R-EGR-01`), SSI changes need maker-checker (`R-SSI-01`), delegation only narrows (`R-DLG-02`), no self-modification (`R-SELF-01`). Shown with "Default deny: not yet. Everything else is observed."
-3. **Shadow week** (deck: *Rolling it out*, Observe): the engine replays the recorded week for all four agents with enforcement **off**. Counters tick per agent and per capability; a calendar strip marks the quarter-end day. Result: 1,141 observed, 7 would-deny, 6 would-hold. The kyc nightly export is highlighted: "Observed 7 times. Breaks a guardrail."
-4. **AI drafts the rulebook** (deck: *Who decides*; live LLM, §7.2, prefetched at Start). The investigator receives an aggregated usage summary, never raw calls. The proposed rulebook appears line by line: per-agent grants with their evidence, the protected quarter-end grant, the left-out legacy entitlements, and a flag for the kyc export ("observed but violates a guardrail: owner decision needed").
-5. **Deterministic verifier** checks each proposed grant and shows ✓ or ✗ with its reason: backed by observed use or declared purpose; breaks no guardrail; restricted data is purpose-bound; references are valid. It also lists anything observed that the draft neither granted nor flagged, and any rare-but-required flow left out. Do **not** inject a bad line to show a rejection.
-6. **Replay** the week against the verified rulebook with default deny on: what would have been blocked (the 7 exports), what would wait for a person (the 6 SSI amendments) and legitimate calls broken (expected 0 of 1,141). All measured.
-7. **Owner approval:** a modal ("Approve the rulebook as owners") with an 8 s countdown, then auto-approval labelled "auto-approved for demo". The kyc export is **rejected by the owner** (Client Onboarding), not by the AI. `rulebook@v0 → v1`.
-8. **Default deny switches on.** From now on only what the rulebook allows runs.
-- **Captions** in `docs/DEMO_SCRIPT.md`. **Prefetch:** the agent's Act 4 plan request goes out at the start of Act 2.
+2. **Day-zero guardrails** (deck: *Who decides*; people-written, deterministic): no restricted data leaves the firm (`R-EGR-01`), SSI changes need maker-checker (`R-SSI-01`), delegation only narrows (`R-DLG-02`), no self-modification (`R-SELF-01`). Shown with "Default deny: not yet. Everything else is observed."
+3. **Shadow week** (deck: *Rolling it out*, Observe): the engine replays the recorded week for all four agents with enforcement **off**. The map fills in who reaches what (edge thickness = calls); the panel counts the calls and marks the quarter-end day. Result: 1,141 observed, 7 would-deny, 6 would-hold. The kyc nightly export is highlighted: "Observed 7 times. Breaks a guardrail."
+4. **AI drafts the rulebook** (deck: *Who decides*; live LLM, §7.2, prefetched at Start). The investigator receives an aggregated usage summary, never raw calls. The draft appears line by line as AI output (purple, dashed): grants per agent, the left-out legacy entitlements and the flag for the kyc export. No verdicts yet: nothing is decided.
 
-### 5.3 Act 3 — Enforce and exception (30 s)
+### 5.3 Act 3 — People sign (30 s): nothing enforced unsigned
 
-- **Enforce:** about six routine calls (trade, settlement, refdata reads by recon, enrichment and settlement agents) appear green with measured ms, each citing `R-GRANT-01` from the approved rulebook.
+1. **Deterministic verifier** (deck: *Human in the loop*) checks each line the AI drafted and shows ✓ or ✗ with its reason: backed by observed use or declared purpose; breaks no guardrail; restricted data is purpose-bound; references are valid. It also lists anything observed that the draft neither granted nor flagged, and any rare-but-required flow left out. Do **not** inject a bad line to show a rejection.
+2. **Replay** the week against the verified rulebook with default deny on: what would have been blocked (the 7 exports), what would wait for a person (the 6 SSI amendments) and legitimate calls broken (expected 0 of 1,141). All measured.
+3. **The owners sign:** a card over the act panel ("Sign the rulebook as owners") with an 8 s countdown, then auto-signing labelled "auto-signed for demo" (in production nothing auto-approves). The kyc export is **rejected by its owner** (Client Onboarding), not by the AI; its line on the map turns red. `rulebook@v0 → v1`.
+4. **Signed, so enforced: default deny switches on.** From now on only what the rulebook allows runs.
+- **Captions** in `docs/DEMO_SCRIPT.md`. **Prefetch:** the agent's Act 5 plan request goes out at the start of Act 2.
+
+### 5.4 Act 4 — Enforce (30 s)
+
+- **Enforce:** about six routine calls (trade, settlement, refdata reads by recon, enrichment and settlement agents) appear green with measured ms, each citing `R-GRANT-01` from the signed rulebook.
 - **Just-in-time exception:**
   - Break `RC-90031` needs the counterparty's legal-entity ID from Client Master. The rulebook's `client.read_masked` grant for recon is scoped to the fields it was observed using, so this field is outside it.
   - The request matches envelope `env-recon-cm-01`: fields `client_id`, `legal_entity_id`, `country`; one counterparty; read-only; TTL 120 s.
@@ -188,13 +209,13 @@ Timings are at 1× speed. The director is a deterministic step list. Each step h
 - **Captions:** "Normal work flows at machine speed, with no AI in the decision." / "A real cross-domain need gets two minutes of exactly what it needs, then it expires."
 - **No LLM in the decision path.**
 
-### 5.4 Act 4 — Attack (85 s)
+### 5.5 Act 5 — Attack (85 s)
 
 1. **Show the poisoned note** in the act panel, with the injected sentence highlighted. Caption: "This settlement note carries a hidden instruction."
 2. **Live agent plan:** display the prefetched plan from the agent LLM (§7.1) as a numbered list of intended tool calls. Caption: "The live model reads it and plans to follow it."
    - **Sanctioned fallback:** sometimes the model **does not** plan any of the three malicious calls (no `client.read_pii`, no delegated PII request, no `external.post`). In that case, show a calm banner: "The model declined the hidden instruction. Good — but models don't always. Replaying a recorded compromised plan to test the controls." Then use `app/demo/recorded_plan.json`, visibly labelled "recorded plan" for the rest of the act. This is the **only** allowed substitution.
 3. **Today mode (about 15 s):**
-   - Execute the plan along the ungoverned path. The estate map shows dashed edges that bypass the plane.
+   - Execute the plan along the ungoverned path. The map draws dashed lines straight through the plane band: nothing checks them.
    - The result is red: "2 fields of client C-102 sent to diagnostics.example.invalid".
    - Caption: "Today: nothing stands between a fooled agent and client data."
 4. **With the plane:** execute the same plan through the gateway. There are three denials, each with its rule and reason:
@@ -208,28 +229,25 @@ Timings are at 1× speed. The director is a deterministic step list. Each step h
    - Caption: "AI explains what happened. Pre-agreed rules decide what happens next."
 6. **Closing caption:** "The model was fooled. The system held."
 
-### 5.5 Act 5 — Harden (45 s): post-incident only
+### 5.6 Act 6 — Tighten and prove (75 s)
 
 1. **Investigator drafts a hardening** (live LLM, §7.4; prefetched as soon as the case exists). Unused-grant removal already happened on day zero, so the expected changes are only: stop recon-agent delegating client-data tasks; require a human for `env-recon-cm-01` for 7 days.
 2. **Deterministic verifier** checks each change (narrowing only, protected grants stay, grants in use stay, references valid) and shows ✓ or ✗ with its reason. Do not inject a bad change.
 3. **Replay test:** the hardened rulebook against the shadow week plus the 20-case attack suite: "Legitimate calls broken: 0 of 1,141" and "Attacks blocked: 20 of 20". Computed live.
-4. **Owner approval:** the same modal pattern ("Approve as owner: Reconciliation Ops", 8 s, then "auto-approved for demo"). `rulebook@v1 → v2`.
+4. **The owner signs** (deck: *Human in the loop*): the same card ("Sign as owner: Reconciliation Ops", 8 s, then "auto-signed for demo"). `rulebook@v1 → v2`.
 5. **Re-run the attack:** it now stops at its first harmful step, with fewer calls attempted.
-6. **Captions:** "After the incident, AI drafts a hardening. A verifier checks it." / "Tighter, and nothing legitimate broke."
-
-### 5.6 Act 6 — Prove and close (30 s)
-
-- **Evidence panel.** Every number is computed from this run's event log:
-  - Consequential calls through the plane: **N of N (100%)**
-  - Decision time p50 / p95 (ms, measured in-process). Label: "in-process; production target under 5 ms at the gateway".
-  - Rulebook lines verified on day zero (*a* of *b* accepted) and guardrail violations found in shadow (7).
-  - Attacks blocked in the suite: **20 / 20**. Legitimate calls broken by the hardened rulebook: **0**.
-  - Time from first malicious call to containment (seconds, measured)
-  - Agents with an identity and owner: **4 / 4**. One is attributable at workload level only (honest).
-- **Download evidence pack:**
-  - A single Markdown file plus a JSON file with the timeline, decision records, delegation chain, rulebook versions and verifier results.
-  - Each event record includes `prev_hash` and `hash` (SHA-256 chain). The pack states "tamper-evident: altering any record breaks the chain".
-- **Close card:** "Synthetic estate. To run Acts 1–3 on a real slice, we need: (1) how agents authenticate today, (2) where traffic can be routed through a gateway, (3) data-classification tags for client and payment data, (4) the owner for each agent, (5) latency budgets in settlement windows."
+6. **Evidence panel** (deck: *What's being asked*). Every number is computed from this run's event log:
+   - Consequential calls through the plane: **N of N (100%)**
+   - Decision time p50 / p95 (ms, measured in-process). Label: "in-process; production target under 5 ms at the gateway".
+   - AI-drafted grants verified on day zero (*a* of *b*), calls watched, guardrail violations found in shadow (7), habits rejected by their owner.
+   - Attacks blocked in the suite: **20 / 20**. Legitimate calls broken by the hardened rulebook: **0**.
+   - Time from first malicious call to containment (seconds, measured)
+   - Agents with an identity and owner: **4 / 4**. One is attributable at workload level only (honest).
+7. **Download evidence pack:**
+   - A single Markdown file plus a JSON file with the timeline, decision records, delegation chain, rulebook versions and verifier results.
+   - Each event record includes `prev_hash` and `hash` (SHA-256 chain). The pack states "tamper-evident: altering any record breaks the chain".
+8. **Close card** (over the map; the evidence stays visible): "Synthetic estate. To run Acts 1–3 on a real slice, we need: (1) how agents authenticate today, (2) where traffic can be routed through a gateway, (3) data-classification tags for client and payment data, (4) the owner for each agent, (5) latency budgets in settlement windows."
+- **Captions:** "After the incident, AI suggests tighter rules. A verifier checks every change." / "The owner signs. AI never approves." / "Tighter, and nothing legitimate broke." / "Every number here was measured in this run."
 
 ### 5.7 Optional extra (not in the 5 minutes)
 
@@ -248,23 +266,23 @@ Once a live run has reached the close card, the presenter can go straight back t
 | # | Title | Captured at | What the console shows |
 |---|---|---|---|
 | 1 | Estate found | end of Act 1 | Registry: 4 agents, one unowned, one on a shared human login |
-| 2 | Watch before blocking | Act 2, after the shadow week | All four agents onboarded, per-agent counters, the quarter-end day, the kyc habit that breaks a guardrail |
-| 3 | AI drafts the rulebook, a person approves | Act 2, default deny on | The rulebook lines with verifier ✓/✗, the replay, the owner's decisions, `rulebook@v0 → v1` |
-| 4 | Two minutes, then gone | Act 3, envelope granted | JIT envelope with its scope and the time remaining at that moment |
-| 5 | Today: nothing stops it | Act 4, end of today mode | Dashed bypass edges, client data reaching the outside, red outcome |
-| 6 | The system held | Act 4, after the third denial | The three denials with `rule@version`, the capability intersection |
-| 7 | AI explains, rules act | Act 4, case ready | The investigator's case and the containment applied |
+| 2 | Watch before blocking | Act 2, after the shadow week | The usage map filled in, the counters, the quarter-end day, the kyc habit that breaks a guardrail |
+| 3 | AI drafts the rulebook, a person signs | Act 3, default deny on | The verified rulebook, the replay, the owner's decisions, `rulebook@v0 → v1`, the kyc line red on the map |
+| 4 | Two minutes, then gone | Act 4, envelope granted | JIT envelope with its scope and the time remaining at that moment |
+| 5 | Today: nothing stops it | Act 5, end of today mode | Dashed lines straight through the plane, client data reaching the outside, red outcome |
+| 6 | The system held | Act 5, after the third denial | The three denials with `rule@version`, the capability intersection, the attack path stopping at the plane |
+| 7 | AI explains, rules act | Act 5, case ready | The investigator's case and the containment applied |
 | 8 | Measured, not claimed | Act 6 | Evidence numbers from the run and the hash-chain status |
 
 **How it works (keep it simple):**
 - The console UI is a pure function of the event log: `state = events.reduce(apply, initialState)`, then `render(state)`. A key view is just an event sequence number, so restoring view *k* means folding the run's events up to that marker and rendering with animations off. No snapshots, screenshots or second code path.
-- Countdowns (the JIT envelope, the approval modal) show their frozen value at that moment. Clicking a timeline row still opens its decision record.
+- Countdowns (the JIT envelope) show their frozen value at that moment. The map, the ticker and the decisions drawer are part of every view.
 - Key views belong to the most recent run that reached Act 6. They stay available after a restart until another run reaches Act 6. They are held in server memory like everything else.
 
 **Controls:**
 - When the close card appears, a **Key views** button appears in the header (keyboard **K**). It opens a filmstrip of eight numbered cards with titles.
 - Clicking a card puts the console into key-view mode and shows that view. ← and → step between views; Esc goes back to the close card. The director stays stopped.
-- A badge is always visible in key-view mode: "Key view 6 of 8 · recorded from this run at 11:42 · no live calls". It uses the neutral info style, never a decision colour.
+- A badge is always visible in key-view mode, in the header in place of the act stepper: "Key view 6 of 8 · recorded from this run at 11:42 · no live calls". It uses the neutral info style, never a decision colour.
 - Starting a new run (R) leaves key-view mode. The connection gate still applies as usual.
 
 **Export:** a *Download key views* button saves one self-contained HTML file named `key-views-YYYYMMDD-HHMM.html`.
@@ -320,7 +338,7 @@ Every action is normalised into one envelope before any decision:
 
 **Observe mode (day zero only):** `R-OBS-00` no guardrail applies and default deny is not yet on, so the call is observed and recorded. In shadow it never blocks anything.
 
-**After the owner approves the rulebook (default deny on):**
+**After the owners sign the rulebook (default deny on):**
 - `R-DEF-00` default deny.
 - `R-GRANT-01` allow if the capability is in the agent's approved grants (within the grant's field scope) and not otherwise denied.
 - `R-PII-01` deny restricted PII unless an explicit purpose-bound grant applies; always deny when `source_taint` contains anything untrusted.
@@ -341,7 +359,11 @@ Every action is normalised into one envelope before any decision:
 
 ## 7. LLM roles and contracts
 
-Prompts live in `app/prompts/*.md`. All outputs are strict JSON validated with pydantic. On invalid JSON, retry once with a "return only valid JSON" nudge, then fail visibly.
+Prompts live in `app/prompts/*.md`. All outputs are strict JSON validated with pydantic, and every contract is built to survive a real model:
+- **Small output:** contracts ask for ids and short codes, not prose (the rulebook is about 800 tokens), with a generous output budget (4,096 tokens; 12,000 for reasoning models that think inside it).
+- **JSON mode where it exists:** `response_format: {"type": "json_object"}` for Azure/OpenAI (Foundry accepts it), `responseMimeType: application/json` for Gemini. Bedrock has none, so parsing does the rest.
+- **Lenient parsing, strict effect:** ``` fences and prose around the reply are stripped, the outermost JSON object is taken (string-aware), and trailing commas are forgiven. A reply cut off at the output limit (the provider's stop reason `length`/`max_tokens`/`MAX_TOKENS`, or an object that never closes) is reported as cut off, not as a parse error.
+- **One retry** with the reason appended ("Your previous reply could not be used: invalid JSON: Expecting ',' delimiter … Return only the JSON object"), then a visible failure naming the call. The raw unusable reply is printed to the presenter's terminal for diagnosis (it never contains the token).
 
 ### 7.1 Agent (reconciliation agent): plan tool calls
 
@@ -364,17 +386,17 @@ Prompts live in `app/prompts/*.md`. All outputs are strict JSON validated with p
 
 - **Input:** an **aggregated** usage summary computed from the engine's shadow records, never raw calls: per agent, the owner, the declared purpose and declared capabilities; per agent × capability, the week's count, the fields and purposes seen, the guardrail outcome (for example "7 of 7 would be denied by R-EGR-01"), the 90-day count and calendar tags (the quarter-end day); the old credential's entitlements with their (zero) usage; and the four guardrails.
 - **Prefetched at Start.** The fixtures are deterministic, so the request can go out before the shadow replay is shown; the summary it contains is computed by the same engine and is identical to what Act 2 then displays.
-- **Output:**
+- **Output (compact: ids and codes only; the verifier computes the evidence it shows):**
 
   ```json
-  {"grants": [{"agent": "recon-agent", "capability": "ledger.read_quarter_end", "evidence": "1 call on 2026-09-30, quarter-end close",
-               "purpose": null, "tags": ["rare-but-required", "quarter-end close"]}, "…"],
-   "left_out": [{"agent": "recon-agent", "capability": "fx.read", "reason": "never used in 90 days"}, "…"],
-   "flags": [{"agent": "kyc-agent", "capability": "fileshare.export", "observed": 7,
-              "issue": "observed but violates guardrail R-EGR-01", "recommendation": "owner_decision"}]}
+  {"grants": [{"agent": "recon-agent", "capability": "ledger.read_quarter_end", "basis": "calendar",
+               "purpose": null, "tags": ["rare-but-required"]}, "…"],
+   "left_out": [{"agent": "recon-agent", "capability": "fx.read", "reason": "unused_90d"}, "…"],
+   "flags": [{"agent": "kyc-agent", "capability": "fileshare.export", "rule": "R-EGR-01", "recommendation": "owner_decision"}]}
   ```
 
-- It must protect the rare-but-required quarter-end grant, leave out never-used legacy entitlements and flag the kyc export instead of granting it. The verifier (§5.2) checks whatever it actually proposes.
+  `basis` is `observed | declared | calendar`; a left-out `reason` is `unused_90d | not_needed`.
+- It must protect the rare-but-required quarter-end grant, leave out never-used legacy entitlements and flag the kyc export instead of granting it. The verifier (§5.3) checks whatever it actually proposes.
 
 ### 7.3 Investigator: case
 
@@ -382,7 +404,7 @@ Prompts live in `app/prompts/*.md`. All outputs are strict JSON validated with p
 - **Output:**
 
   ```json
-  {"case_title": "…", "narrative": "≤4 sentences", "linked_request_ids": ["…"], "suspected_cause": "prompt_injection | malfunction | misuse | unknown", "recommended_containment": "read_only | revoke_session | quarantine | none"}
+  {"case_title": "…", "narrative": "≤3 short sentences", "linked_request_ids": ["…"], "suspected_cause": "prompt_injection | malfunction | misuse | unknown", "recommended_containment": "read_only | revoke_session | quarantine | none"}
   ```
 
 ### 7.4 Investigator: hardening diff
@@ -391,10 +413,10 @@ Prompts live in `app/prompts/*.md`. All outputs are strict JSON validated with p
 - **Output:**
 
   ```json
-  {"changes": [{"op": "remove_grant | restrict_delegation | require_human_for_envelope | add_condition", "agent": "recon-agent", "target": "…", "params": {}, "rationale": "…"}]}
+  {"changes": [{"op": "remove_grant | restrict_delegation | require_human_for_envelope | add_condition", "agent": "recon-agent", "target": "…", "params": {}, "rationale": "≤12 words"}]}
   ```
 
-- The verifier (§5.5) is deterministic code, not the LLM.
+- The verifier (§5.6) is deterministic code, not the LLM.
 
 ## 8. Non-goals
 
@@ -408,4 +430,5 @@ Real integrations, real identity infrastructure, persistence across restarts (th
 - All invariants in §6.4 have passing tests. The evidence numbers are computed from the run.
 - After a completed run, all eight key views (§5.8) open instantly with no model calls and no new decisions. The exported key-views file works offline, is labelled as a recording and contains no token.
 - No token on disk, in logs or in the browser. `scripts/check_no_secrets.py` passes.
-- Legible at 1440×900 and 1920×1080, in light and dark mode, consistent with `docs/DESIGN.md`.
+- Nothing overflows or is clipped at 1280×720, 1366×768, 1536×864, 1440×900 and 1920×1080, at browser zoom 90%, 100% and 110%, in light and dark mode, consistent with `docs/DESIGN.md`. Anything that scrolls (drawers) scrolls with wheel, trackpad, touch and keyboard.
+- A failed model call pauses with Retry, Switch model and Restart; a pasted token with a stray character gets a plain message, never a 500; one tab drives the run, others watch.

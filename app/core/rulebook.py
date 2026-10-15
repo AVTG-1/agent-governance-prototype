@@ -16,7 +16,7 @@ from __future__ import annotations
 from collections import defaultdict
 from dataclasses import asdict, dataclass
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 from app.core.policies import (CAPABILITIES, CONTROL_PLANE, GUARDRAIL_TEXT, GUARDRAILS, MASKED_PROFILE,
                                PII_FIELDS, QUARTER_END, RARE_BUT_REQUIRED, AgentPolicy, Grant, PolicySet)
@@ -107,27 +107,45 @@ def usage_summary(records: list[dict], signals: dict, usage90: dict, calendar: d
 
 # --- 2. What the AI drafts (data, never applied directly) ---------------------------------------
 
+# The contract is ids and short codes (SPEC §7.2), so the reply stays small. Longer legacy fields
+# (evidence, issue, observed) are still accepted; the verifier computes the evidence it shows itself.
+
 class GrantLine(BaseModel):
     agent: str
     capability: str
+    basis: str = ""                  # observed | declared | calendar
     evidence: str = ""
     purpose: str | None = None
     fields: list[str] | None = None
     tags: list[str] = Field(default_factory=list)
 
+    @model_validator(mode="after")
+    def _evidence_from_basis(self):
+        self.evidence = self.evidence or self.basis
+        return self
+
 
 class LeftOut(BaseModel):
     agent: str
     capability: str
-    reason: str = ""
+    reason: str = ""                 # unused_90d | not_needed
 
 
 class Flag(BaseModel):
     agent: str
     capability: str
+    rule: str = ""                   # the guardrail the behaviour breaks
     observed: int | None = None
     issue: str = ""
     recommendation: str = ""
+
+    @model_validator(mode="after")
+    def _issue_from_rule(self):
+        self.issue = self.issue or (f"breaks {self.rule}" if self.rule else "")
+        return self
+
+
+LEFT_OUT_REASON = {"unused_90d": "never used in 90 days", "not_needed": "not needed for the declared purpose"}
 
 
 class RulebookDraft(BaseModel):
@@ -220,8 +238,8 @@ def verify_rulebook(draft: RulebookDraft, summary: dict) -> list[Line]:
         notes = []
         if obs and obs["calendar"]:
             if RARE_BUT_REQUIRED not in tags:
-                tags = tags + QUARTER_END
                 notes.append("tagged rare-but-required from calendar evidence")
+            tags = tags + tuple(t for t in QUARTER_END if t not in tags)
             notes.append(f"protected: {obs['calendar']}")
         if obs:
             why = f"observed {obs['week']}× this week"
@@ -247,7 +265,7 @@ def verify_rulebook(draft: RulebookDraft, summary: dict) -> list[Line]:
                            if real else "flag does not match any recorded guardrail outcome"), f.issue))
     for lo in draft.left_out:
         lines.append(Line(len(lines) + 1, "left_out", lo.agent, lo.capability, True,
-                          "not granted" + (f": {lo.reason}" if lo.reason else ""), lo.reason))
+                          "not granted" + (f": {LEFT_OUT_REASON.get(lo.reason, lo.reason)}" if lo.reason else ""), lo.reason))
     # Completeness: what the engine recorded that the draft neither granted nor flagged.
     for a in summary["agents"]:
         for o in a["observed"]:

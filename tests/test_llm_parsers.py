@@ -96,7 +96,7 @@ def test_request_shapes():
     assert foundry.openai_request("gpt-5.1", "S", "U")[1]["temperature"] == 0
     path, body = foundry.bedrock_request("us.anthropic.claude-sonnet-4-5-20250929-v1:0", "S", "U")
     assert path == "/bedrock/us.anthropic.claude-sonnet-4-5-20250929-v1:0/converse"
-    assert body["system"] == [{"text": "S"}] and body["inferenceConfig"] == {"temperature": 0, "maxTokens": 1500}
+    assert body["system"] == [{"text": "S"}] and body["inferenceConfig"] == {"temperature": 0, "maxTokens": foundry.MAX_TOKENS}
     assert foundry.bedrock_request("m", "S", "U", stream=True)[0] == "/bedrock/m/converse_stream"
     path, body = foundry.gemini_request("gemini-3-flash-preview", "S", "U")
     assert path == "/gemini/v1beta/models/gemini-3-flash-preview:generateContent"

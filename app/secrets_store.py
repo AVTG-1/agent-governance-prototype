@@ -6,13 +6,35 @@ any text that might leave the process, and a logging filter does the same for lo
 from __future__ import annotations
 
 import logging
+import re
+import unicodedata
 
 _token: str | None = None
 
 
+TOKEN_NOT_SENDABLE = "The token contains a character that can't be sent. Paste it again from the source."
+SUFFIX_NOT_SENDABLE = "The project suffix contains a character that can't be sent. Type it again."
+
+
+def clean(value: str | None, message: str = TOKEN_NOT_SENDABLE) -> str:
+    """A pasted token or suffix as it can travel in an HTTP header: whitespace and invisible characters
+    (zero-width spaces, BOMs, line breaks) are dropped; anything else outside ASCII raises ValueError
+    with a plain message for the gate. Never echoes the value."""
+    kept = "".join(ch for ch in (value or "")
+                   if not (ch.isspace() or unicodedata.category(ch) in ("Cc", "Cf", "Zs", "Zl", "Zp")))
+    if not kept.isascii():
+        raise ValueError(message)
+    return kept
+
+
+def is_masked_echo(value: str | None) -> bool:
+    """True if the browser sent back the masked display value instead of a fresh token."""
+    return bool(value) and re.fullmatch("\u2022{2,}[A-Za-z0-9_-]{0,4}", value.strip()) is not None
+
+
 def set(token: str) -> None:  # noqa: A001 - module-level API: secrets_store.set(...)
     global _token
-    _token = token.strip() or None
+    _token = clean(token) or None
 
 
 def get() -> str | None:

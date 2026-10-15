@@ -9,8 +9,8 @@ FAKE = "fake-KVCHECK-" + __import__("secrets").token_hex(10)
 
 EXPECTED_VIEW = {   # key view id -> (act, panel view, stage or None)
     "estate-found": (1, "registry", None), "watch-before-blocking": (2, "shadow", None),
-    "rulebook": (2, "rulebook", "approved"), "two-minutes": (3, "enforce", None), "today": (4, "attack", "today"),
-    "system-held": (4, "attack", "governed"), "ai-explains": (4, "attack", "case"), "measured": (6, "evidence", None),
+    "rulebook": (3, "rulebook", "approved"), "two-minutes": (4, "enforce", None), "today": (5, "attack", "today"),
+    "system-held": (5, "attack", "governed"), "ai-explains": (5, "attack", "case"), "measured": (6, "evidence", None),
 }
 
 

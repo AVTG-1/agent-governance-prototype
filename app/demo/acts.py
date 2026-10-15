@@ -17,7 +17,7 @@ from app.core import rulebook as rb
 from app.core.audit import percentile, verify_chain
 from app.core.delegation import intersection_table
 from app.core.gateway import Call
-from app.core.policies import GUARDRAIL_TEXT, GUARDRAILS, RESTRICTED, RULES
+from app.core.policies import CAPABILITIES, GUARDRAIL_TEXT, GUARDRAILS, RESTRICTED, RULES
 from app.core.verifier import PolicyDiff, verify_and_replay
 from app.demo.script import CAPTIONS, CLOSE_ASKS, FALLBACK_BANNER
 from app.estate.agents import (INJECTED, ROUTINE, TAINT, AgentPlan, Case, agent_prompt, case_prompt,
@@ -80,8 +80,16 @@ def override_caption(d, step) -> str | None:
         return CAPTIONS["close_fallback"]
     if step.action == "harden_replay" and not data.get("accepted"):
         return CAPTIONS["harden_nothing"]
-    if step.action == "rulebook_replay" and (data.get("rulebook_replay") or {}).get("legit_broken"):
-        return CAPTIONS["rulebook_broken"]
+    if step.action == "rulebook_verify" and any(not l.ok for l in data.get("rulebook_lines", [])):
+        return CAPTIONS["verify_rejects"]
+    if step.action == "rulebook_replay":
+        r = rb.replay_week(d.run.world.gateway, d.run.world.shadow_week, d.run.world.audit.records,
+                           data["rulebook_candidate"]) if "rulebook_candidate" in data else {}
+        data["rulebook_replay"] = r
+        if r.get("violations_stopped", 0) < r.get("violations", 0):
+            return CAPTIONS["rulebook_exports_pass"]
+        if r.get("legit_broken"):
+            return CAPTIONS["rulebook_broken"]
     return None
 
 
@@ -162,10 +170,8 @@ def _fingerprint(summary: dict) -> str:
     return hashlib.sha256(json.dumps(summary, sort_keys=True).encode()).hexdigest()
 
 
-def prefetch_rulebook(d) -> None:
-    """At Start. The fixtures are deterministic, so the same engine shadows the recorded week in a scratch
-    world now and the draft request goes out immediately. Act 2 recomputes the summary from the live run's
-    own records and checks it is identical before the draft is used."""
+def scratch_day_zero():
+    """A throwaway world taken through Act 1 and the shadow week: (world, the aggregated usage summary)."""
     from app.core.world import World
 
     scratch = World()
@@ -174,17 +180,24 @@ def prefetch_rulebook(d) -> None:
     scratch.onboard_all()
     for spec in scratch.shadow_week:
         scratch.gateway.handle(Call.from_spec({**spec, "session": "s-shadow-week"}), enforce=False, execute=False)
-    summary = rb.usage_summary(scratch.audit.records, scratch.signals, scratch.usage,
-                               scratch.estate.refdata["calendar"], scratch.owners())
+    return scratch, rb.usage_summary(scratch.audit.records, scratch.signals, scratch.usage,
+                                     scratch.estate.refdata["calendar"], scratch.owners())
+
+
+def prefetch_rulebook(d) -> None:
+    """At Start. The fixtures are deterministic, so the same engine shadows the recorded week in a scratch
+    world now and the draft request goes out immediately. Act 2 recomputes the summary from the live run's
+    own records and checks it is identical before the draft is used."""
+    _, summary = scratch_day_zero()
     d.run.data["summary_prefetched"] = _fingerprint(summary)
     system, user = rulebook_prompt(summary)
-    d.prefetch("rulebook", lambda: complete_json("investigator", system, user, rb.RulebookDraft))
+    d.prefetch("rulebook", lambda: complete_json("investigator", system, user, rb.RulebookDraft, job="rulebook draft"))
 
 
 async def onboard_start(d, step) -> None:
     w = d.run.world
     system, user = agent_prompt(w.estate)           # the Act 4 plan: prefetched at the start of Act 2
-    d.prefetch("plan", lambda: complete_json("agent", system, user, AgentPlan))
+    d.prefetch("plan", lambda: complete_json("agent", system, user, AgentPlan, job="agent plan"))
     rows = []
     for agent_id in ONBOARD_ORDER:
         a = w.registry.get(agent_id)
@@ -211,6 +224,16 @@ async def onboard_swaps(d, step) -> None:
                                  "cred": CRED_SHORT.get(a.credential.kind, "onboarded")}})
         await d.sleep(3.5)
     d.panel("onboard", current=None)
+
+
+def _usage(per_agent: dict) -> dict:
+    """Shadow-week calls per agent × system: the map's edge thickness ("know which agents reach which systems")."""
+    out: dict[str, dict] = {}
+    for agent, v in per_agent.items():
+        for cap, n in v["caps"].items():
+            system = CAPABILITIES[cap].system
+            out.setdefault(agent, {})[system] = out.get(agent, {}).get(system, 0) + n
+    return out
 
 
 def _last_rows(d) -> list[dict]:
@@ -254,6 +277,7 @@ async def shadow_week(d, step) -> None:
             tally[o.decision.decision] += 1
             days[spec["ts"][:10]]["calls"] += 1
             processed += 1
+        d.emit("map", {"usage": _usage(per_agent)})
         d.panel("shadow", running=True, processed=processed, total=len(calls),
                 totals={"observed": processed, "allow": tally["allow"], "would_deny": tally["would_deny"],
                         "would_hold": tally["would_hold"]},
@@ -294,7 +318,11 @@ async def shadow_findings(d, step) -> None:
     d.panel("shadow", findings=findings, highlight="kyc-agent")
 
 
+DRAFT_KINDS = ("grant", "flag", "left_out")      # what the AI wrote; "missing" and "habit" are the verifier's
+
+
 async def rulebook_draft(d, step) -> None:
+    """Act 2: the AI's draft, line by line, as data. No verdicts yet: nothing here is decided."""
     w = d.run.world
     draft, res = d.run.llm["rulebook"].result()
     summary = d.run.data["summary"]
@@ -305,21 +333,40 @@ async def rulebook_draft(d, step) -> None:
     focus(d, "monitor", "policy")
     d.run.data.update(rulebook_lines=lines, rulebook_candidate=candidate, owner_decisions=decisions,
                       rulebook_ok=sum(1 for l in grants if l.ok), rulebook_total=len(grants))
+    drafted = [l for l in lines if l.kind in DRAFT_KINDS]
     d.panel("rulebook", stage="draft", model=res.model_ref, latency_ms=d.run.data.get("rulebook_latency_ms"),
-            lines=[], replay=None, decisions=None, approval=None, version=None, default_deny=None,
-            counts={"grants": len(grants), "left_out": sum(1 for l in lines if l.kind == "left_out"),
-                    "flags": sum(1 for l in lines if l.kind in ("flag", "habit"))})
-    pace = 0.5 if len(lines) <= 24 else 11.0 / len(lines)
-    for l in lines:
-        d.panel("rulebook", push={"lines": l.as_dict()})
+            lines=[], verdicts=[], replay=None, decisions=None, approval=None, version=None, default_deny=None,
+            verified=None, counts={"grants": len(grants), "left_out": sum(1 for l in lines if l.kind == "left_out"),
+                                   "flags": sum(1 for l in lines if l.kind == "flag")})
+    pace = min(0.45, 9.0 / max(1, len(drafted)))
+    for l in drafted:
+        d.panel("rulebook", push={"lines": {"n": l.n, "kind": l.kind, "agent": l.agent, "capability": l.capability,
+                                            "evidence": l.evidence}})
         await d.sleep(pace)
-    ok = sum(1 for l in grants if l.ok)
-    d.panel("rulebook", verified={"ok": ok, "total": len(grants)})
+
+
+async def rulebook_verify(d, step) -> None:
+    """Act 3: the deterministic verifier's verdict on every line, plus what the draft missed."""
+    focus(d, "policy", "evidence")
+    lines = d.run.data["rulebook_lines"]
+    extra = [l for l in lines if l.kind not in DRAFT_KINDS]
+    for l in extra:
+        d.panel("rulebook", push={"lines": {"n": l.n, "kind": l.kind, "agent": l.agent, "capability": l.capability,
+                                            "evidence": l.evidence}})
+    d.panel("rulebook", stage="verify")
+    pace = min(0.25, 5.0 / max(1, len(lines)))
+    for l in lines:
+        d.panel("rulebook", push={"verdicts": {"n": l.n, "ok": l.ok, "reason": l.reason}})
+        await d.sleep(pace)
+    grants = [l for l in lines if l.kind == "grant"]
+    d.panel("rulebook", verified={"ok": sum(1 for l in grants if l.ok), "total": len(grants),
+                                  "problems": sum(1 for l in lines if not l.ok)})
 
 
 async def rulebook_replay(d, step) -> None:
     w = d.run.world
-    r = rb.replay_week(w.gateway, w.shadow_week, w.audit.records, d.run.data["rulebook_candidate"])
+    r = d.run.data.get("rulebook_replay") or rb.replay_week(w.gateway, w.shadow_week, w.audit.records,
+                                                            d.run.data["rulebook_candidate"])
     d.run.data["rulebook_replay"] = r
     focus(d, "policy", "evidence")
     for k in range(1, 6):
@@ -331,8 +378,12 @@ async def rulebook_replay(d, step) -> None:
         await d.sleep(0.6)
 
 
+SIGNED_BY_PRESENTER, AUTO_SIGNED = "signed by the presenter", "auto-signed for demo"
+
+
 async def owner_approval(d, payload: dict) -> bool:
-    """The same modal everywhere: an 8 s countdown, then auto-approval labelled as such. True if clicked."""
+    """The same modal everywhere: an 8 s countdown, then auto-signing labelled as such. True if clicked.
+    The countdown runs on the scripted clock, so it scales with speed and freezes while paused."""
     d.approval.clear()
     for left in range(8, 0, -1):
         d.emit("system", {"approval": {**payload, "remaining": left}})
@@ -354,16 +405,19 @@ async def rulebook_approve(d, step) -> None:
     grants = [l for l in lines if l.kind == "grant" and l.ok]
     per_agent = Counter(l.agent for l in grants)
     clicked = await owner_approval(d, {
-        "kind": "rulebook", "title": "Approve the rulebook as owners",
+        "kind": "rulebook", "title": "Sign the rulebook as owners",
         "before": w.policy.current.version_label(), "after": candidate.version_label(),
         "items": [{"agent": a, "owner": w.registry.get(a).owner, "grants": n} for a, n in per_agent.items()],
         "reject": [{"agent": x["agent"], "owner": x["owner"], "capability": x["capability"], "rule": x["rule"],
                     "observed": x["observed"], "pattern": x["pattern"]} for x in decisions],
         "replay": d.run.data.get("rulebook_replay", {}).get("legit_broken"),
     })
-    how = "approved by the presenter" if clicked else "auto-approved for demo"
+    how = SIGNED_BY_PRESENTER if clicked else AUTO_SIGNED
     before, after = w.policy.approve(candidate, owner=OWNERS_LABEL, how=how, note="day-zero rulebook")
     rejected = [{**x, "decision": "rejected by the owner", "by": x["owner"]} for x in decisions]
+    for x in rejected:
+        d.emit("map", {"edge": {"agent": x["agent"], "system": CAPABILITIES[x["capability"]].system,
+                                "state": "rejected", "by": x["owner"]}})
     d.run.data["owner_rejected"] = rejected
     d.panel("rulebook", stage="approved", version={"before": before, "after": after, "how": how}, decisions=rejected)
     d.emit("system", {"policy": after})
@@ -538,6 +592,7 @@ async def attack_governed(d, step) -> None:
         d.panel("attack", governed=list(rows))
         if call.chain and len(call.chain) > 1 and o.decision.rule == "R-DLG-02":
             d.caption(CAPTIONS["delegation"])
+            d.emit("system", {"deck": "Agent to agent"})
             focus = ["client.read_pii", "client.read_masked", "trade.read"]
             table = intersection_table(call.chain, w.policy.current, call.purpose or "reconciliation", focus)
             d.panel("attack", intersection={"caller": call.chain[0], "callee": call.chain[-1],
@@ -548,13 +603,14 @@ async def attack_governed(d, step) -> None:
 
 
 def _start_case(d, denied_records: list[dict]) -> None:
-    w = d.run.world
+    w, run = d.run.world, d.run
     sys_c, user_c = case_prompt(denied_records, w.registry.get("recon-agent").row())
 
     async def case_job():
-        result = await complete_json("investigator", sys_c, user_c, Case)
+        result = await complete_json("investigator", sys_c, user_c, Case, job="incident case")
         sys_d, user_d = diff_prompt(result[0].model_dump(), w.policy.current, w.usage)
-        d.prefetch("diff", lambda: complete_json("investigator", sys_d, user_d, PolicyDiff))
+        d.prefetch("diff", lambda: complete_json("investigator", sys_d, user_d, PolicyDiff, job="hardening diff"),
+                   run=run)                # never into a newer run after a restart
         return result
 
     d.prefetch("case", case_job)
@@ -631,16 +687,16 @@ async def harden_replay(d, step) -> None:
 async def harden_approve(d, step) -> None:
     w = d.run.world
     if not d.run.data.get("accepted"):
-        d.panel("harden", approval={"skipped": True, "text": "Nothing to approve: the policy stays at "
+        d.panel("harden", approval={"skipped": True, "text": "Nothing to sign: the policy stays at "
                                                              f"{w.policy.current.version_label()}."})
         return
     before = w.policy.current.version_label()
     target = d.run.data["candidate"].version_label()
     owner = w.registry.get("recon-agent").owner
-    clicked = await owner_approval(d, {"kind": "harden", "title": f"Approve as owner: {owner}", "owner": owner,
+    clicked = await owner_approval(d, {"kind": "harden", "title": f"Sign as owner: {owner}", "owner": owner,
                                        "before": before, "after": target, "changes": len(d.run.data["accepted"]),
                                        "replay": d.run.data["replay"]["legit_broken"]})
-    how = "approved by the presenter" if clicked else "auto-approved for demo"
+    how = SIGNED_BY_PRESENTER if clicked else AUTO_SIGNED
     before, after = w.policy.approve(d.run.data["candidate"], owner=owner, how=how, note="post-incident hardening")
     d.panel("harden", stage="approved", version={"before": before, "after": after, "how": how})
     d.emit("system", {"policy": after})
