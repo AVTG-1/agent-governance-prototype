@@ -89,12 +89,17 @@ def build_pack(meta: dict, metrics: dict, records: list[dict], timeline: list[di
         f"| First malicious call to containment | {m['containment_s']} s |",
         f"| Agents with an identity and owner | {m['agents_owned']} / {m['agents_total']} |",
         "",
-        "## Policy versions",
+        f"Day zero: {m.get('shadow_calls')} recorded calls observed in shadow, {m.get('guardrail_violations')} guardrail "
+        f"violations found, {m.get('rulebook_ok')} of {m.get('rulebook_total')} AI-drafted rulebook grants verified, "
+        f"{m.get('owner_rejected')} habit rejected by its owner.",
+        "",
+        "## Rulebook versions",
         "",
     ]
     lines += [f"- {v['label']}: {v['note']}" for v in policy_versions]
     lines += ["", "## Verifier results", ""]
-    lines += [f"- {'✓' if v['ok'] else '✗'} `{v['op']}` {v['target']}: {v['reason']}" for v in verifier] or ["- (none)"]
+    lines += [f"- {v.get('stage', '')}: {'✓' if v['ok'] else '✗'} `{v['op']}` {v['target']}: {v['reason']}"
+              for v in verifier] or ["- (none)"]
     lines += ["", "## Delegation chain (Act 4)", ""]
     lines += [f"- {d['capability']}: caller {_yn(d['caller'])} · callee {_yn(d['callee'])} · task {_yn(d['task'])}"
               f" · policy {_yn(d['policy'])} → {'effective' if d['effective'] else '∅'}" for d in delegation] or ["- (none)"]

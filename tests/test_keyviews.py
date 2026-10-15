@@ -8,9 +8,9 @@ from tests.conftest import pass_gate, wait_done
 FAKE = "fake-KVCHECK-" + __import__("secrets").token_hex(10)
 
 EXPECTED_VIEW = {   # key view id -> (act, panel view, stage or None)
-    "estate-found": (1, "registry", None), "watch-before-blocking": (2, "observe", "shadow"),
-    "two-minutes": (3, "enforce", None), "today": (4, "attack", "today"), "system-held": (4, "attack", "governed"),
-    "ai-explains": (4, "attack", "case"), "tighter": (5, "tighten", "approved"), "measured": (6, "evidence", None),
+    "estate-found": (1, "registry", None), "watch-before-blocking": (2, "shadow", None),
+    "rulebook": (2, "rulebook", "approved"), "two-minutes": (3, "enforce", None), "today": (4, "attack", "today"),
+    "system-held": (4, "attack", "governed"), "ai-explains": (4, "attack", "case"), "measured": (6, "evidence", None),
 }
 
 
@@ -50,16 +50,18 @@ def test_eight_markers_in_order_and_each_shows_its_panel(client):
         assert (act, view) == (want_act, want_view), v["id"]
         if want_stage:
             assert panels[view].get("stage") == want_stage, v["id"]
-    # View 3 holds the envelope with its time remaining at that moment.
-    three = [e for e in data["events"] if e["seq"] <= views[2]["seq"] and e["kind"] == "panel"
-             and e["payload"]["set"].get("envelope")]
-    assert three[-1]["payload"]["set"]["envelope"]["remaining"] == 120
-    # View 7 carries the version bump and the replay numbers.
-    seven = [e["payload"]["set"] for e in data["events"] if e["seq"] <= views[6]["seq"] and e["kind"] == "panel"
-             and e["payload"]["view"] == "tighten"]
-    assert any(s.get("version", {}) and s["version"]["after"] == "recon-agent-policy@v5" for s in seven)
-    assert any(s.get("replay") and s["replay"]["legit_broken"] == 0 and s["replay"]["attacks_blocked"] == 20
-               for s in seven)
+    # View 4 holds the envelope with its time remaining at that moment.
+    four = [e for e in data["events"] if e["seq"] <= views[3]["seq"] and e["kind"] == "panel"
+            and e["payload"]["set"].get("envelope")]
+    assert four[-1]["payload"]["set"]["envelope"]["remaining"] == 120
+    # View 3 carries the verified rulebook lines, the replay, the owner's rejection and the version bump.
+    three = [e["payload"] for e in data["events"] if e["seq"] <= views[2]["seq"] and e["kind"] == "panel"
+             and e["payload"]["view"] == "rulebook"]
+    assert sum(1 for p in three if p["push"].get("lines")) == 22
+    assert any(p["set"].get("version", {}) and p["set"]["version"]["after"] == "rulebook@v1" for p in three)
+    assert any(p["set"].get("replay") and p["set"]["replay"]["legit_broken"] == 0
+               and p["set"]["replay"]["violations_stopped"] == 7 for p in three)
+    assert any(p["set"].get("decisions") and p["set"]["decisions"][0]["capability"] == "fileshare.export" for p in three)
 
 
 def test_listing_and_export_make_no_model_calls_and_no_decisions(client):

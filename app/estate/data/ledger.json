@@ -4,27 +4,27 @@
     {
       "account": "1100 Cash at custodian",
       "currency": "USD",
-      "balance": 799250209.69
+      "balance": 712528153.68
     },
     {
       "account": "1200 Securities inventory",
       "currency": "USD",
-      "balance": 145653140.93
+      "balance": 114118884.44
     },
     {
       "account": "2100 Client payables",
       "currency": "USD",
-      "balance": 68427176.52
+      "balance": 210174493.14
     },
     {
       "account": "3100 Retained earnings",
       "currency": "USD",
-      "balance": 847708895.04
+      "balance": 883526464.16
     },
     {
       "account": "4100 Commission income",
       "currency": "USD",
-      "balance": 880259329.09
+      "balance": 709917081.38
     }
   ]
 }

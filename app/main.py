@@ -220,8 +220,10 @@ def _pack() -> tuple[str, dict]:
     timeline = [{"seq": e["seq"], "t": e["t"], "act": e["act"], "kind": e["kind"],
                  "summary": e["payload"].get("text") or e["payload"].get("capability") or e["payload"].get("title")}
                 for e in run.events if e["kind"] in ("act", "caption", "decision", "call", "keyview")]
-    checks = [c.as_dict() for c in run.data.get("checks", [])]
-    verifier = [{"op": c["op"], "target": c["target"], "ok": c["ok"], "reason": c["reason"]} for c in checks]
+    verifier = [{"stage": "day-zero rulebook", "op": l.kind, "target": f"{l.agent} {l.capability}", "ok": l.ok,
+                 "reason": l.reason} for l in run.data.get("rulebook_lines", [])]
+    verifier += [{"stage": "hardening", "op": c["op"], "target": c["target"], "ok": c["ok"], "reason": c["reason"]}
+                 for c in (c.as_dict() for c in run.data.get("checks", []))]
     delegation = []
     for e in run.events:
         if e["kind"] == "panel" and e["payload"]["view"] == "attack" and e["payload"]["set"].get("intersection"):

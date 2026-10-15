@@ -117,11 +117,8 @@ def _normalise(ch: ProposedChange, policy: PolicySet, usage: dict) -> tuple[dict
         callee = p.get("callee") or p.get("to") or p.get("delegate") or (target if target in policy.agents else "*")
         caps = _caps_from(p.get("capabilities") or p.get("deny_capabilities") or p.get("scope")
                           or p.get("data") or (target if target not in policy.agents else None))
-        delegates = policy.agents[agent].delegate_to
-        if not delegates:
-            return None, f"rejected: {agent} has no delegation to restrict"
-        if callee != "*" and callee not in delegates:
-            return None, f"rejected: {agent} does not delegate to '{callee}'"
+        if callee != "*" and (callee not in policy.agents or callee == agent):
+            return None, f"rejected: unknown callee '{callee}'"
         scope = "client-data tasks" if caps and set(caps) <= set(CLIENT_DATA) else (
             ", ".join(caps) if caps else "any task")
         return ({"kind": "restrict_delegation", "agent": agent, "callee": callee, "capabilities": caps},
@@ -168,7 +165,7 @@ def probe_requests(policy: PolicySet) -> list[RequestEnvelope]:
     out = []
     agents = sorted(policy.agents)
     for agent in agents:
-        callers = [None] + [a for a in agents if agent in policy.agents[a].delegate_to]
+        callers = [None] + [a for a in agents if a != agent and a != "investigator"]
         for cap, meta in CAPABILITIES.items():
             for taint in ([], ["untrusted"]):
                 for caller in callers:
@@ -210,11 +207,12 @@ def replay(gateway, current: PolicySet, candidate: PolicySet, shadow: list[dict]
 
     jit = JitBook()
     grant, _ = jit.issue(candidate, "env-recon-cm-01", "recon-agent", "C-102", human_approved=True)
-    broken, qe_ok = [], True
+    broken, qe_ok, legit = [], True, 0
     for spec in shadow:
         call = Call.from_spec({**spec, "session": "replay"})
         was = gateway.simulate(call, current, jit).decision == "allow"
         now = gateway.simulate(call, candidate, jit).decision == "allow"
+        legit += was
         if was and not now:
             broken.append(spec["id"])
         if spec["capability"] == "ledger.read_quarter_end" and not now:
@@ -228,7 +226,7 @@ def replay(gateway, current: PolicySet, candidate: PolicySet, shadow: list[dict]
         if d.blocked:
             blocked += 1
             rules[d.rule] = rules.get(d.rule, 0) + 1
-    return {"legit_total": len(shadow), "legit_broken": len(broken), "broken_ids": broken[:10],
+    return {"legit_total": legit, "legit_broken": len(broken), "broken_ids": broken[:10],
             "quarter_end_ok": qe_ok, "attacks_total": len(attacks), "attacks_blocked": blocked,
             "attack_rules": dict(sorted(rules.items()))}
 

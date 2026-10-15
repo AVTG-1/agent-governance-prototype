@@ -20,7 +20,7 @@ SENSITIVITY = ["client", "settlement", "ledger", "recon", "trade", "refdata"]
 
 @dataclass
 class Credential:
-    kind: str                  # shared | brokered | per-agent | cloud-role | static-key | none
+    kind: str                  # shared | db-login | cloud-role | static-key | brokered | token | federated | proxied | none
     principal: str
     audience: list[str] = field(default_factory=lambda: ["*"])
     ttl_s: int | None = None
@@ -30,10 +30,14 @@ class Credential:
     def label(self) -> str:
         return {
             "shared": f"Shared service account {self.principal}",
-            "brokered": f"Brokered, {self.ttl_s // 60}-minute credential" if self.ttl_s else "Brokered credential",
-            "per-agent": "Per-agent credential",
-            "cloud-role": f"Cloud role {self.principal}",
+            "db-login": f"Direct database login {self.principal.removeprefix('db:')}",
+            "cloud-role": f"Cloud IAM role {self.principal}",
             "static-key": "Static API key in a config file",
+            "per-agent": "Per-agent credential",
+            "brokered": f"Own identity, {self.ttl_s // 60}-minute brokered credential" if self.ttl_s else "Own identity",
+            "token": f"Short-lived token from the broker ({self.ttl_s // 60} min)" if self.ttl_s else "Short-lived token",
+            "federated": "Federated agent identity",
+            "proxied": f"Database login behind the data proxy",
             "none": "No system credential",
         }[self.kind]
 
@@ -61,6 +65,26 @@ class AgentIdentity:
         }
 
 
+ONBOARDING = {   # connection style before -> what changes (wording from the deck), never the agent's code
+    "shared": {"kind": "brokered", "ttl_s": 600, "retires": True, "attaches": ["credential", "path"],
+               "swap": "One identity per agent; the shared account is retired",
+               "path": "Calls go through the agent gateway", "data": "Unchanged",
+               "attribution": "agent", "attribution_text": "Per agent"},
+    "static-key": {"kind": "token", "ttl_s": 900, "retires": True, "attaches": ["credential", "path"],
+                   "swap": "Key swapped for a short-lived token from the broker",
+                   "path": "Calls go through the agent gateway", "data": "Unchanged",
+                   "attribution": "agent", "attribution_text": "Per agent"},
+    "cloud-role": {"kind": "federated", "ttl_s": None, "retires": False, "attaches": ["credential", "path"],
+                   "swap": "Role federated to a registered agent identity",
+                   "path": "Egress limited to the agent gateway", "data": "Unchanged",
+                   "attribution": "workload", "attribution_text": "Per workload (agents sharing a runtime look like one)"},
+    "db-login": {"kind": "proxied", "ttl_s": None, "retires": False, "attaches": ["path", "data"],
+                 "swap": "Credential unchanged",
+                 "path": "Connection moved behind a data proxy",
+                 "data": "Row and column rules applied at the proxy",
+                 "attribution": "db-login", "attribution_text": "Per database login"},
+}
+
 PURPOSES = {"recon-agent": "reconciliation", "settlement-agent": "settlement",
             "enrichment-agent": "enrichment", "kyc-agent": "kyc_refresh"}
 
@@ -77,7 +101,7 @@ def discover(signals: dict) -> list[AgentIdentity]:
         flags, owner, kind = [], None, "per-agent"
         if principal in vault:
             owner = vault[principal]["owner"]
-            kind = "shared" if vault[principal]["kind"] == "shared service account" else "per-agent"
+            kind = {"shared service account": "shared", "database login": "db-login"}.get(vault[principal]["kind"], "per-agent")
         elif principal in roles:
             owner, kind = roles[principal]["owner"], "cloud-role"
         elif principal in configs:
@@ -94,13 +118,15 @@ def discover(signals: dict) -> list[AgentIdentity]:
         systems = list(log["systems"])
         if extra:
             flags.append(f"direct database login {extra[0]}")
+        if kind == "db-login":
+            flags.append("direct database login: no gateway in the path")
         if owner is None:
             flags.insert(0, "no owner")
         agents.append(AgentIdentity(
             id=workload, name=NAMES.get(workload, workload), owner=owner,
             credential=Credential(kind, principal), systems=systems, flags=flags, extra_logins=extra,
             attribution=attribution, purpose=PURPOSES.get(workload, "routine"),
-            status="governable" if kind in ("per-agent", "cloud-role") else "discovered",
+            status="discovered",
         ))
     return agents
 
@@ -130,17 +156,21 @@ class Registry:
         self.add(AgentIdentity("investigator", NAMES["investigator"], "Governance", Credential("none", "—", []),
                                [], status="advisory", attribution="agent", purpose="investigation"))
 
-    def wrap(self, agent_id: str, ttl_s: int = 600) -> dict:
-        """Swap a shared login for a brokered, short-lived credential. The agent's code is untouched."""
+    def onboard(self, agent_id: str) -> dict:
+        """Mediate, don't modify: swap what surrounds the agent (credential, path, data), never its code.
+        The wording per connection style is the deck's ("Agents we can't see inside")."""
         a = self.agents[agent_id]
         before = a.credential
-        a.credential = Credential("brokered", f"spiffe://kaiyo.example/agent/{agent_id}", ["*"], ttl_s)
-        a.status = "wrapped"
-        a.attribution = "workload"
-        a.flags = [f for f in a.flags if not f.startswith(("shared with a person", "direct database login"))]
-        a.flags.append("attribution: workload-level")
-        return {"agent": agent_id, "before": before.label, "after": a.credential.label,
-                "retired": [before.principal] + a.extra_logins}
+        spec = ONBOARDING[before.kind]
+        principal = f"spiffe://kaiyo.example/agent/{agent_id}" if spec["kind"] != "proxied" else before.principal
+        a.credential = Credential(spec["kind"], principal, ["*"], spec["ttl_s"])
+        a.status = "onboarded"
+        a.attribution = spec["attribution"]
+        a.flags = [f for f in a.flags if not f.startswith(("shared with a person", "direct database login", "static API key"))]
+        retired = [before.principal.removeprefix("apikey:").removeprefix("db:")] + a.extra_logins if spec["retires"] else []
+        return {"agent": agent_id, "before": before.label, "after": a.credential.label, "swap": spec["swap"],
+                "path": spec["path"], "data": spec["data"], "attribution": spec["attribution_text"],
+                "attaches": spec["attaches"], "retired": retired, "code": "unchanged"}
 
     def with_owner_and_identity(self) -> tuple[int, int]:
         agents = [a for a in self.agents.values() if a.id != "investigator"]

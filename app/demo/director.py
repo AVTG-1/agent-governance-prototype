@@ -14,13 +14,13 @@ from datetime import datetime
 
 from app.core.world import World
 from app.demo import acts
-from app.demo.script import ACTS, END, EXTRA_ACT, KEY_VIEW_BY_ID, STEPS, Step
+from app.demo.script import ACTS, END, EXTRA_ACT, INTRO_S, KEY_VIEW_BY_ID, STEPS, Step
 from app.events import Bus
 from app.llm import CONNECTION, LLMError
 from app.llm.catalog import short_name
 
 SPEEDS = (0.5, 1.0, 2.0)
-ROLE_OF = {"plan": "agent", "case": "investigator", "diff": "investigator"}
+ROLE_OF = {"rulebook": "investigator", "plan": "agent", "case": "investigator", "diff": "investigator"}
 
 
 class Run:
@@ -91,6 +91,7 @@ class Director:
                           "provider": self.run.provider,
                           "models": {r: short_name(m) for r, m in self.run.models.items()},
                           "speed": self.speed, "acts": {k: v["title"] for k, v in ACTS.items()}, "end": END})
+        acts.prefetch_rulebook(self)          # fixtures are deterministic, so the day-zero draft can go out now
         self.task = asyncio.create_task(self._play())
         return self.run
 
@@ -109,15 +110,24 @@ class Director:
         run = self.run
         try:
             for i, step in enumerate(STEPS):
+                if step.act != run.act:
+                    await self.sleep_until(ACTS[step.act]["start"])
+                    if self._skip_to_act is not None and step.act >= self._skip_to_act:
+                        self._skip_to_act = None
+                    run.act = step.act
+                    meta = ACTS[step.act]
+                    self.emit("act", {"act": step.act, "title": meta["title"], "deck": meta["deck"],
+                                      "sub": meta["sub"], "intro": True})
+                    await self.sleep(INTRO_S)
+                    self.emit("system", {"intro": False})
                 await self.sleep_until(step.abs_at)
                 run.step_index = i
                 if self._skip_to_step is not None and i >= self._skip_to_step:
                     self._skip_to_step = None
                 if self._skip_to_act is not None and step.act >= self._skip_to_act:
                     self._skip_to_act = None
-                if step.act != run.act:
-                    run.act = step.act
-                    self.emit("act", {"act": step.act, "title": ACTS[step.act]["title"]})
+                if step.deck:
+                    self.emit("system", {"deck": step.deck})
                 if step.wait_for:
                     await self.wait_llm(step.wait_for, step.timeout_s)
                 text = acts.override_caption(self, step) or step.caption

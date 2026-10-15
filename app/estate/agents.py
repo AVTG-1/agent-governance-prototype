@@ -152,15 +152,16 @@ def case_prompt(records: list[dict], agent_row: dict) -> tuple[str, str]:
 
 def diff_prompt(case: dict, policy: PolicySet, usage: dict, agent: str = "recon-agent") -> tuple[str, str]:
     system, user = load_prompt("investigator_diff")
-    ap = policy.agents[agent]
+    blocks = policy.delegation_blocks.get(agent, {})
     delegation = [{"caller": agent, "callee": callee,
-                   "may_delegate": "any task the caller could do itself" if not blocked
-                   else f"anything except {sorted(blocked)}"} for callee, blocked in ap.delegate_to.items()]
+                   "may_delegate": f"anything except {sorted(blocks[callee])}" if callee in blocks
+                   else "anything in caller ∩ callee ∩ task (delegation only narrows)"}
+                  for callee in ("settlement-agent", "enrichment-agent", "kyc-agent") if callee != agent]
     envelopes = [{"id": e.id, "agent": e.agent, "capability": e.capability, "fields": sorted(e.fields),
                   "max_rows": e.max_rows, "ttl_s": e.ttl_s, "operation": e.op,
                   "human_approval_days": policy.envelope_human_days.get(e.id, 0)}
                  for e in policy.envelopes.values() if e.agent == agent]
-    return system, render(user, case=case, agent_id=agent, policy_version=ap.label,
+    return system, render(user, case=case, agent_id=agent, policy_version=policy.version_label(),
                           grants=rightsizing.review(policy, usage, agent), delegation=delegation, envelopes=envelopes)
 
 
@@ -174,3 +175,15 @@ ROUTINE = [   # Act 3: ordinary work through the plane once enforcement is on
     Call("enrichment-agent", "trade.read", args={"trade_id": "T-1102"}, purpose="enrichment"),
     Call("recon-agent", "settlement.read", args={"trade_id": "T-1077"}, session="s-recon-00", purpose="reconciliation"),
 ]
+
+
+def rulebook_prompt(summary: dict) -> tuple[str, str]:
+    """The day-zero draft. Its input is the engine's aggregate, never raw calls, and never a secret."""
+    system, user = load_prompt("investigator_rulebook")
+    week = f"{summary['week']['from']} to {summary['week']['to']} ({summary['week']['calls']} calls)"
+    agents = []
+    for a in summary["agents"]:
+        agents.append({k: a[k] for k in ("agent", "owner", "declared_purpose", "declared_capabilities",
+                                         "restricted_purposes", "observed", "delegated", "old_credential_unused")})
+    body = {"calendar": summary["week"]["calendar"], "default_deny": summary["default_deny"], "agents": agents}
+    return system, render(user, guardrails=summary["guardrails"], week=week, summary=body)

@@ -4,6 +4,7 @@ from app.core.gateway import Call
 
 
 def test_chain_verifies_and_detects_tampering(world):
+    world.audit.records.clear()
     for s in world.shadow_week[:50]:
         world.gateway.handle(Call.from_spec(s), enforce=False, execute=False)
     world.gateway.handle(Call("recon-agent", "client.read_pii", fields=["tax_id"], taint=["x"]))
@@ -16,6 +17,7 @@ def test_chain_verifies_and_detects_tampering(world):
 
 
 def test_reordering_breaks_chain(world):
+    world.audit.records.clear()
     for s in world.shadow_week[:5]:
         world.gateway.handle(Call.from_spec(s), enforce=False, execute=False)
     recs = list(world.audit.records)

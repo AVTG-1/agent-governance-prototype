@@ -36,18 +36,31 @@ def test_poisoned_note_verbatim():
 
 def test_shadow_week_composition():
     calls = load("shadow_week.json")
-    assert len(calls) == 600
-    caps = Counter(c["capability"] for c in calls)
-    assert caps["refdata.read"] == 13
-    assert caps["ledger.read_quarter_end"] == 1
-    qe = [c for c in calls if c["capability"] == "ledger.read_quarter_end"][0]
-    assert qe["ts"].startswith("2026-09-30")
+    assert len(calls) == 1154
+    by_agent = Counter((c.get("chain") or [c["agent"]])[0] for c in calls)
+    assert by_agent == {"recon-agent": 600, "settlement-agent": 254, "enrichment-agent": 180, "kyc-agent": 120}
+    qe = [c for c in calls if c["capability"] == "ledger.read_quarter_end"]
+    assert len(qe) == 1 and qe[0]["ts"].startswith("2026-09-30")
+    delegated = [c for c in calls if c.get("chain")]
+    assert len(delegated) == 12 and all(c["chain"] == ["recon-agent", "settlement-agent"] for c in delegated)
 
 
-def test_usage_and_attack_suite():
-    usage = load("usage_90d.json")["agents"]["recon-agent"]
-    assert [g for g, u in usage.items() if u["uses"] == 0] == ["settlement.update", "fx.read", "fileshare.export"]
-    assert usage["ledger.read_quarter_end"]["uses"] == 1
+def test_the_planted_bad_habit():
+    """kyc exports client PII to the external shared drive every night: frequent, so usage alone would keep it."""
+    exports = [c for c in load("shadow_week.json") if c["capability"] == "fileshare.export"]
+    assert len(exports) == 7 and {c["agent"] for c in exports} == {"kyc-agent"}
+    assert {c["ts"][11:16] for c in exports} == {"02:10"} and len({c["ts"][:10] for c in exports}) == 7
+    assert all({"tax_id", "email", "dob"} <= set(c["fields"]) for c in exports)
+
+
+def test_owner_declarations_and_old_entitlements():
+    s = load("signals.json")
+    assert set(s["owner_declarations"]) == {"recon-agent", "settlement-agent", "enrichment-agent", "kyc-agent"}
+    assert "fileshare.export" not in s["owner_declarations"]["kyc-agent"]["capabilities"]
+    usage = load("usage_90d.json")["agents"]
+    assert [c for c, u in usage["recon-agent"].items() if u["uses"] == 0] == ["fileshare.export", "fx.read", "settlement.update"]
+    assert usage["recon-agent"]["ledger.read_quarter_end"]["uses"] == 1
+    assert usage["kyc-agent"]["client.read_pii"]["uses"] == 0
     assert len(load("attack_suite.json")) == 20
 
 
@@ -57,13 +70,3 @@ def test_masking():
     assert masked["tax_id"].startswith("••••")
     raw = e.client_read("C-102", ["tax_id"], reveal_pii=True)
     assert not raw["tax_id"].startswith("••••")
-
-
-def test_shadow_week_outcome_against_initial_grants():
-    """Plain set check; tests/test_shadow.py repeats this through the real policy engine."""
-    initial = {"trade.read", "settlement.read", "client.read_masked", "recon.update",
-               "settlement.update", "fx.read", "fileshare.export"}
-    calls = load("shadow_week.json")
-    denied = Counter(c["capability"] for c in calls if c["capability"] not in initial)
-    assert sum(1 for c in calls if c["capability"] in initial) == 586
-    assert denied == {"refdata.read": 13, "ledger.read_quarter_end": 1}

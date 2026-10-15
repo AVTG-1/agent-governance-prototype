@@ -1,17 +1,38 @@
 import pytest
 
-from app.core.policies import baseline_policy
+from app.core import rulebook as rb
+from app.core.gateway import Call
 from app.core.world import World
+
+
+def day_zero_world(shadow: bool = True) -> World:
+    """Act 1 and the start of Act 2: discovered, owners assigned, all four onboarded, the week shadowed."""
+    w = World()
+    w.discover()
+    w.assign_owners()
+    w.onboard_all()
+    if shadow:
+        for spec in w.shadow_week:
+            w.gateway.handle(Call.from_spec({**spec, "session": "s-shadow-week"}), enforce=False, execute=False)
+    return w
+
+
+def summary_of(w: World) -> dict:
+    return rb.usage_summary(w.audit.records, w.signals, w.usage, w.estate.refdata["calendar"], w.owners())
+
+
+def approve_rulebook(w: World, draft: dict | None = None):
+    from app.llm.mock import RULEBOOK
+    lines = rb.verify_rulebook(rb.RulebookDraft.model_validate(draft or RULEBOOK), summary_of(w))
+    w.policy.approve(rb.build_rulebook(w.policy.current, lines), owner="Agent owners", how="test")
+    return lines
 
 
 @pytest.fixture
 def world():
-    """A world after Acts 1–2: agents discovered, recon wrapped, baseline policy adopted."""
-    w = World()
-    w.discover()
-    w.assign_owners()
-    w.registry.wrap("recon-agent")
-    w.policy.adopt(baseline_policy(w.policy.current), "baseline")
+    """A world after Act 2: the owners approved the (good) AI-drafted rulebook@v1; default deny is on."""
+    w = day_zero_world()
+    approve_rulebook(w)
     return w
 
 

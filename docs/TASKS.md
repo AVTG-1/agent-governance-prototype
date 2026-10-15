@@ -82,3 +82,34 @@ Work top to bottom. Tick each box when its acceptance checks pass, then commit. 
 - [x] A final pass removes dead code, unused files and any abstraction that isn't needed for the demo.
 
 **Accept:** fresh clone, install, `python run.py`: the connection screen appears. All tests and the secrets check pass.
+
+---
+
+# Round 2: day-zero onboarding and the deck-matched console
+
+## M10 — Day-zero core
+- [x] Fixtures: a recorded week for all four agents (1,154 calls) including the quarter-end ledger read, recon's delegated reads, settlement's SSI amendments and purpose-bound PII reads, and kyc's nightly PII export to the external shared drive (the planted bad habit). Owner declarations and the old credentials' entitlements in `signals.json`; 90-day usage for all four agents.
+- [x] Onboarding swaps for all four agents with the deck's wording; attribution per agent.
+- [x] `rulebook@v0`: guardrails only (`R-EGR-01`, `R-SSI-01`, `R-DLG-02`, `R-SELF-01`), default deny off, `R-OBS-00` observe for everything else.
+- [x] `app/core/rulebook.py`: aggregated usage summary from the engine's shadow records, the rulebook JSON contract, the deterministic verifier (observed use or declared purpose, no guardrail broken, restricted data purpose-bound, valid references, protected flows and unflagged guardrail habits listed), building `rulebook@v1`, and the week replay.
+- [x] Tests: verifier rules for the rulebook; the kyc bad habit is never auto-granted; shadow outcome 1,141 / 7 / 6; invariants still hold under the new rulebook.
+
+**Accept:** `pytest -q` is green; a good draft verifies all ✓ and replays 0 legitimate calls broken with the 7 exports blocked.
+
+## M11 — The new story in the director
+- [x] `investigator_rulebook.md` prompt; the rulebook call prefetched at Start (four live calls per run).
+- [x] Act 2 "Shadow and learn": onboard, guardrails, shadow week, AI draft, verifier, replay, owner approval (owner rejects the export), default deny on.
+- [x] Act 5 hardening only (restrict client-data delegation; human for `env-recon-cm-01` for 7 days). Acts 3, 4 and 6 as before; every evidence number recomputed.
+- [x] Eight key views, with "AI drafts the rulebook, a person approves" replacing "Tighter, nothing broke".
+- [x] Tests: timing within budget (300 ± 20 s scripted), prefetch order, the rulebook prompt contains no token, key views.
+
+**Accept:** a mocked full run reaches every act in 5:00 and the evidence pack verifies.
+
+## M12 — Console matches the deck
+- [x] Deck chrome: deep navy header and caption in both themes, soft glow washes, card styles and shadows, rounded nodes, exact colour semantics (blue control, green allowed, red stopped, amber waits for a person, purple dashed AI advisory, grey dashed simulated); every status is icon plus word plus colour.
+- [x] The estate map is the deck's control-plane diagram with the six parts named as in the deck and a moving decision dot.
+- [x] Act intro cards and the "Deck: …" chapter chip; one focal point per step; purposeful motion only; `prefers-reduced-motion` honoured.
+- [x] Connection screen and close card redesigned to the same standard.
+- [x] Screenshots of every step at 1440×900 and 1920×1080 in both themes compared against the deck; overflow sweep clean; final set in `docs/screens/`.
+
+**Accept:** someone who has just seen the deck recognises every screen as the same product.
